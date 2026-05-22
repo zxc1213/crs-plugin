@@ -1,37 +1,23 @@
 {
-  "name": "claude-req-sys",
+  "name": "claude-req-sys-plugin",
   "version": "0.6.0",
-  "description": "ClaudeReqSys - 智能需求管理与自动化执行系统，为 Claude Code 提供从需求到测试的全流程管理能力",
+  "description": "ClaudeReqSys Plugin - 智能需求管理系统，从需求到测试的全流程自动化",
   "type": "module",
-  "main": "src/scripts/requirement-manager/index.js",
-  "types": "src/scripts/requirement-manager/index.d.ts",
-  "scripts": {
-    "test": "vitest run tests/",
-    "test:watch": "vitest watch tests/",
-    "test:coverage": "vitest run tests/ --coverage",
-    "test:verbose": "vitest run tests/ --reporter=verbose",
-    "lint": "eslint src/ tests/",
-    "lint:fix": "eslint src/ tests/ --fix",
-    "format": "prettier --write src/ tests/",
-    "format:check": "prettier --check src/ tests/",
-    "prepare": "husky || exit 0",
-    "postinstall": "node scripts/postinstall.js || exit 0"
-  },
-  "bin": {
-    "claude-req-init": "./bin/claude-req-init.js",
-    "claude-req-update": "./bin/claude-req-update.js",
-    "kg-search": "./bin/kg-cli.js",
-    "kg-stats": "./bin/kg-cli.js",
-    "kg-connections": "./bin/kg-cli.js",
-    "kg-recommend": "./bin/kg-cli.js",
-    "kg-rebuild": "./bin/kg-cli.js"
-  },
+  "files": [
+    ".claude-plugin/",
+    "skills/",
+    "commands/",
+    "hooks/",
+    "scripts/",
+    "bin/",
+    "README.md"
+  ],
   "keywords": [
     "claude-code",
+    "plugin",
     "requirement-management",
     "automation",
-    "skills",
-    "cli"
+    "skills"
   ],
   "author": "19944",
   "license": "MIT",
@@ -42,34 +28,5 @@
   "bugs": {
     "url": "https://github.com/zxc1213/claude-req-sys/issues"
   },
-  "homepage": "https://github.com/zxc1213/claude-req-sys#readme",
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "cli-table3": "^0.6.3",
-    "commander": "^12.0.0",
-    "fuse.js": "^7.0.0",
-    "js-yaml": "^4.1.0",
-    "ora": "^8.0.1"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^21.0.1",
-    "@eslint/js": "^9.18.0",
-    "@vitest/coverage-v8": "^1.6.1",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
-    "prettier": "^3.2.0",
-    "vitest": "^1.6.1"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "files": [
-    "src/",
-    "bin/",
-    "scripts/",
-    "package.json"
-  ]
+  "homepage": "https://github.com/zxc1213/claude-req-sys#readme"
 }
