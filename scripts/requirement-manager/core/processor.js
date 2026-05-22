@@ -4,6 +4,7 @@
 
 import { generate } from '../utils/id-generator.js';
 import { createRequirementDir, readMeta, writeMeta, exists } from '../utils/storage.js';
+import { trackDocuments } from '../utils/document-tracker.js';
 import path from 'path';
 import fs from 'fs/promises';
 import { getKnowledgeGraph } from '../../knowledge-graph/index.js';
@@ -151,6 +152,46 @@ export class Processor {
     const rawContent = `# ${description}\n\n${description}`;
     await fs.writeFile(rawPath, rawContent, 'utf-8');
 
+    // 创建 Claude 上下文文件，告诉 superpowers 技能应该将文档保存到这里
+    const contextPath = path.join(reqPath, '.claude-context.md');
+    const contextContent = `# Claude 上下文文件
+
+## 当前需求
+
+- **ID**: ${id}
+- **类型**: ${type}
+- **状态**: ${meta.status}
+- **创建时间**: ${meta.created}
+
+## 需求描述
+
+${description}
+
+## 文档保存指引
+
+**重要**: 当使用 superpowers 技能（如 brainstorming、systematic-debugging、writing-plans 等）分析此需求时，请将生成的文档保存到当前目录（\`${reqPath}\`）。
+
+### 推荐的文档文件名：
+
+- **设计文档**: \`design.md\` 或 \`spec.md\`
+- **分析报告**: \`analysis.md\` 或 \`report.md\`
+- **实施计划**: \`plan.md\` 或 \`implementation-plan.md\`
+- **测试计划**: \`test-plan.md\`
+- **会议记录**: \`meeting-YYYY-MM-DD.md\`
+- **决策记录**: \`decisions.md\`
+
+### 更新 meta.yaml
+
+在添加新文档后，请更新 \`meta.yaml\` 中的相关字段：
+- \`status\`: 更新需求状态
+- \`tags\`: 添加相关标签
+- 其他相关元数据
+
+---
+*此文件由 req 系统自动生成，请勿删除*
+`;
+    await fs.writeFile(contextPath, contextContent, 'utf-8');
+
     // 更新索引
     this.index.set(id, reqPath);
 
@@ -220,6 +261,36 @@ export class Processor {
     } catch (_error) {
       // 知识图谱同步失败不影响主流程
     }
+  }
+
+  /**
+   * 跟踪需求文档变化并更新元数据
+   * @param {string} id - 需求 ID
+   * @returns {Promise<object>} 更新后的元数据
+   */
+  async trackDocuments(id) {
+    const reqPath = this.getRequirementPath(id);
+
+    if (!reqPath) {
+      throw new Error(`Requirement not found: ${id}`);
+    }
+
+    // 使用 document-tracker 更新元数据
+    const updatedMeta = await trackDocuments(this.baseDir, reqPath);
+
+    // 同步到知识图谱
+    try {
+      const graph = await getKnowledgeGraph(this.baseDir);
+      await graph.updateRequirement(id, {
+        status: updatedMeta.status,
+        title: updatedMeta.title,
+        description: updatedMeta.description,
+      });
+    } catch (_error) {
+      // 知识图谱同步失败不影响主流程
+    }
+
+    return updatedMeta;
   }
 
   /**
