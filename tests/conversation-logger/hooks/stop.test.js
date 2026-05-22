@@ -64,7 +64,7 @@ describe('stop Hook', () => {
     expect(content).to.include('测试');
 
     const metadata = await fs.readJSON(result.summary.metaPath);
-    expect(metadata.id).to.match(/^sess-\d{8}-\d{6}$/);
+    expect(metadata.id).to.match(/^sess-\d{8}-\d{6}-\d{3}$/);
     expect(metadata.workingDir).to.equal('/test/dir');
     expect(metadata.eventCount).to.equal(1);
   });

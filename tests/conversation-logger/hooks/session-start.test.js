@@ -26,7 +26,7 @@ describe('sessionStart Hook', () => {
     const result = await sessionStart(context);
 
     expect(result.continue).to.be.true;
-    expect(result.sessionId).to.match(/^sess-\d{8}-\d{6}$/);
+    expect(result.sessionId).to.match(/^sess-\d{8}-\d{6}-\d{3}$/);
 
     const logger = getConversationLogger();
     expect(logger).to.not.be.null;
