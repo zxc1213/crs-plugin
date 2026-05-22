@@ -3,6 +3,8 @@
  */
 
 import { getRoute, getSkillChain, getPhases } from './router.js';
+import { SkillInterface } from './skill-interface.js';
+import { AdapterFactory } from '../skill-adapters/index.js';
 
 /**
  * 提示词模板配置
@@ -77,12 +79,27 @@ const EXECUTION_MODES = {
 class Scheduler {
   /**
    * 构造函数
+   * @param {string} baseDir - 基础目录路径
    */
-  constructor() {
+  constructor(baseDir) {
+    this.baseDir = baseDir;
     this.promptTemplates = new Map();
     this.executionModes = new Map();
     this.setupTemplates();
     this.setupModes();
+    this.initializeSkillInterface();
+  }
+
+  /**
+   * 初始化技能接口和适配器
+   */
+  initializeSkillInterface() {
+    this.skillInterface = new SkillInterface(this.baseDir, {
+      enableFallback: true,
+      fallbackMode: 'template',
+      cacheStatus: true,
+    });
+    this.adapters = AdapterFactory.createAllAdapters(this.baseDir);
   }
 
   /**
@@ -286,6 +303,100 @@ class Scheduler {
   }
 
   /**
+   * 通过适配器执行技能
+   * @param {string} skillName - 技能名称
+   * @param {object} params - 参数对象
+   * @returns {Promise<object>} 执行结果
+   */
+  async executeSkill(skillName, params = {}) {
+    try {
+      // 获取对应的适配器
+      const adapter = this.adapters.get(skillName);
+
+      if (!adapter) {
+        // 如果没有适配器，使用 SkillInterface
+        return await this.skillInterface.callSkill(skillName, params);
+      }
+
+      // 使用适配器执行
+      const result = await adapter.execute(params);
+
+      return {
+        success: true,
+        skill: skillName,
+        result,
+        adapter: true,
+      };
+    } catch (error) {
+      // 降级到 SkillInterface
+      return await this.skillInterface.callSkill(skillName, params, {}, error);
+    }
+  }
+
+  /**
+   * 获取技能健康摘要
+   * @returns {Promise<object>} 健康摘要
+   */
+  async getHealthSummary() {
+    const health = await this.skillInterface.getAllSkillsHealth();
+
+    const summary = {
+      total: health.size,
+      available: 0,
+      missing: 0,
+      details: {},
+    };
+
+    for (const [name, status] of health.entries()) {
+      summary.details[name] = {
+        available: status.available,
+        version: status.version,
+        error: status.error,
+      };
+
+      if (status.available) {
+        summary.available++;
+      } else {
+        summary.missing++;
+      }
+    }
+
+    return summary;
+  }
+
+  /**
+   * 检查技能链健康状态
+   * @param {string[]} skillChain - 技能链
+   * @returns {Promise<object>} 健康检查结果
+   */
+  async checkSkillsHealth(skillChain) {
+    const results = {
+      allAvailable: true,
+      skills: {},
+      summary: {
+        total: skillChain.length,
+        available: 0,
+        missing: 0,
+      },
+    };
+
+    for (const skillName of skillChain) {
+      const health = await this.skillInterface.checkSkillHealth(skillName);
+
+      results.skills[skillName] = health;
+
+      if (health.available) {
+        results.summary.available++;
+      } else {
+        results.summary.missing++;
+        results.allAvailable = false;
+      }
+    }
+
+    return results;
+  }
+
+  /**
    * 获取支持的 skill 列表
    * @returns {string[]} skill 名称数组
    */
@@ -322,10 +433,45 @@ class Scheduler {
     const config = this.executionModes.get(mode);
     return config ? { ...config } : null;
   }
+
+  /**
+   * 设置降级模式
+   * @param {string} mode - 降级模式 (template/manual/simulation/error)
+   */
+  setFallbackMode(mode) {
+    this.skillInterface.setFallbackMode(mode);
+  }
+
+  /**
+   * 启用/禁用降级
+   * @param {boolean} enabled - 是否启用
+   */
+  setFallbackEnabled(enabled) {
+    this.skillInterface.setFallbackEnabled(enabled);
+  }
+
+  /**
+   * 清除技能状态缓存
+   */
+  clearSkillCache() {
+    this.skillInterface.clearCache();
+  }
 }
 
-// 创建单例实例
-const schedulerInstance = new Scheduler();
+// 创建单例实例（延迟初始化）
+let schedulerInstance = null;
+
+/**
+ * 获取或创建 Scheduler 实例
+ * @param {string} baseDir - 基础目录路径
+ * @returns {Scheduler} Scheduler 实例
+ */
+function getScheduler(baseDir) {
+  if (!schedulerInstance || schedulerInstance.baseDir !== baseDir) {
+    schedulerInstance = new Scheduler(baseDir);
+  }
+  return schedulerInstance;
+}
 
 /**
  * 导出便捷函数
@@ -334,20 +480,36 @@ const schedulerInstance = new Scheduler();
 /**
  * 生成执行计划
  * @param {object} requirement - 需求对象
+ * @param {string} baseDir - 基础目录路径
  * @returns {object} 执行计划
  */
-export function schedule(requirement) {
-  return schedulerInstance.schedule(requirement);
+export function schedule(requirement, baseDir) {
+  const scheduler = getScheduler(baseDir);
+  return scheduler.schedule(requirement);
 }
 
 /**
  * 生成 skill 调用提示词
  * @param {string} skill - skill 名称
  * @param {object} context - 上下文对象
+ * @param {string} baseDir - 基础目录路径
  * @returns {string} 提示词
  */
-export function generateSkillPrompt(skill, context) {
-  return schedulerInstance.generateSkillPrompt(skill, context);
+export function generateSkillPrompt(skill, context, baseDir) {
+  const scheduler = getScheduler(baseDir);
+  return scheduler.generateSkillPrompt(skill, context);
+}
+
+/**
+ * 执行技能
+ * @param {string} skillName - 技能名称
+ * @param {object} params - 参数对象
+ * @param {string} baseDir - 基础目录路径
+ * @returns {Promise<object>} 执行结果
+ */
+export async function executeSkill(skillName, params, baseDir) {
+  const scheduler = getScheduler(baseDir);
+  return await scheduler.executeSkill(skillName, params);
 }
 
 /**
@@ -355,7 +517,7 @@ export function generateSkillPrompt(skill, context) {
  * @returns {string[]}
  */
 export function getSupportedSkills() {
-  return schedulerInstance.getSupportedSkills();
+  return Object.keys(PROMPT_TEMPLATES);
 }
 
 /**
@@ -363,16 +525,18 @@ export function getSupportedSkills() {
  * @returns {string[]}
  */
 export function getSupportedModes() {
-  return schedulerInstance.getSupportedModes();
+  return Object.keys(EXECUTION_MODES);
 }
 
 /**
  * 添加自定义提示词模板
  * @param {string} skill - skill 名称
  * @param {function} template - 模板函数
+ * @param {string} baseDir - 基础目录路径
  */
-export function addPromptTemplate(skill, template) {
-  schedulerInstance.addPromptTemplate(skill, template);
+export function addPromptTemplate(skill, template, baseDir) {
+  const scheduler = getScheduler(baseDir);
+  scheduler.addPromptTemplate(skill, template);
 }
 
 /**
@@ -381,9 +545,10 @@ export function addPromptTemplate(skill, template) {
  * @returns {object|null}
  */
 export function getModeConfig(mode) {
-  return schedulerInstance.getModeConfig(mode);
+  const modes = EXECUTION_MODES;
+  return modes[mode] ? { ...modes[mode] } : null;
 }
 
-// 导出类和默认实例
-export { Scheduler };
-export default schedulerInstance;
+// 导出类和默认实例工厂
+export { Scheduler, getScheduler };
+export default getScheduler;

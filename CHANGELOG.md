@@ -9,6 +9,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Superpowers 技能集成完成 (2026-05-22)
+
+- **skill-interface.js**: 新增技能接口抽象层
+  - `SkillInterface` 类 - 统一技能调用接口
+  - `callSkill(skillName, params, options)` - 调用技能并处理降级
+  - `checkSkillHealth(skillName)` - 检查单个技能健康状态
+  - `getAllSkillsHealth()` - 获取所有技能健康状态
+  - `handleFallback()` - 处理降级策略
+  - 支持四种降级模式: template, manual, simulation, error
+  - 技能状态缓存机制（60秒 TTL）
+
+- **skill-adapters/**: 新增技能适配器系统
+  - `base.js` - `BaseSkillAdapter` 基类
+  - `brainstorming.js` - `BrainstormingAdapter` 头脑风暴适配器
+  - `debugging.js` - `DebuggingAdapter` 系统化调试适配器
+  - `research.js` - `ResearchAdapter` 信息收集适配器
+  - `code-explorer.js` - `CodeExplorerAdapter` 代码探索适配器
+  - `planning.js` - `PlanningAdapter` 实施规划适配器
+  - `index.js` - `AdapterFactory` 工厂和索引
+  - 适配器功能: 参数验证、预处理、模板生成、结果后处理
+
+- **skill-versions.json**: 新增技能版本管理配置
+  - 记录5个核心技能的版本要求
+  - Claude Code 和 Superpowers 版本依赖
+  - 技能兼容性状态追踪
+
+- **tests/integration/skill-adapters.test.js**: 新增集成测试
+  - 36个测试用例全部通过
+  - 覆盖适配器、接口、路由、调度器集成
+  - 测试性能指标: 适配器创建 <100ms, 计划生成 <50ms
+
+### Changed
+
+#### Superpowers 技能集成 (2026-05-22)
+
+- **scheduler.js**: 集成 SkillInterface 和适配器系统
+  - 添加 `initializeSkillInterface()` - 初始化技能接口和适配器
+  - 添加 `executeSkill(skillName, params)` - 通过适配器执行技能
+  - 添加 `getHealthSummary()` - 获取技能健康摘要
+  - 添加 `checkSkillsHealth(skillChain)` - 检查技能链健康状态
+  - 添加 `setFallbackMode(mode)` - 设置降级模式
+  - 添加 `setFallbackEnabled(enabled)` - 启用/禁用降级
+  - 添加 `clearSkillCache()` - 清除状态缓存
+  - 修改为支持 baseDir 参数的延迟初始化单例模式
+
+- **router.js**: 添加降级模式配置支持
+  - 添加 `FALLBACK_MODES` 枚举
+  - 为每个路由添加 `fallback` 配置
+  - 添加 `getFallbackConfig(type)` - 获取降级配置
+  - 添加 `getSkillFallbackMode(type, skillName)` - 获取技能降级模式
+  - 添加 `isFallbackEnabled(type)` - 检查降级是否启用
+  - 添加 `setFallbackMode(type, mode)` - 设置降级模式
+  - 添加 `setSkillFallbackMode(type, skillName, mode)` - 设置技能降级模式
+
+### Added
+
 #### 技能健康检查系统 (2026-05-22)
 
 - **skills-health.js**: 新增技能健康检查模块
