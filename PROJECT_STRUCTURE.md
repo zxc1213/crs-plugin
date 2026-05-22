@@ -453,15 +453,17 @@ zread version
 **首次生成 Wiki**：
 
 ```bash
-# 在项目根目录执行生成
-zread generate
+# 在项目根目录执行生成（自动确认）
+zread generate -y
+
+# 清除现有草稿重新生成
+zread generate --draft=clear -y
 
 # 选项说明：
-# --resume    恢复之前的草稿（默认）
-# --clear     清除现有草稿重新生成
-# --cancel    取消现有草稿
-# --yes       自动确认所有提示
-zread generate --clear
+# --draft=resume  恢复之前的草稿（默认）
+# --draft=clear   清除现有草稿重新生成
+# --draft=cancel  取消现有草稿
+# -y, --yes        自动确认所有提示
 ```
 
 **查看生成的 Wiki**：
