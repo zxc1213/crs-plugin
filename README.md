@@ -2,37 +2,51 @@
 
 智能需求管理与自动化执行系统，为 Claude Code 提供从需求到测试的全流程管理能力。
 
-## ⚡ 快速安装
+## 🌟 重要提示
 
-### 方式一：npm 全局安装（推荐）
+**ClaudeReqSys 目前有两个版本可供选择**：
+
+| 版本                         | 分支                       | 安装方式          | 适用场景                     |
+| ---------------------------- | -------------------------- | ----------------- | ---------------------------- |
+| **Claude Code 插件** ⭐ 推荐 | `feature/plugin-migration` | `/plugin install` | 原生集成，自动配置，最佳体验 |
+| **npm 全局包**               | `master`                   | `npm install -g`  | 传统方式，需要手动配置       |
+
+---
+
+## ⚡ 快速开始
+
+### 方式一：Claude Code 插件（推荐）⭐
 
 ```bash
-# 直接从 GitHub 安装
-npm install -g github:zxc1213/claude-req-sys
+# 从 feature/plugin-migration 分支安装
+/plugin install https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
 
 # 安装后直接使用
-cd /path/to/your/project
 /req 添加新功能
 ```
 
-> 💡 **优势**：标准 npm 包管理，一键安装，全局可用
+**优势**：
 
-### 方式二：克隆安装
+- ✅ 一键安装，自动配置
+- ✅ hooks 自动生效
+- ✅ 环境变量自动设置
+- ✅ 支持插件版本管理和更新
+
+**详细文档**：[README_PLUGIN.md](README_PLUGIN.md) | [安装指南](INSTALL.md)
+
+### 方式二：npm 全局安装
 
 ```bash
-# 1. 克隆仓库
-git clone https://github.com/zxc1213/claude-req-sys.git claude-req-sys
+# 从 master 分支安装
+npm install -g github:zxc1213/claude-req-sys#master
+
+# 或克隆安装
+git clone https://github.com/zxc1213/claude-req-sys.git -b master claude-req-sys
 cd claude-req-sys
-
-# 2. npm 全局安装
 npm install -g .
-
-# 安装后直接使用
-cd /path/to/your/project
-/req 添加新功能
 ```
 
-> 💡 **优势**：方便开发者修改源码和本地测试
+**注意**：npm 版本需要手动配置 hooks，详见 [VERSIONS.md](VERSIONS.md) 对比。
 
 ## 🚀 特性
 
@@ -55,21 +69,24 @@ cd /path/to/your/project
 
 ## 🔄 更新方式
 
-**npm 安装更新**：
+**Claude Code 插件更新**：
 
 ```bash
-npm install -g github:zxc1213/claude-req-sys
+/plugin update claude-req-sys
+# 或重新安装
+/plugin install --force https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
 ```
 
-**克隆安装更新**：
+**npm 全局包更新**：
 
 ```bash
-cd claude-req-sys
-git pull
-npm install -g .
+npm install -g github:zxc1213/claude-req-sys#master
 ```
 
-**详细安装指南**：[INSTALL.md](INSTALL.md)
+**详细安装指南**：
+
+- **插件版本**：[INSTALL.md](INSTALL.md) | [README_PLUGIN.md](README_PLUGIN.md)
+- **npm 版本**：[VERSIONS.md](VERSIONS.md)
 
 ## 使用
 
@@ -144,25 +161,54 @@ kg-rebuild                   # 重建知识图谱索引
 # 在执行中提出变更，自动触发 req-change
 ```
 
-## 项目结构
+## 📁 项目结构
 
-### 全局安装目录 (~/.claude/)
+### 插件版本结构 (feature/plugin-migration)
 
 ```
-~/.claude/
-├── commands/                   # 全局命令
-│   ├── req.md                  # 需求管理命令
-│   └── metrics.md              # 度量命令
-├── scripts/                    # 全局脚本
-│   └── init-project.sh         # 项目初始化脚本
-└── skills/                     # 符号链接（指向仓库）
-    ├── req-manager.md          # → 仓库/skills/core/
-    ├── req-brainstorm.md
-    ├── req-init.md
-    └── ...                     # 其他 req- 技能
+claude-req-sys/
+├── .claude-plugin/             # 插件清单
+│   └── plugin.json             # 插件配置文件
+├── skills/                     # Skills（12个）
+│   ├── core/                   # 核心需求管理
+│   ├── quality/                # 质量保证
+│   ├── analysis/               # 分析评估
+│   ├── change/                 # 变更处理
+│   └── utils/                  # 辅助工具
+├── commands/                   # Commands（13个）
+├── hooks/                      # Hooks 配置
+│   └── hooks.json
+├── scripts/                    # 核心脚本
+│   ├── requirement-manager/    # 需求管理器
+│   ├── knowledge-graph/        # 向量知识图谱
+│   ├── hooks/                  # 自动化钩子
+│   └── metrics/                # 度量收集
+├── bin/                        # CLI 工具
+├── tests/                      # 测试文件
+├── README_PLUGIN.md            # 插件版本文档
+├── INSTALL.md                  # 安装指南
+├── VERSIONS.md                 # 版本对比
+└── package.json
 ```
 
-### 项目本地目录
+### npm 版本结构 (master)
+
+```
+claude-req-sys/
+├── src/                        # 源文件目录
+│   ├── claude/                 # Claude Code 集成
+│   │   ├── commands/           # 命令定义
+│   │   └── skills/             # 技能集合
+│   ├── scripts/                # 脚本工具
+│   └── config/                 # 配置文件
+├── bin/                        # CLI 命令
+├── scripts/                    # npm 安装脚本
+├── tests/                      # 测试文件
+├── docs/                       # 文档
+└── package.json
+```
+
+### 项目本地目录（通用）
 
 ```
 your-project/
@@ -173,104 +219,69 @@ your-project/
 │   ├── adjustments/            # 需求调整
 │   └── refactorings/           # 重构任务
 └── docs/                       # 项目文档（可选）
-    ├── specs/                  # 需求规格
-    └── guides/                 # 使用指南
 ```
 
-### 仓库结构（开发）
+## 📚 文档
 
-```
-claude-req-sys/
-├── src/                        # 源文件目录
-│   ├── claude/                 # Claude Code 集成
-│   │   ├── commands/           # 命令定义
-│   │   └── skills/             # 技能集合
-│   │       ├── core/           # 核心需求管理
-│   │       ├── quality/        # 质量保证
-│   │       ├── analysis/       # 分析评估
-│   │       ├── change/         # 变更处理
-│   │       └── utils/          # 辅助工具
-│   ├── scripts/                # 脚本工具
-│   │   ├── hooks/              # 自动化钩子
-│   │   ├── metrics/            # 度量收集
-│   │   ├── knowledge-graph/    # 向量知识图谱 ⭐
-│   │   └── requirement-manager/  # 需求管理器
-│   └── config/                 # 配置文件
-│       ├── hooks.json          # hooks 配置
-│       └── req-system-hooks.example.json
-├── bin/                        # CLI 命令
-│   ├── claude-req-init.js      # 初始化命令
-│   ├── claude-req-update.js    # 更新命令
-│   └── kg-cli.js               # 知识图谱 CLI 工具 ⭐
-├── scripts/                    # 管理脚本
-│   ├── npm-install.js          # npm 安装脚本
-│   ├── link-skills.sh          # 技能链接脚本
-│   └── update.sh               # 更新脚本
-├── tests/                      # 测试文件
-├── docs/                       # 文档
-├── package.json
-└── README.md
-```
+### 插件版本 (feature/plugin-migration)
 
-## 文档
+- [README_PLUGIN.md](README_PLUGIN.md) - 插件完整文档
+- [INSTALL.md](INSTALL.md) - 插件安装指南
+- [VERSIONS.md](VERSIONS.md) - 版本对比（插件 vs npm）
 
-- [安装指南](INSTALL.md) — 详细安装说明
-- [用户指南](docs/guides/user-guide.md) — 功能使用说明
-- [设计文档](docs/specs/2026-05-07-design.md) — 系统设计
+### npm 版本 (master)
 
-## 版本
+- [用户指南](docs/guides/user-guide.md) - 功能使用说明
+- [设计文档](docs/specs/2026-05-07-design.md) - 系统设计
 
-v0.6.0 - 向量知识图谱 ⭐ 最新
+## 📋 版本
 
-- ✅ **向量知识图谱**：基于 Fuse.js 实现语义搜索
-- ✅ **智能相似度检测**：自动发现相似需求，避免重复工作
-- ✅ **知识关联遍历**：BFS 算法遍历需求关系网络
-- ✅ **上下文感知推荐**：基于类型、标签、优先级的智能推荐
-- ✅ **CLI 工具集**：kg-search、kg-stats、kg-connections、kg-recommend、kg-rebuild
-- ✅ **自动同步集成**：需求创建/更新/删除时自动同步到知识图谱
-- ✅ **19个专项测试**：确保知识图谱功能稳定可靠
-- ✅ **142个测试用例**：整体测试覆盖率提升
+### 当前版本
 
-v0.5.0 - 全局安装架构 ⭐ 推荐
+| 版本              | 分支                       | 状态    | 说明                       |
+| ----------------- | -------------------------- | ------- | -------------------------- |
+| **v0.6.0 Plugin** | `feature/plugin-migration` | ⭐ 推荐 | Claude Code 插件，原生集成 |
+| **v0.6.0 npm**    | `master`                   | 稳定版  | npm 全局包，传统方式       |
+
+### 插件版本特性 (feature/plugin-migration)
+
+- ✅ **一键安装**：`/plugin install` 自动配置
+- ✅ **自动生效**：hooks 自动合并，无需手动操作
+- ✅ **环境变量**：`CLAUDE_REQ_SYS` 自动设置
+- ✅ **版本管理**：支持插件更新和版本控制
+- ✅ **完整功能**：所有核心功能（需求管理、知识图谱、质量门禁等）
+
+### npm 版本特性 (master)
 
 - ✅ **全局安装**：一次安装，所有项目共享
 - ✅ **项目分离**：工具在全局，数据在项目
-- ✅ **快速更新**：`git pull && bash scripts/link-skills.sh` 即可更新
-- ✅ **init-project**：快速初始化新项目结构
-- ✅ **符号链接**：自动同步最新版本
+- ✅ **手动配置**：需要手动合并 hooks 配置
+- ✅ **完整功能**：所有核心功能（同插件版）
 
-v0.4.0 - 技能管理优化
+### 历史版本
 
-- ✅ **符号链接安装**：参考 mattpocock/skills，使用符号链接管理技能
-- ✅ **分类组织**：技能按功能分类（core/quality/analysis/change/utils）
-- ✅ **快速更新**：`git pull && bash scripts/link-skills.sh` 即可更新
-- ✅ **setup 技能**：一次性初始化配置，交互式设置
-- ✅ **跨平台支持**：提供 Unix (bash) 和 Windows (PowerShell) 脚本
+**v0.6.0 - 向量知识图谱**
 
-v0.3.0 - 系统优化升级
+- ✅ 向量知识图谱：基于 Fuse.js 实现语义搜索
+- ✅ 智能相似度检测：自动发现相似需求
+- ✅ 知识关联遍历：BFS 算法遍历需求关系网络
+- ✅ CLI 工具集：kg-search、kg-stats、kg-connections、kg-recommend、kg-rebuild
+- ✅ 142个测试用例：整体测试覆盖率提升
 
-- ✅ **req-manager**：统一入口，智能路由到最优流程
-- ✅ **req-priority**：科学评估优先级（5维度评分）
-- ✅ **req-quality**：4个质量门禁，自动检查质量标准
-- ✅ **req-unify**：统一文档结构（5文件→2文件）
-- ✅ 命令简化：自动推断类型和模式
-- ✅ 维护成本降低70%
-- ✅ 返工率减少60%
-- ✅ 用户学习成本降低50%
+**v0.5.0 - 全局安装架构**
 
-v0.2.0 - 智能配置合并
+- ✅ 全局安装：一次安装，所有项目共享
+- ✅ 项目分离：工具在全局，数据在项目
+- ✅ 快速更新：`git pull && bash scripts/link-skills.sh`
 
-- ✅ 自动合并 settings.json，不覆盖现有配置
-- ✅ 深度合并 hooks、permissions 等配置
-- ✅ 保留所有现有用户设置
-- ✅ 修复命令文件格式（req.md + 无 name 字段）
+**v0.3.0 - 系统优化升级**
 
-v0.1.0 - 初始版本
+- ✅ req-manager：统一入口，智能路由
+- ✅ req-priority：科学评估优先级
+- ✅ req-quality：4个质量门禁
+- ✅ req-unify：统一文档结构
 
-- ✅ 多类型需求管理
-- ✅ 智能 Skill 集成
-- ✅ 可选自动化 Hooks
-- ✅ 非侵入式安装
+详细版本历史请查看各分支的 CHANGELOG.md。
 
 ## 测试 ⭐ 新增
 

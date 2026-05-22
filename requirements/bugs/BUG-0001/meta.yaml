@@ -1,9 +1,0 @@
-id: BUG-0001
-type: bug
-title: 登录页面在移动端显示异常
-description: 登录页面在移动端显示异常
-created: '2026-05-06T16:50:38.433Z'
-status: open
-priority: medium
-mode: semi
-tags: []
