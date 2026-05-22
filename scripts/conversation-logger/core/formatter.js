@@ -98,3 +98,93 @@ export class ContentFormatter {
     return doc;
   }
 }
+
+/**
+ * 对话记录格式化器
+ */
+export class ConversationFormatter {
+  /**
+   * 格式化为美化格式
+   */
+  formatPretty(conversation) {
+    const lines = [];
+    lines.push('═══════════════════════════════════════════════════════════════');
+    lines.push(`  对话 ID: ${conversation.id}`);
+    lines.push(`  开始时间: ${this.formatDateTime(conversation.startTime)}`);
+    lines.push(`  状态: ${conversation.metadata?.status || 'active'}`);
+    lines.push(`  标签: ${(conversation.metadata?.tags || []).join(' ') || '无'}`);
+    lines.push('═══════════════════════════════════════════════════════════════');
+    lines.push('');
+
+    for (const msg of conversation.messages || []) {
+      const time = this.formatTimestamp(msg.timestamp);
+      const role = this.formatRole(msg.role);
+      lines.push(`[${time}] ${role} ${msg.content}`);
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
+   * 格式化为 Markdown
+   */
+  formatMarkdown(conversation) {
+    const lines = [];
+    lines.push(`# 对话记录: ${conversation.id}\n`);
+    lines.push(`**开始时间**: ${this.formatDateTime(conversation.startTime)}  \n`);
+    lines.push(`**状态**: ${conversation.metadata?.status || 'active'}  \n`);
+    lines.push(`**标签**: ${(conversation.metadata?.tags || []).join(', ') || '无'}\n`);
+    lines.push('## 对话内容\n');
+
+    for (const msg of conversation.messages || []) {
+      const time = this.formatTimestamp(msg.timestamp);
+      const role = this.formatRole(msg.role);
+      lines.push(`### [${time}] ${role}`);
+      lines.push(`${msg.content}\n`);
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
+   * 格式化为紧凑格式
+   */
+  formatCompact(conversation) {
+    const msgCount = conversation.messages?.length || 0;
+    const status = conversation.metadata?.status || 'active';
+    const startTime = this.formatDateTime(conversation.startTime);
+
+    return `${conversation.id} | ${startTime} | ${status} | ${msgCount} 消息`;
+  }
+
+  /**
+   * 格式化日期时间
+   */
+  formatDateTime(isoString) {
+    const date = new Date(isoString);
+    return date.toISOString().substring(0, 19).replace('T', ' ');
+  }
+
+  /**
+   * 格式化时间戳
+   */
+  formatTimestamp(isoString) {
+    const date = new Date(isoString);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  /**
+   * 格式化角色
+   */
+  formatRole(role) {
+    const roles = {
+      user: '👤 用户:',
+      assistant: '🤖 助手:',
+      tool: '🔧 工具:',
+    };
+    return roles[role] || role;
+  }
+}

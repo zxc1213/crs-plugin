@@ -35,3 +35,6 @@ temp/
 
 # ZRead 工作目录（自动生成）
 .zread/
+
+# 对话记录（自动生成）
+.conversations/

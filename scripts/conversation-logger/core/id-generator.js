@@ -36,3 +36,22 @@ export function parseSessionId(sessionId) {
     time: match[2],
   };
 }
+
+/**
+ * ID 生成器类
+ */
+export class IDGenerator {
+  static generate(prefix = 'CONV') {
+    const now = new Date();
+    const date = now.toISOString().slice(0, 10).replace(/-/g, '');
+
+    // 简单的计数器，基于时间戳
+    const count = String(now.getMilliseconds()).padStart(3, '0');
+
+    return `${prefix}-${date}-${count}`;
+  }
+
+  static generateSessionId() {
+    return generateSessionId();
+  }
+}
