@@ -1,4 +1,5 @@
-import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import { expect } from 'chai';
 import { ConversationLogger } from '../../../scripts/conversation-logger/core/logger.js';
 import fs from 'fs-extra';
 
@@ -13,7 +14,7 @@ describe('ConversationLogger', () => {
     await fs.remove(testDir);
   });
 
-  test('应该启动新会话', async () => {
+  it('应该启动新会话', async () => {
     const logger = new ConversationLogger(testDir);
     await logger.startSession('sess-test', { type: 'test' });
 
@@ -21,7 +22,7 @@ describe('ConversationLogger', () => {
     expect(logger.getStatus()).to.equal('active');
   });
 
-  test('应该捕获事件', async () => {
+  it('应该捕获事件', async () => {
     const logger = new ConversationLogger(testDir);
     await logger.startSession('sess-test', {});
     await logger.captureEvent('user_message', { content: '测试' });
@@ -31,7 +32,7 @@ describe('ConversationLogger', () => {
     expect(events[0].content).to.equal('测试');
   });
 
-  test('应该保存会话到文件', async () => {
+  it('应该保存会话到文件', async () => {
     const logger = new ConversationLogger(testDir);
     await logger.startSession('sess-test', {});
     await logger.captureEvent('user_message', { content: '测试' });

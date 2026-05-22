@@ -1,8 +1,9 @@
 import { ContentFormatter } from '../../../scripts/conversation-logger/core/formatter.js';
-import { describe, test, expect } from 'vitest';
+import { describe, it } from 'mocha';
+import { expect } from 'chai';
 
 describe('ContentFormatter', () => {
-  test('应该格式化单个事件为 Markdown', () => {
+  it('应该格式化单个事件为 Markdown', () => {
     const formatter = new ContentFormatter();
     const event = {
       type: 'user_message',
@@ -12,11 +13,11 @@ describe('ContentFormatter', () => {
 
     const markdown = formatter.formatEvent(event);
 
-    expect(markdown).toContain('[14:30:15]');
-    expect(markdown).toContain('新增功能');
+    expect(markdown).include('[14:30:15]');
+    expect(markdown).include('新增功能');
   });
 
-  test('应该格式化工具调用', () => {
+  it('应该格式化工具调用', () => {
     const formatter = new ContentFormatter();
     const event = {
       type: 'tool_use',
@@ -27,10 +28,10 @@ describe('ContentFormatter', () => {
 
     const markdown = formatter.formatEvent(event);
 
-    expect(markdown).toContain('`Read: {"filepath":"package.json"}`');
+    expect(markdown).include('`Read: {"filepath":"package.json"}`');
   });
 
-  test('应该生成完整文档', () => {
+  it('应该生成完整文档', () => {
     const formatter = new ContentFormatter();
     const session = {
       sessionId: 'sess-20260522-143000',
@@ -43,9 +44,9 @@ describe('ContentFormatter', () => {
 
     const doc = formatter.formatDocument(session);
 
-    expect(doc).toContain('# 对话记录');
-    expect(doc).toContain('sess-20260522-143000');
-    expect(doc).toContain('测试');
-    expect(doc).toContain('好的');
+    expect(doc).include('# 对话记录');
+    expect(doc).include('sess-20260522-143000');
+    expect(doc).include('测试');
+    expect(doc).include('好的');
   });
 });

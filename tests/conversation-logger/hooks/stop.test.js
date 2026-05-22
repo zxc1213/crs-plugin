@@ -1,4 +1,5 @@
-import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import { expect } from 'chai';
 import {
   sessionStart,
   getConversationLogger,
@@ -17,7 +18,7 @@ describe('stop Hook', () => {
     await fs.remove(testDir);
   });
 
-  test('应该结束会话并保存记录', async () => {
+  it('应该结束会话并保存记录', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -42,7 +43,7 @@ describe('stop Hook', () => {
     expect(result.summary.toolCallCount).to.equal(1);
   });
 
-  test('应该创建会话文件和元数据文件', async () => {
+  it('应该创建会话文件和元数据文件', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -69,7 +70,7 @@ describe('stop Hook', () => {
     expect(metadata.eventCount).to.equal(1);
   });
 
-  test('应该在没有活跃会话时静默失败', async () => {
+  it('应该在没有活跃会话时静默失败', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -83,7 +84,7 @@ describe('stop Hook', () => {
     expect(result.summary).to.not.exist;
   });
 
-  test('应该在会话结束后将状态设为 idle', async () => {
+  it('应该在会话结束后将状态设为 idle', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -97,7 +98,7 @@ describe('stop Hook', () => {
     expect(logger.getStatus()).to.equal('idle');
   });
 
-  test('应该在保存失败时静默失败', async () => {
+  it('应该在保存失败时静默失败', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -122,7 +123,7 @@ describe('stop Hook', () => {
     logger.endSession = originalEnd;
   });
 
-  test('应该正确计算消息数和工具调用数', async () => {
+  it('应该正确计算消息数和工具调用数', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',

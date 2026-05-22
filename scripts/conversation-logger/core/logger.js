@@ -28,7 +28,7 @@ export class ConversationLogger {
     this.currentSessionId = sessionId || generateSessionId();
 
     // 创建日期目录
-    const parsed = this.currentSessionId.match(/sess-(\d{8})-(\d{6})/);
+    const parsed = this.currentSessionId.match(/sess-(\d{8})-(\d{6})-\d{3}/);
     if (parsed) {
       const date = parsed[1];
       const year = date.slice(0, 4);
@@ -128,7 +128,7 @@ export class ConversationLogger {
       throw new Error('No active session');
     }
 
-    const sessionSummary = this.sessionManager.endSession(this.currentSessionId);
+    const sessionSummary = this.sessionManager.endSessionById(this.currentSessionId);
     const session = this.sessionManager.getSession(this.currentSessionId);
 
     // 生成文件路径
@@ -164,7 +164,7 @@ export class ConversationLogger {
    * @private
    */
   _getFilePath(sessionId) {
-    const parsed = sessionId.match(/sess-(\d{8})-(\d{6})/);
+    const parsed = sessionId.match(/sess-(\d{8})-(\d{6})-\d{3}/);
     if (!parsed) {
       return path.join(this.baseDir, `${sessionId}.md`);
     }

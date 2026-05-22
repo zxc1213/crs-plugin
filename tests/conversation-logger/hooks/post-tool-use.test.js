@@ -1,4 +1,5 @@
-import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import { expect } from 'chai';
 import { sessionStart } from '../../../scripts/conversation-logger/hooks/session-start.js';
 import { postToolUse } from '../../../scripts/conversation-logger/hooks/post-tool-use.js';
 import fs from 'fs-extra';
@@ -14,7 +15,7 @@ describe('postToolUse Hook', () => {
     await fs.remove(testDir);
   });
 
-  test('应该记录工具调用事件', async () => {
+  it('应该记录工具调用事件', async () => {
     // 先启动会话
     const context = {
       workingDirectory: '/test/dir',
@@ -49,7 +50,7 @@ describe('postToolUse Hook', () => {
     expect(events[0].duration).to.equal(150);
   });
 
-  test('应该在没有活跃会话时静默失败', async () => {
+  it('应该在没有活跃会话时静默失败', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -67,7 +68,7 @@ describe('postToolUse Hook', () => {
     expect(hookResult.continue).to.be.true;
   });
 
-  test('应该在记录器抛出错误时静默失败', async () => {
+  it('应该在记录器抛出错误时静默失败', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
@@ -100,7 +101,7 @@ describe('postToolUse Hook', () => {
     logger.captureEvent = originalCapture;
   });
 
-  test('应该记录多个工具调用', async () => {
+  it('应该记录多个工具调用', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',

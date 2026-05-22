@@ -1,4 +1,5 @@
-import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import { expect } from 'chai';
 import {
   sessionStart,
   getConversationLogger,
@@ -16,7 +17,7 @@ describe('sessionStart Hook', () => {
     await fs.remove(testDir);
   });
 
-  test('应该初始化记录器并返回 sessionId', async () => {
+  it('应该初始化记录器并返回 sessionId', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'feature/test',
@@ -34,7 +35,7 @@ describe('sessionStart Hook', () => {
     expect(logger.getStatus()).to.equal('active');
   });
 
-  test('应该保存会话元数据', async () => {
+  it('应该保存会话元数据', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'feature/test',
@@ -52,7 +53,7 @@ describe('sessionStart Hook', () => {
     expect(metadata.type).to.equal('session');
   });
 
-  test('多次调用应该创建新会话', async () => {
+  it('多次调用应该创建新会话', async () => {
     const context = {
       workingDirectory: '/test/dir',
       gitBranch: 'master',
