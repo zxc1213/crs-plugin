@@ -3,14 +3,14 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Processor } from '../../src/scripts/requirement-manager/core/processor.js';
-import { reset as resetIdGenerator } from '../../src/scripts/requirement-manager/utils/id-generator.js';
+import { Processor } from '../../scripts/requirement-manager/core/processor.js';
+import { reset as resetIdGenerator } from '../../scripts/requirement-manager/utils/id-generator.js';
 import {
   init,
   cleanup,
   readMeta,
   exists,
-} from '../../src/scripts/requirement-manager/utils/storage.js';
+} from '../../scripts/requirement-manager/utils/storage.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

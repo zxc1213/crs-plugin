@@ -63,24 +63,24 @@ kg-rebuild                    # 重建索引
 
 ### 关键模块
 
-**需求处理器** (`src/scripts/requirement-manager/core/processor.js`)
+**需求处理器** (`scripts/requirement-manager/core/processor.js`)
 
 - `Processor.create()` - 创建新需求，生成 ID（如 FEAT-20260514-001）
 - `Processor.update()` - 更新需求状态
 - `Processor.parseType()` - 解析命令输入，自动推断类型和模式
 
-**路由器** (`src/scripts/requirement-manager/core/router.js`)
+**路由器** (`scripts/requirement-manager/core/router.js`)
 
 - 管理 5 种需求类型的路由配置：feature、bug、question、adjustment、refactor
 - 每种类型对应不同的 primarySkill 和 phases
 
-**知识图谱** (`src/scripts/knowledge-graph/index.js`)
+**知识图谱** (`scripts/knowledge-graph/index.js`)
 
 - `KnowledgeGraph.initialize()` - 扫描所有需求目录构建索引
 - `KnowledgeGraph.findSimilarRequirements()` - 基于 Fuse.js 的语义搜索
 - `KnowledgeGraph.getKnowledgeConnections()` - BFS 算法遍历需求关系网络
 
-**Hooks 集成** (`src/scripts/hooks/`)
+**Hooks 集成** (`scripts/hooks/`)
 
 - `post-req-update.js` - PostToolUse 钩子，记录工具调用到 execution.log
 - `stop-req-summary.js` - Stop 钩子，生成需求执行总结
@@ -88,29 +88,48 @@ kg-rebuild                    # 重建索引
 ## 文件结构
 
 ```
-src/
-├── claude/                    # Claude Code 集成
-│   ├── commands/              # 自定义命令 (req.md, metrics.md)
-│   └── skills/                # 技能定义（按功能分类）
-│       ├── core/              # 核心需求管理
-│       ├── quality/           # 质量保证
-│       ├── analysis/          # 分析评估
-│       └── change/            # 变更处理
-├── scripts/                   # 脚本工具
-│   ├── requirement-manager/   # 需求管理器核心
-│   │   ├── core/              # processor.js, router.js, scheduler.js
-│   │   ├── optimization/      # optimizer.js, evaluator.js, upgrader.js
-│   │   └── utils/             # storage.js, logger.js, id-generator.js
-│   ├── knowledge-graph/       # 向量知识图谱
-│   ├── hooks/                 # 自动化钩子
-│   └── metrics/               # 度量收集
-└── config/                    # 配置文件
-    └── hooks.json             # hooks 配置模板
+scripts/                       # 核心脚本工具
+├── requirement-manager/       # 需求管理器核心
+│   ├── core/                  # processor.js, router.js, scheduler.js
+│   ├── optimization/          # optimizer.js, evaluator.js, upgrader.js
+│   └── utils/                 # storage.js, logger.js, id-generator.js
+├── knowledge-graph/           # 向量知识图谱
+├── hooks/                     # 自动化钩子
+└── metrics/                   # 度量收集
 
-bin/                            # CLI 命令
-├── claude-req-init.js         # 初始化命令
-├── claude-req-update.js       # 更新命令
+skills/                        # Claude Code 技能定义
+├── core/                      # 核心需求管理
+│   ├── req-manager/           # 智能需求管理
+│   ├── req-brainstorm/        # 深度需求分析
+│   └── req-init/              # 需求系统初始化
+├── quality/                   # 质量保证
+│   ├── req-quality/           # 质量门禁
+│   ├── req-test-plan/         # 测试策略
+│   └── req-verify/            # 需求验证
+├── analysis/                  # 分析评估
+│   ├── req-priority/          # 优先级评估
+│   └── req-metrics/           # 度量分析
+├── change/                    # 变更处理
+│   ├── req-change/            # 变更管理
+│   └── req-migrate/           # 需求迁移
+└── utils/                     # 辅助工具
+    └── req-unify/             # 文档统一
+
+commands/                      # Claude Code 命令定义
+├── req.md                     # 主命令
+├── req-init.md                # 初始化命令
+├── req-update.md              # 更新命令
+├── req-priority.md            # 优先级评估
+├── req-quality.md             # 质量检查
+└── ...                        # 其他命令
+
+bin/                           # CLI 工具
+├── claude-req-init            # 初始化命令
+├── claude-req-update          # 更新命令
 └── kg-cli.js                  # 知识图谱 CLI
+
+hooks/                         # Hooks 配置
+└── hooks.json                 # hooks 配置文件
 
 tests/                         # 测试套件（142个测试用例）
 ├── test-import.test.js        # 导入测试
@@ -180,7 +199,7 @@ Fuse.js 提供轻量级的模糊搜索能力，对于需求管理场景足够：
 
 ### Hooks 配置
 
-项目提供 hooks 配置模板（`src/config/hooks.json`），但**不会自动合并到用户 settings.json**。
+项目提供 hooks 配置模板（`hooks/hooks.json`），但**不会自动合并到用户 settings.json**。
 
 如需启用自动化功能（需求跟踪、会话总结），需手动将 hooks 配置合并到 `.claude/settings.json`。
 

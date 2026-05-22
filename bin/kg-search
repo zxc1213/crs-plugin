@@ -10,7 +10,7 @@
  *   kg-rebuild                 重建索引
  */
 
-import { getKnowledgeGraph, rebuildKnowledgeGraph } from '../src/scripts/knowledge-graph/index.js';
+import { getKnowledgeGraph, rebuildKnowledgeGraph } from '../scripts/knowledge-graph/index.js';
 import { resolve } from 'path';
 
 const requirementsPath = resolve('.requirements');

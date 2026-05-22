@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import path from 'path';
 import fs from 'fs/promises';
-import { info, warn, error, success } from '../../src/scripts/requirement-manager/utils/logger.js';
+import { info, warn, error, success } from '../../scripts/requirement-manager/utils/logger.js';
 
 const TEST_BASE_DIR = path.join(__dirname, '../temp-test-logger');
 

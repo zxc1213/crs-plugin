@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { KnowledgeGraph } from '../../src/scripts/knowledge-graph/index.js';
+import { KnowledgeGraph } from '../../scripts/knowledge-graph/index.js';
 import { mkdirSync, writeFileSync, rmSync } from 'fs';
 import { join } from 'path';
 

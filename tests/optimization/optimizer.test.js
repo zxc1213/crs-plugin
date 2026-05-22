@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'vitest';
 import { expect } from 'vitest';
 import fs from 'node:fs/promises';
 import yaml from 'js-yaml';
-import { Optimizer } from '../../src/scripts/requirement-manager/optimization/optimizer.js';
+import { Optimizer } from '../../scripts/requirement-manager/optimization/optimizer.js';
 
 describe('Optimizer', () => {
   const testDir = '.test-optimizer';

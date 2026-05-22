@@ -47,7 +47,7 @@ ClaudeReqSys 采用**双重使用机制**：
    - Skills 之间的自动调用链保持不变
 
 2. **Skills 独立存在**
-   - `src/claude/skills/` 中的 Skills 文件保持不变
+   - `skills/` 目录中的 Skills 文件保持不变
    - Skills 之间的引用通过 skill 名称，不依赖命令文件
    - 自动触发逻辑硬编码在 Skills 中
 

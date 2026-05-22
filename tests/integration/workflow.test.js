@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'vitest';
 import { expect } from 'vitest';
 import fs from 'node:fs/promises';
 import yaml from 'js-yaml';
-import RequirementManager from '../../src/scripts/requirement-manager/index.js';
+import RequirementManager from '../../scripts/requirement-manager/index.js';
 
 describe('需求管理系统集成测试', () => {
   const testDir = '.test-workflow';

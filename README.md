@@ -2,20 +2,9 @@
 
 智能需求管理与自动化执行系统，为 Claude Code 提供从需求到测试的全流程管理能力。
 
-## 🌟 重要提示
-
-**ClaudeReqSys 目前有两个版本可供选择**：
-
-| 版本                         | 分支                       | 安装方式          | 适用场景                     |
-| ---------------------------- | -------------------------- | ----------------- | ---------------------------- |
-| **Claude Code 插件** ⭐ 推荐 | `feature/plugin-migration` | `/plugin install` | 原生集成，自动配置，最佳体验 |
-| **npm 全局包**               | `master`                   | `npm install -g`  | 传统方式，需要手动配置       |
-
----
-
 ## ⚡ 快速开始
 
-### 方式一：Claude Code 插件（推荐）⭐
+### Claude Code 插件安装
 
 ```bash
 # 从 feature/plugin-migration 分支安装
@@ -33,20 +22,6 @@
 - ✅ 支持插件版本管理和更新
 
 **详细文档**：[README_PLUGIN.md](README_PLUGIN.md) | [安装指南](INSTALL.md)
-
-### 方式二：npm 全局安装
-
-```bash
-# 从 master 分支安装
-npm install -g github:zxc1213/claude-req-sys#master
-
-# 或克隆安装
-git clone https://github.com/zxc1213/claude-req-sys.git -b master claude-req-sys
-cd claude-req-sys
-npm install -g .
-```
-
-**注意**：npm 版本需要手动配置 hooks，详见 [VERSIONS.md](VERSIONS.md) 对比。
 
 ## 🚀 特性
 
@@ -69,24 +44,11 @@ npm install -g .
 
 ## 🔄 更新方式
 
-**Claude Code 插件更新**：
-
 ```bash
 /plugin update claude-req-sys
 # 或重新安装
 /plugin install --force https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
 ```
-
-**npm 全局包更新**：
-
-```bash
-npm install -g github:zxc1213/claude-req-sys#master
-```
-
-**详细安装指南**：
-
-- **插件版本**：[INSTALL.md](INSTALL.md) | [README_PLUGIN.md](README_PLUGIN.md)
-- **npm 版本**：[VERSIONS.md](VERSIONS.md)
 
 ## 使用
 
@@ -163,8 +125,6 @@ kg-rebuild                   # 重建知识图谱索引
 
 ## 📁 项目结构
 
-### 插件版本结构 (feature/plugin-migration)
-
 ```
 claude-req-sys/
 ├── .claude-plugin/             # 插件清单
@@ -187,24 +147,6 @@ claude-req-sys/
 ├── tests/                      # 测试文件
 ├── README_PLUGIN.md            # 插件版本文档
 ├── INSTALL.md                  # 安装指南
-├── VERSIONS.md                 # 版本对比
-└── package.json
-```
-
-### npm 版本结构 (master)
-
-```
-claude-req-sys/
-├── src/                        # 源文件目录
-│   ├── claude/                 # Claude Code 集成
-│   │   ├── commands/           # 命令定义
-│   │   └── skills/             # 技能集合
-│   ├── scripts/                # 脚本工具
-│   └── config/                 # 配置文件
-├── bin/                        # CLI 命令
-├── scripts/                    # npm 安装脚本
-├── tests/                      # 测试文件
-├── docs/                       # 文档
 └── package.json
 ```
 
@@ -223,42 +165,32 @@ your-project/
 
 ## 📚 文档
 
-### 插件版本 (feature/plugin-migration)
-
 - [README_PLUGIN.md](README_PLUGIN.md) - 插件完整文档
 - [INSTALL.md](INSTALL.md) - 插件安装指南
-- [VERSIONS.md](VERSIONS.md) - 版本对比（插件 vs npm）
-
-### npm 版本 (master)
-
-- [用户指南](docs/guides/user-guide.md) - 功能使用说明
-- [设计文档](docs/specs/2026-05-07-design.md) - 系统设计
+- [CLAUDE.md](CLAUDE.md) - Claude Code 项目指导
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - 项目结构说明
 
 ## 📋 版本
 
 ### 当前版本
 
-| 版本              | 分支                       | 状态    | 说明                       |
-| ----------------- | -------------------------- | ------- | -------------------------- |
-| **v0.6.0 Plugin** | `feature/plugin-migration` | ⭐ 推荐 | Claude Code 插件，原生集成 |
-| **v0.6.0 npm**    | `master`                   | 稳定版  | npm 全局包，传统方式       |
+**v0.7.0** - `feature/plugin-migration` 分支
 
-### 插件版本特性 (feature/plugin-migration)
+### 最新特性
 
 - ✅ **一键安装**：`/plugin install` 自动配置
 - ✅ **自动生效**：hooks 自动合并，无需手动操作
 - ✅ **环境变量**：`CLAUDE_REQ_SYS` 自动设置
 - ✅ **版本管理**：支持插件更新和版本控制
-- ✅ **完整功能**：所有核心功能（需求管理、知识图谱、质量门禁等）
+- ✅ **完整功能**：需求管理、知识图谱、质量门禁等
 
-### npm 版本特性 (master)
+### 版本历史
 
-- ✅ **全局安装**：一次安装，所有项目共享
-- ✅ **项目分离**：工具在全局，数据在项目
-- ✅ **手动配置**：需要手动合并 hooks 配置
-- ✅ **完整功能**：所有核心功能（同插件版）
+**v0.7.0 - 计划同步优化**
 
-### 历史版本
+- ✅ 精简进度区块，移除冗余状态信息
+- ✅ 验收标准章节自动同步功能
+- ✅ 文档结构优化，消除重复
 
 **v0.6.0 - 向量知识图谱**
 
@@ -266,77 +198,8 @@ your-project/
 - ✅ 智能相似度检测：自动发现相似需求
 - ✅ 知识关联遍历：BFS 算法遍历需求关系网络
 - ✅ CLI 工具集：kg-search、kg-stats、kg-connections、kg-recommend、kg-rebuild
-- ✅ 142个测试用例：整体测试覆盖率提升
 
-**v0.5.0 - 全局安装架构**
-
-- ✅ 全局安装：一次安装，所有项目共享
-- ✅ 项目分离：工具在全局，数据在项目
-- ✅ 快速更新：`git pull && bash scripts/link-skills.sh`
-
-**v0.3.0 - 系统优化升级**
-
-- ✅ req-manager：统一入口，智能路由
-- ✅ req-priority：科学评估优先级
-- ✅ req-quality：4个质量门禁
-- ✅ req-unify：统一文档结构
-
-详细版本历史请查看各分支的 CHANGELOG.md。
-
-## 测试 ⭐ 新增
-
-项目包含完整的测试套件，确保代码质量和功能稳定性。
-
-### 运行测试
-
-```bash
-# 运行所有测试
-npm test
-
-# 运行测试并查看覆盖率
-npm run test:coverage
-
-# 监视模式（开发时使用）
-npm run test:watch
-
-# 显示详细输出
-npm run test:verbose
-```
-
-### 测试结构
-
-```
-tests/
-├── test-import.test.js     # 导入测试（1个测试）
-├── utils/                  # 工具函数测试
-│   ├── id-generator.test.js    # ID生成器测试（4个测试）
-│   ├── logger.test.js          # 日志工具测试（4个测试）
-│   └── storage.test.js         # 存储工具测试（4个测试）
-├── core/                   # 核心功能测试
-│   └── processor.test.js       # 需求处理器测试（32个测试）
-├── knowledge-graph/       # 知识图谱测试 ⭐
-│   └── index.test.js           # 知识图谱测试（19个测试）
-├── optimization/           # 优化模块测试
-│   ├── optimizer.test.js       # 优化器测试（12个测试）
-│   ├── evaluator.test.js       # 评估器测试（21个测试）
-│   └── upgrader.test.js        # 升级器测试（8个测试）
-└── integration/            # 集成测试
-    └── workflow.test.js        # 工作流测试（18个测试）
-```
-
-### 测试覆盖
-
-- ✅ **142个测试用例**全部通过（包含19个知识图谱测试）⭐
-- ✅ **11个测试文件**覆盖所有核心模块
-- ✅ **集成测试**确保端到端功能正常
-- ✅ **知识图谱专项测试**确保语义搜索和推荐功能稳定 ⭐
-
-### 测试最佳实践
-
-1. **运行测试前提交代码**：确保测试环境干净
-2. **测试失败时**：检查修改是否影响现有功能
-3. **添加新功能**：同时添加对应测试用例
-4. **CI/CD**：GitHub Actions 自动运行所有测试
+详细版本历史请查看 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 开发指南
 

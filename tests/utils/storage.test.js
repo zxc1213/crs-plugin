@@ -8,7 +8,7 @@ import {
   readMeta,
   writeMeta,
   cleanup,
-} from '../../src/scripts/requirement-manager/utils/storage.js';
+} from '../../scripts/requirement-manager/utils/storage.js';
 
 const TEST_BASE_DIR = path.join(__dirname, '../temp-test-storage');
 

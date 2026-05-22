@@ -44,7 +44,7 @@ if (needsGlobalSetup) {
 
     // 复制命令文件
     console.log('📋 安装命令文件...');
-    const commandsDir = path.join(pkgDir, 'src', 'claude', 'commands');
+    const commandsDir = path.join(pkgDir, 'commands');
     if (fs.existsSync(commandsDir)) {
       const files = fs.readdirSync(commandsDir);
       files.forEach((file) => {
@@ -57,7 +57,7 @@ if (needsGlobalSetup) {
 
     // 复制 hooks 配置
     console.log('⚙️  安装 hooks 配置...');
-    const hooksJson = path.join(pkgDir, 'src', 'config', 'hooks.json');
+    const hooksJson = path.join(pkgDir, 'hooks', 'hooks.json');
     if (fs.existsSync(hooksJson)) {
       fs.copyFileSync(hooksJson, path.join(GLOBAL_CLAUDE, 'hooks.json'));
       console.log('  ✓ hooks 配置');
@@ -65,7 +65,7 @@ if (needsGlobalSetup) {
 
     // 复制 hooks 脚本
     console.log('🔧 安装 hooks 脚本...');
-    const hooksDir = path.join(pkgDir, 'src', 'scripts', 'hooks');
+    const hooksDir = path.join(pkgDir, 'scripts', 'hooks');
     if (fs.existsSync(hooksDir)) {
       const files = fs.readdirSync(hooksDir);
       files.forEach((file) => {
@@ -81,7 +81,7 @@ if (needsGlobalSetup) {
 
     // 创建技能符号链接
     console.log('🔗 链接技能文件...');
-    const skillsDir = path.join(pkgDir, 'src', 'claude', 'skills');
+    const skillsDir = path.join(pkgDir, 'skills');
     if (fs.existsSync(skillsDir)) {
       const skills = fs.readdirSync(skillsDir, { withFileTypes: true });
 

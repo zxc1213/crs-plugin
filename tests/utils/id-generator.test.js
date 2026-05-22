@@ -1,9 +1,5 @@
 import { describe, it, before, beforeEach, expect } from 'vitest';
-import {
-  generate,
-  parse,
-  reset,
-} from '../../src/scripts/requirement-manager/utils/id-generator.js';
+import { generate, parse, reset } from '../../scripts/requirement-manager/utils/id-generator.js';
 
 describe('ID Generator Utility', () => {
   beforeEach(async () => {

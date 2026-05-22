@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'vitest';
 import { expect } from 'vitest';
 import fs from 'node:fs/promises';
 import yaml from 'js-yaml';
-import { Evaluator } from '../../src/scripts/requirement-manager/optimization/evaluator.js';
+import { Evaluator } from '../../scripts/requirement-manager/optimization/evaluator.js';
 
 describe('Evaluator', () => {
   const testDir = '.test-evaluator';
