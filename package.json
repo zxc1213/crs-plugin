@@ -28,5 +28,19 @@
   "bugs": {
     "url": "https://github.com/zxc1213/claude-req-sys/issues"
   },
-  "homepage": "https://github.com/zxc1213/claude-req-sys#readme"
+  "homepage": "https://github.com/zxc1213/claude-req-sys#readme",
+  "dependencies": {
+    "fuse.js": "^7.0.0",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "chai": "^5.1.2",
+    "eslint": "^9.18.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "mocha": "^11.1.0",
+    "prettier": "^3.4.2"
+  }
 }
