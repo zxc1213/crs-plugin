@@ -354,58 +354,116 @@ Git 钩子配置，自动化代码质量检查。
 
 ### Code Review Graph - 代码知识图谱
 
-项目集成了 **code-review-graph**，提供基于代码依赖关系的智能分析和可视化。
+项目集成了 **code-review-graph**，提供基于代码依赖关系的智能分析和可视化，减少 AI 编码时的 token 消耗。
+
+#### 安装和配置
+
+```bash
+# 安装 code-review-graph
+pip install code-review-graph
+
+# 自动检测并配置所有支持的平台（Codex、Claude Code、Cursor 等）
+code-review-graph install
+
+# 仅配置特定平台
+code-review-graph install --platform claude-code
+```
 
 #### 手动触发和更新
 
-**完整构建**：
+**首次构建**：
 
 ```bash
-# 使用 MCP 工具构建完整图谱
-mcp__code-review-graph__build_or_update_graph_tool
-  full_rebuild=true
-  repo_root="E:\\AI_Project\\ClaudeReqSys"
-  postprocess="full"
+# 解析整个代码库（首次使用）
+code-review-graph build
+
+# 首次构建约 10 秒（500 个文件项目）
+# 支持的语言：Python, TypeScript, JavaScript, Go, Rust, Java, C#, Ruby, PHP 等 23 种语言
 ```
 
-**增量更新**（推荐，仅处理变更文件）：
+**增量更新**（推荐，自动触发）：
 
 ```bash
-# 增量更新（默认）
-mcp__code-review-graph__build_or_update_graph_tool
-  full_rebuild=false
-  repo_root="E:\\AI_Project\\ClaudeReqSys"
-  base="HEAD~1"  # 与指定 commit 比较
+# 增量更新（仅变更文件，不到 2 秒）
+code-review-graph update
+
+# 查看图统计信息
+code-review-graph status
+```
+
+**监听模式**（持续更新）：
+
+```bash
+# 文件变更时自动更新
+code-review-graph watch
 ```
 
 **重新生成 Wiki**：
 
 ```bash
-# 强制重新生成所有 Wiki 页面
-mcp__code-review-graph__generate_wiki_tool
-  repo_root="E:\\AI_Project\\ClaudeReqSys"
-  force=true
+# 从社区结构生成 Markdown Wiki
+code-review-graph wiki
+
+# 强制重新生成
+code-review-graph wiki --force
 ```
 
-#### 查询代码图谱
+#### 查询和分析
+
+**影响半径分析**：
 
 ```bash
-# 获取架构概览
-mcp__code-review-graph__get_architecture_overview_tool
+# 变更文件的影响半径
+code-review-graph detect-changes
+
+# 查看受变更影响的执行流
+code-review-graph affected-flows <file_path>
+```
+
+**可视化**：
+
+```bash
+# 生成交互式 HTML 图
+code-review-graph visualize
+
+# 导出为其他格式
+code-review-graph visualize --format graphml    # GraphML (Gephi/yEd)
+code-review-graph visualize --format svg        # SVG 静态图
+code-review-graph visualize --format obsidian  # Obsidian 知识库
+code-review-graph visualize --format cypher     # Neo4j Cypher
+```
+
+**架构分析**：
+
+```bash
+# 获取架构概览（自动生成架构图）
+code-review-graph architecture
 
 # 列出代码社区
-mcp__code-review-graph__list_communities_tool
-  sort_by="size"  # 按大小排序: size/cohesion/name
+code-review-graph communities
 
-# 查找代码实体（语义搜索）
-mcp__code-review-graph__semantic_search_nodes_tool
-  query="需求处理器"
-  limit=20
+# 查找架构热点（连接最多的节点）
+code-review-graph hubs
 
-# 查询代码关系
-mcp__code-review-graph__query_graph_tool
-  pattern="callees_of"  # callers_of, callees_of, imports_of, children_of
-  target="Processor"
+# 查找架构瓶颈（Bridge 节点）
+code-review-graph bridges
+```
+
+**搜索和查询**：
+
+```bash
+# 语义搜索代码实体
+code-review-graph search "需求处理器"
+
+# 查找大型函数
+code-review-graph large-functions --min-lines 50
+
+# 列出执行流
+code-review-graph flows
+
+# 跨仓库搜索（需先注册多个仓库）
+code-review-graph register <repo_path>
+code-review-graph cross-repo "function_name"
 ```
 
 #### 图谱统计
@@ -419,6 +477,27 @@ mcp__code-review-graph__query_graph_tool
 - 执行流: 57 个
 - Wiki 页面: 12 个
 
+#### AI 助手集成
+
+图构建完成后，在 AI 助手中直接使用：
+
+```
+Build the code review graph for this project
+```
+
+可用的 MCP 工具（28 个）：
+
+- `build_or_update_graph_tool` - 构建或增量更新
+- `get_minimal_context_tool` - 超紧凑上下文
+- `get_impact_radius_tool` - 影响半径
+- `get_review_context_tool` - 审查上下文
+- `query_graph_tool` - 查询调用关系
+- `traverse_graph_tool` - 图遍历
+- `semantic_search_nodes_tool` - 语义搜索
+- `list_communities_tool` - 代码社区
+- `get_architecture_overview_tool` - 架构概览
+- 等等...
+
 #### Wiki 文档
 
 生成的 Wiki 页面存储在 `.code-review-graph/wiki/` 目录：
@@ -430,6 +509,10 @@ ls .code-review-graph/wiki/
 # 查看特定社区的 Wiki
 cat .code-review-graph/wiki/requirement-manager.md
 ```
+
+#### 官方文档
+
+详细使用说明：[https://github.com/tirth8205/code-review-graph/blob/main/README.zh-CN.md](https://github.com/tirth8205/code-review-graph/blob/main/README.zh-CN.md)
 
 ### ZRead - GitHub 代码阅读和 Wiki 生成
 
