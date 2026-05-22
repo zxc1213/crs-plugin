@@ -7,7 +7,6 @@
  * 功能：
  * - syncPlanStatus() - 同步整体状态到进度区块
  * - syncAcceptanceCriteria() - 同步验收标准复选框
- * - syncMetadataSection() - 同步元数据章节状态
  */
 
 import { readMeta } from './storage.js';
@@ -15,18 +14,11 @@ import path from 'path';
 import fs from 'fs/promises';
 
 /**
- * 进度区块模板
+ * 进度区块模板（精简版）
  */
 const PROGRESS_BLOCK_TEMPLATE = `## 实时进度
 
-> **当前状态**: \`{{STATUS}}\` (更新于: {{UPDATED_AT}})
-> **完成度**: {{COMPLETION_PERCENT}}%
->
-> **状态说明**:
-> - \`open\`: 未开始
-> - \`in_progress\`: 进行中
-> - \`completed\`: 已完成
-> - \`blocked\`: 已阻塞
+> **状态**: \`{{STATUS}}\` | **完成度**: {{COMPLETION_PERCENT}}% | **更新**: {{UPDATED_AT}}
 
 ---
 
@@ -83,8 +75,6 @@ export async function syncPlanStatus(baseDir, reqPath) {
 
     // 同步验收标准章节（无论是否有进度区块）
     updatedPlan = syncAcceptanceCriteria(updatedPlan, meta.status);
-    // 同步元数据章节状态（无论是否有进度区块）
-    updatedPlan = syncMetadataSection(updatedPlan, meta.status);
 
     await fs.writeFile(planPath, updatedPlan, 'utf-8');
     return true;
@@ -201,39 +191,4 @@ function syncAcceptanceCriteria(planContent, status) {
 
   // 替换验收标准章节
   return planContent.replace(acceptanceRegex, updatedSection);
-}
-
-/**
- * 同步元数据章节的状态行
- * @param {string} planContent - plan.md 内容
- * @param {string} status - 需求状态
- * @returns {string} 更新后的 plan.md 内容
- */
-function syncMetadataSection(planContent, status) {
-  // 查找元数据章节
-  const metadataRegex = /## 元数据[\s\S]*?(?=\n## |\n---|$)/;
-
-  const match = planContent.match(metadataRegex);
-  if (!match) {
-    // 没有元数据章节，返回原内容
-    return planContent;
-  }
-
-  const metadataSection = match[0];
-
-  // 查找状态行并替换
-  // 匹配格式: - **状态**: xxx
-  const statusLineRegex = /^- \*\*状态\*\*:\s*\S+$/gm;
-
-  // 检查是否有状态行
-  if (!statusLineRegex.test(metadataSection)) {
-    // 没有状态行，返回原内容
-    return planContent;
-  }
-
-  // 替换状态行
-  const updatedSection = metadataSection.replace(statusLineRegex, `- **状态**: ${status}`);
-
-  // 替换元数据章节
-  return planContent.replace(metadataRegex, updatedSection);
 }
