@@ -32,3 +32,6 @@ temp/
 
 # ClaudeReqSys 安装目录（自动生成）
 .claude/
+
+# ZRead 工作目录（自动生成）
+.zread/
