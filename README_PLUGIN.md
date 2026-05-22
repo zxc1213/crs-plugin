@@ -11,17 +11,17 @@
 
 ### 安装
 
-**从 GitHub 安装**（推荐）:
+**从 GitHub 分支安装**（推荐）:
 
 ```bash
-# 从 GitHub 仓库安装
-/plugin install https://github.com/zxc1213/claude-req-sys
+# 从 feature/plugin-migration 分支安装插件版本
+/plugin install https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
 
-# 或者使用 git+ 协议
-/plugin install git+https://github.com/zxc1213/claude-req-sys.git
+# 或者使用 git+ 协议指定分支
+/plugin install git+https://github.com/zxc1213/claude-req-sys.git#feature/plugin-migration
 
 # 或者使用 ssh 协议（如果你有写权限）
-/plugin install git+ssh://git@github.com/zxc1213/claude-req-sys.git
+/plugin install git+ssh://git@github.com/zxc1213/claude-req-sys.git#feature/plugin-migration
 ```
 
 **本地测试**:
@@ -141,7 +141,7 @@ kg-rebuild
 2. **安装插件版本**:
 
    ```bash
-   /plugin install https://github.com/zxc1213/claude-req-sys
+   /plugin install https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
    ```
 
 3. **数据兼容性**: 现有的 `.requirements/` 目录完全兼容，无需迁移
