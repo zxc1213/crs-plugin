@@ -29,6 +29,17 @@
     "url": "https://github.com/zxc1213/claude-req-sys/issues"
   },
   "homepage": "https://github.com/zxc1213/claude-req-sys#readme",
+  "bin": {
+    "claude-req-init": "bin/claude-req-init.js",
+    "claude-req-update": "bin/claude-req-update.js",
+    "claude-req-track": "bin/claude-req-track.js",
+    "claude-req-skill-health": "bin/claude-req-skill-health.js",
+    "kg-search": "bin/kg-cli.js",
+    "kg-stats": "bin/kg-cli.js",
+    "kg-connections": "bin/kg-cli.js",
+    "kg-recommend": "bin/kg-cli.js",
+    "kg-rebuild": "bin/kg-cli.js"
+  },
   "dependencies": {
     "cli-table3": "^0.6.5",
     "fs-extra": "^11.2.0",
@@ -36,7 +47,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.0",
     "chai": "^5.1.2",
     "eslint": "^9.18.0",
     "husky": "^9.1.7",
