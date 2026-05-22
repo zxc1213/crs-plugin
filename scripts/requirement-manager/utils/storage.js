@@ -13,13 +13,13 @@ import yaml from 'js-yaml';
 export async function init(baseDir) {
   const dirs = [
     baseDir,
-    path.join(baseDir, 'requirements'),
-    path.join(baseDir, 'requirements', 'features'),
-    path.join(baseDir, 'requirements', 'bugs'),
-    path.join(baseDir, 'requirements', 'questions'),
-    path.join(baseDir, 'requirements', 'adjustments'),
-    path.join(baseDir, 'requirements', 'refactors'),
-    path.join(baseDir, 'requirements', 'tech-debt'),
+    path.join(baseDir, '.requirements'),
+    path.join(baseDir, '.requirements', 'features'),
+    path.join(baseDir, '.requirements', 'bugs'),
+    path.join(baseDir, '.requirements', 'questions'),
+    path.join(baseDir, '.requirements', 'adjustments'),
+    path.join(baseDir, '.requirements', 'refactors'),
+    path.join(baseDir, '.requirements', 'tech-debt'),
     path.join(baseDir, 'templates'),
     path.join(baseDir, 'logs'),
   ];
@@ -59,7 +59,7 @@ export async function exists(filePath) {
  */
 export async function createRequirementDir(baseDir, type, id) {
   const typeDir = type === 'tech-debt' ? 'tech-debt' : `${type}s`;
-  const reqPath = path.join(baseDir, 'requirements', typeDir, id);
+  const reqPath = path.join(baseDir, '.requirements', typeDir, id);
 
   await fs.mkdir(reqPath, { recursive: true });
 

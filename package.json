@@ -30,8 +30,9 @@
   },
   "homepage": "https://github.com/zxc1213/claude-req-sys#readme",
   "dependencies": {
-    "fuse.js": "^7.0.0",
-    "fs-extra": "^11.2.0"
+    "cli-table3": "^0.6.5",
+    "fs-extra": "^11.2.0",
+    "fuse.js": "^7.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",

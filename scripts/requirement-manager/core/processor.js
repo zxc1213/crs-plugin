@@ -59,7 +59,7 @@ export class Processor {
    */
   constructor(baseDir) {
     this.baseDir = baseDir;
-    this.requirementsDir = path.join(baseDir, 'requirements');
+    this.requirementsDir = path.join(baseDir, '.requirements');
     this.index = new Map(); // ID 到路径的缓存索引
   }
 
@@ -114,8 +114,8 @@ export class Processor {
   async create(parsed) {
     const { type, mode, description } = parsed;
 
-    // 生成 ID
-    const id = generate(type);
+    // 生成 ID (现在生成ID是异步操作)
+    const id = await generate(type);
     const prefix = TYPE_PREFIXES[type];
 
     // 确定类型目录
