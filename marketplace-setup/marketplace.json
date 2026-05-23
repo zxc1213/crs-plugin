@@ -1,5 +1,8 @@
 {
-  "marketplace": "claude-req-sys",
+  "name": "claude-req-sys",
+  "owner": {
+    "name": "19944"
+  },
   "plugins": [
     {
       "name": "claude-req-sys",
