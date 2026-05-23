@@ -4,7 +4,7 @@
 
 ## ⚡ 快速开始
 
-### 方式一：Marketplace 安装（推荐）⭐
+### Marketplace 安装（推荐）⭐
 
 ```bash
 # 1. 添加 Marketplace
@@ -14,7 +14,7 @@
 /plugin install claude-req-sys@claude-req-sys
 
 # 3. 开始使用
-/req 添加新功能
+/r 添加新功能
 ```
 
 **优势**：
@@ -26,21 +26,12 @@
 
 **详细文档**：[Marketplace 安装指南](marketplace-setup/INSTALL.md)
 
-### 方式二：直接安装
+### 直接安装（备选）
 
 ```bash
 # 从 GitHub 直接安装
 /plugin install https://github.com/zxc1213/claude-req-sys-plugin
 ```
-
-**优势**：
-
-- ✅ 一键安装，自动配置
-- ✅ hooks 自动生效
-- ✅ 环境变量自动设置
-- ✅ 支持插件版本管理和更新
-
-**详细文档**：[README_PLUGIN.md](README_PLUGIN.md) | [安装指南](INSTALL.md)
 
 - 📋 **多类型支持**：新功能、Bug 修复、技术问题、需求调整、重构
 - 🤖 **智能自动化**：集成 brainstorming、systematic-debugging 等 skills
@@ -59,24 +50,34 @@
 - 💰 **成本优化**：智能控制 Token 使用
 - ⚠️ **智能配置合并**：自动合并 settings.json，不覆盖现有配置
 
-## 🔄 更新方式
+## 🔄 更新插件
 
 ```bash
-/plugin update claude-req-sys-plugin
-# 或重新安装
-/plugin install --force https://github.com/zxc1213/claude-req-sys-plugin
+/plugin update claude-req-sys@claude-req-sys
+```
+
+## 📝 卸载插件
+
+```bash
+/plugin remove claude-req-sys@claude-req-sys
 ```
 
 ## 使用
 
-### 基本命令
+### 主命令（简短形式）⭐
 
 ```bash
-/req 添加用户登录功能           # 创建新功能（智能推断类型和模式）⭐ 更新
-/req --bug 登录页面异常        # Bug 报告
-/req --question 性能优化       # 技术问题
-/req --dashboard               # 查看仪表板
-/req --list                    # 列出所有需求
+/r 添加用户登录功能           # 创建新功能
+/r --bug 登录页面异常        # Bug 报告
+/r --question 性能优化       # 技术问题
+/r --dashboard               # 查看仪表板
+/r --list                    # 列出所有需求
+```
+
+### 原命令（仍然支持）
+
+```bash
+/req 添加用户登录功能        # 完整命令名
 ```
 
 ### 新增功能 ⭐

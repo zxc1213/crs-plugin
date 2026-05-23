@@ -1,39 +1,26 @@
 # ClaudeReqSys 插件安装指南
 
-> **快速安装 ClaudeReqSys 插件**
+> **通过 Marketplace 快速安装 ClaudeReqSys 插件**
 
 ## 🚀 安装方法
 
-### 方法 1: 从 GitHub 分支安装（推荐）
+### 方法 1: Marketplace 安装（推荐）⭐
 
 ```bash
-# 从 feature/plugin-migration 分支安装插件版本
-/plugin install https://github.com/zxc1213/claude-req-sys/tree/feature/plugin-migration
+# 1. 添加 Marketplace
+/plugin marketplace add zxc1213/claude-req-sys-marketplace
 
-# 或使用 git+ 协议指定分支
-/plugin install git+https://github.com/zxc1213/claude-req-sys.git#feature/plugin-migration
+# 2. 安装插件
+/plugin install claude-req-sys@claude-req-sys
+
+# 3. 验证安装
+/r --help
 ```
 
-### 方法 2: 使用 SSH 协议
-
-如果你有 GitHub 仓库写权限：
+### 方法 2: 直接从 GitHub 安装
 
 ```bash
-/plugin install git+ssh://git@github.com/zxc1213/claude-req-sys.git#feature/plugin-migration
-```
-
-### 方法 3: 本地安装
-
-```bash
-# 1. 克隆仓库
-git clone https://github.com/zxc1213/claude-req-sys.git
-cd claude-req-sys
-
-# 2. 本地测试
-claude --plugin-dir .
-
-# 3. 确认无误后安装
-claude --plugin-dir . --install
+/plugin install https://github.com/zxc1213/claude-req-sys-plugin
 ```
 
 ## ✅ 验证安装
@@ -41,65 +28,93 @@ claude --plugin-dir . --install
 安装完成后，运行以下命令验证：
 
 ```bash
-# 测试主命令
-/req --help
+# 查看帮助信息
+/r --help
 
-# 查看所有可用技能
-/agents
+# 查看仪表板
+/r --dashboard
 
-# 测试知识图谱 CLI
-kg-stats
+# 列出所有需求
+/r --list
 ```
 
-## 🔧 团队私有安装
-
-如果你的团队使用私有 GitHub 仓库：
+## 🔄 更新插件
 
 ```bash
-# 从你的团队仓库安装
-/plugin install https://github.com/your-org/claude-req-sys-plugin
+# 更新到最新版本
+/plugin update claude-req-sys@claude-req-sys
 ```
 
-## 📝 从 npm 版本迁移
-
-如果你之前使用 `npm install -g` 安装：
+## 🗑️ 卸载插件
 
 ```bash
-# 1. 卸载 npm 版本
-npm uninstall -g claude-req-sys
+# 卸载插件
+/plugin remove claude-req-sys@claude-req-sys
 
-# 2. 从新插件仓库安装
-/plugin install https://github.com/zxc1213/claude-req-sys-plugin
+# 移除 Marketplace（可选）
+/plugin marketplace remove claude-req-sys
+```
 
-# 3. 验证数据兼容性（现有 .requirements/ 目录无需迁移）
-/req --dashboard
+## 📝 快速命令参考
+
+### 主命令
+
+```bash
+/r <描述>              # 创建新需求
+/r --quick <描述>       # 快速创建
+/r --bug <描述>         # Bug 报告
+/r --dashboard          # 查看仪表板
+/r --list               # 列出需求
+/r --active             # 活跃需求
+```
+
+### 子命令
+
+```bash
+/r:pri                 # 优先级评估
+/r:q                   # 质量检查
+/r:init                # 初始化项目
+/r:unify               # 统一文档
+```
+
+### 知识图谱 CLI
+
+```bash
+kg-search "用户登录" 10  # 搜索相似需求
+kg-stats                 # 统计信息
+kg-connections REQ-001   # 查看关联
+kg-recommend             # 智能推荐
+kg-rebuild               # 重建索引
 ```
 
 ## 🐛 常见问题
 
 ### Q: 插件安装后找不到命令？
 
-**A**: 运行 `/reload-plugins` 重新加载插件。
+**A**: 运行 `/reload` 或重新加载 Claude Code。
 
-### Q: 如何更新插件？
-
-**A**:
-
-```bash
-/plugin update claude-req-sys-plugin
-# 或重新安装
-/plugin install --force https://github.com/zxc1213/claude-req-sys-plugin
-```
-
-### Q: 如何卸载插件？
+### Q: 如何查看插件状态？
 
 **A**:
-
 ```bash
-/plugin uninstall claude-req-sys
+/plugin list                    # 查看所有插件
+/plugin list claude-req-sys      # 查看插件详情
 ```
+
+### Q: 安装失败怎么办？
+
+**A**: 检查网络连接，或尝试：
+```bash
+/plugin marketplace update claude-req-sys
+/plugin install claude-req-sys@claude-req-sys
+```
+
+### Q: hooks 不工作？
+
+**A**: hooks 需要手动配置到项目的 `.claude/settings.json` 中。
 
 ## 📚 更多信息
 
-- [完整文档](https://github.com/zxc1213/claude-req-sys-plugin/blob/main/README_PLUGIN.md)
+- [完整文档](README.md)
+- [Marketplace 配置](marketplace-setup/INSTALL.md)
 - [问题反馈](https://github.com/zxc1213/claude-req-sys-plugin/issues)
