@@ -17,8 +17,9 @@
       },
       "license": "MIT",
       "source": {
-        "type": "github",
-        "repo": "zxc1213/claude-req-sys-plugin",
+        "type": "git-subdir",
+        "url": "https://github.com/zxc1213/claude-req-sys-plugin.git",
+        "subdir": "/",
         "branch": "feature/plugin-migration"
       },
       "keywords": [
