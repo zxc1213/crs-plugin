@@ -18,9 +18,8 @@
       "repository": "https://github.com/zxc1213/claude-req-sys-plugin",
       "license": "MIT",
       "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/zxc1213/claude-req-sys-plugin.git",
-        "path": "/",
+        "source": "github",
+        "repo": "zxc1213/claude-req-sys-plugin",
         "ref": "main"
       },
       "keywords": [
