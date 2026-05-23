@@ -21,7 +21,7 @@
         "source": "git-subdir",
         "url": "https://github.com/zxc1213/claude-req-sys-plugin.git",
         "path": "/",
-        "ref": "feature/plugin-migration"
+        "ref": "main"
       },
       "keywords": [
         "requirements",
