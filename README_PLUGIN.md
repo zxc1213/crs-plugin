@@ -11,18 +11,28 @@
 
 ### 安装
 
-**从 GitHub 安装**（推荐）:
+**方式一：通过 Marketplace 安装（推荐）**:
+
+```bash
+# 添加 marketplace
+/plugin marketplace add https://github.com/zxc1213/claude-req-sys-marketplace.git
+
+# 安装插件
+/plugin install claude-req-sys@claude-req-sys
+```
+
+**方式二：本地开发模式**:
 
 ```bash
 # 克隆仓库到本地
 git clone https://github.com/zxc1213/claude-req-sys-plugin.git
 cd claude-req-sys-plugin
 
-# 使用 cc 命令加载插件（本地开发模式）
+# 使用 cc 命令加载插件
 cc --plugin-dir .
 ```
 
-**从指定分支安装**:
+**方式三：从指定分支安装**:
 
 ```bash
 # 克隆指定分支
