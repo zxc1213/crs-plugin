@@ -1,11 +1,11 @@
 ---
 name: req-init
-description: ClaudeReqSys 初始化配置 - 一次性设置，配置问题追踪系统、标签体系和文档存储位置
+description: CRS 初始化配置 - 一次性设置，配置问题追踪系统、标签体系和文档存储位置
 ---
 
-# ClaudeReqSys 初始化配置
+# CRS 初始化配置
 
-欢迎使用 ClaudeReqSys 智能需求管理系统！
+欢迎使用 CRS 智能需求管理系统！
 
 本技能将引导你完成一次性初始化配置，确保系统与你的工作流程完美集成。
 

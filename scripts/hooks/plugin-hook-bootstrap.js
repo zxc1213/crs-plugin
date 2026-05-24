@@ -26,9 +26,7 @@ function resolvePluginRoot() {
   const home = homedir();
   const claudeDir = path.join(home, '.claude');
 
-  const searchPaths = [
-    path.join(claudeDir, 'plugins', 'marketplaces', 'crs', 'plugins', 'crs'),
-  ];
+  const searchPaths = [path.join(claudeDir, 'plugins', 'marketplaces', 'crs', 'plugins', 'crs')];
 
   for (const candidate of searchPaths) {
     if (fs.existsSync(path.join(candidate, SENTINEL))) {

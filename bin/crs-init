@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * ClaudeReqSys 项目初始化命令
- * 使用: claude-req-init [--version|-v]
+ * CRS 项目初始化命令
+ * 使用: crs-init [--version|-v]
  *
  * 首次运行时自动安装全局配置到 ~/.claude/
  */
@@ -116,7 +116,7 @@ if (needsGlobalSetup) {
   }
 }
 
-console.log('🎯 ClaudeReqSys 项目初始化\n');
+console.log('🎯 CRS 项目初始化\n');
 
 // 获取项目根目录
 const projectRoot = process.cwd();
@@ -198,7 +198,7 @@ if (!fs.existsSync(metricsDataPath)) {
 }
 
 console.log('\n✅ 项目初始化完成!\n');
-console.log('📊 ClaudeReqSys 已就绪\n');
+console.log('📊 CRS 已就绪\n');
 console.log('开始使用:');
 console.log('  /req 添加你的第一个需求');
 console.log('  /req --dashboard 查看仪表板\n');

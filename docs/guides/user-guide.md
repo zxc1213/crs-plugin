@@ -1,7 +1,7 @@
-# 需求管理系统 - 用户指南
+# CRS - 用户指南
 
-**版本**: v0.6.0  
-**更新日期**: 2026-05-13
+**版本**: v0.8.0  
+**更新日期**: 2026-05-24
 
 ---
 
@@ -26,13 +26,10 @@
 **快速安装**：
 
 ```bash
-# npm 全局安装（推荐）
-npm install -g github:zxc1213/crs
+# 通过 Marketplace 安装（推荐）
+/plugin marketplace add zxc1213/crs-marketplace
+/plugin install crs-marketplace/crs
 
-# 克隆安装
-git clone https://github.com/zxc1213/crs-plugin.git crs
-cd crs
-npm install -g .
 ```
 
 ### 创建第一个需求
@@ -512,7 +509,7 @@ AI: [暂停] [完整req-brainstorm] [创建新需求] [重新规划]
 # 📦 开始迁移：REQ-20260507-001
 #
 # ✓ 检查需求目录
-# ✓ 创建备份: .backup/before-migration-2026-05-13-11-30-00
+# ✓ 创建备份: .backup/before-migration-2026-05-24-11-30-00
 #
 # 找到 5 个文件:
 #   - design.md
@@ -531,7 +528,7 @@ AI: [暂停] [完整req-brainstorm] [创建新需求] [重新规划]
 #
 # ✓ 迁移完成！
 #
-# 旧文件保留在: .backup/before-migration-2026-05-13-11-30-00
+# 旧文件保留在: .backup/before-migration-2026-05-24-11-30-00
 # 是否删除旧文件？(y/n): _
 ```
 

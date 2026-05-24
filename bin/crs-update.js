@@ -2,7 +2,7 @@
 
 /**
  * CRS 更新命令
- * 使用: claude-req-update [--version|-v]
+ * 使用: crs-update [--version|-v]
  */
 
 import { execSync } from 'child_process';

@@ -107,7 +107,7 @@ README.md                           # 已创建
 - [ ] **步骤 2：安装依赖**
 
 ```bash
-cd E:/AI_Project/ClaudeReqSys
+cd E:/AI_Project/CRS
 npm install
 ```
 
@@ -2564,7 +2564,7 @@ git commit -m "docs: add user guide"
 - [ ] **步骤 1：运行完整测试套件**
 
 ```bash
-cd E:/AI_Project/ClaudeReqSys
+cd E:/AI_Project/CRS
 npm test
 ```
 

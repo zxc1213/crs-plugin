@@ -1,7 +1,7 @@
 {
   "name": "crs-plugin",
   "version": "0.8.0",
-  "description": "ClaudeReqSys Plugin - 智能需求管理系统，从需求到测试的全流程自动化",
+  "description": "CRS Plugin - 智能需求管理系统，从需求到测试的全流程自动化",
   "type": "module",
   "files": [
     ".claude-plugin/",
@@ -30,11 +30,11 @@
   },
   "homepage": "https://github.com/zxc1213/crs-plugin#readme",
   "bin": {
-    "claude-req-init": "bin/claude-req-init.js",
-    "claude-req-update": "bin/claude-req-update.js",
-    "claude-req-track": "bin/claude-req-track.js",
-    "claude-req-sync-plans": "bin/claude-req-sync-plans.js",
-    "claude-req-skill-health": "bin/claude-req-skill-health.js",
+    "crs-init": "bin/crs-init.js",
+    "crs-update": "bin/crs-update.js",
+    "crs-track": "bin/crs-track.js",
+    "crs-sync-plans": "bin/crs-sync-plans.js",
+    "crs-skill-health": "bin/crs-skill-health.js",
     "kg-search": "bin/kg-cli.js",
     "kg-stats": "bin/kg-cli.js",
     "kg-connections": "bin/kg-cli.js",

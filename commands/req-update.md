@@ -1,10 +1,10 @@
 ---
-description: 更新 ClaudeReqSys 到最新版本 - 拉取代码并重新链接技能
+description: 更新 CRS 到最新版本 - 拉取代码并重新链接技能
 ---
 
 # 需求管理系统更新命令
 
-更新 ClaudeReqSys 到最新版本，包括代码更新和技能文件重新链接。
+更新 CRS 到最新版本，包括代码更新和技能文件重新链接。
 
 ## 用法
 
@@ -44,7 +44,7 @@ bash scripts/link-skills.sh
 ## 输出示例
 
 ```markdown
-🔄 ClaudeReqSys 更新
+🔄 CRS 更新
 
 📥 拉取最新代码...
 Already up to date.
@@ -60,7 +60,7 @@ Already up to date.
 
 ✅ 更新完成!
 
-ClaudeReqSys 已更新到最新版本
+CRS 已更新到最新版本
 ```
 
 ## 错误处理
@@ -73,7 +73,7 @@ ClaudeReqSys 已更新到最新版本
 
 常见错误：
 
-- **不在 git 仓库中**: 请在 ClaudeReqSys 项目目录中运行
+- **不在 git 仓库中**: 请在 CRS 项目目录中运行
 - **网络问题**: 检查网络连接
 - **权限问题**: 确保有执行脚本的权限
 - **合并冲突**: 需要手动解决冲突后再次运行

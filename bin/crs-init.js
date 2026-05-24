@@ -2,7 +2,7 @@
 
 /**
  * CRS 项目初始化命令
- * 使用: claude-req-init [--version|-v]
+ * 使用: crs-init [--version|-v]
  *
  * 首次运行时自动安装全局配置到 ~/.claude/
  */
