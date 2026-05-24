@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/session-start.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),d=p.join(require('os').homedir(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/session-start.js",
             "timeout": 5
           }
         ],
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/hooks/post-req-update.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),d=p.join(require('os').homedir(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/hooks/post-req-update.js",
             "timeout": 10
           }
         ],
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/post-tool-use.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),d=p.join(require('os').homedir(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/post-tool-use.js",
             "timeout": 5
           }
         ],
@@ -46,7 +46,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/hooks/stop-req-summary.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),d=p.join(require('os').homedir(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/hooks/stop-req-summary.js",
             "timeout": 10
           }
         ],
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),h=require('os').homedir(),d=p.join(h(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/stop.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),d=p.join(require('os').homedir(),'.claude'),s=[p.join(d,'plugins/marketplaces/crs/plugins/crs'),p.join(d,'plugins/cache/crs')],r='';for(var i of s){if(f.existsSync(i)){r=i;break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,'scripts/hooks/plugin-hook-bootstrap.cjs'))\" scripts/conversation-logger/hooks/stop.js",
             "timeout": 5
           }
         ],
