@@ -11,7 +11,7 @@
 ### 2. 安装插件
 
 ```bash
-/plugin install crs/crs
+/plugin install crs-marketplace/crs
 ```
 
 ## 验证安装
