@@ -58,7 +58,6 @@ const FLAG_MAPPING = {
   '-f': 'feature',
 };
 
-
 /**
  * Load template file and substitute ${KEY} placeholders
  */
@@ -265,15 +264,22 @@ ${description}
     );
 
     // 创建子目录骨架
-    await copySubTemplates(reqPath, 'spec',
-      ['background.md.tpl', 'user-stories.md.tpl', 'design.md.tpl', 'api.md.tpl', 'decisions.md.tpl'],
+    await copySubTemplates(
+      reqPath,
+      'spec',
+      [
+        'background.md.tpl',
+        'user-stories.md.tpl',
+        'design.md.tpl',
+        'api.md.tpl',
+        'decisions.md.tpl',
+      ],
       tplVars
     );
-    await copySubTemplates(reqPath, 'plan',
-      ['tasks.md.tpl', 'milestones.md.tpl'],
-      tplVars
-    );
-    await copySubTemplates(reqPath, 'test-cases',
+    await copySubTemplates(reqPath, 'plan', ['tasks.md.tpl', 'milestones.md.tpl'], tplVars);
+    await copySubTemplates(
+      reqPath,
+      'test-cases',
       ['positive.md.tpl', 'negative.md.tpl', 'boundary.md.tpl'],
       tplVars
     );
