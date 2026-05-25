@@ -1,11 +1,11 @@
 ---
 name: req-unify
-description: 文档结构统一 - 将5个冗余文件简化为2个精简文件，降低70%维护成本
+description: 文档结构统一 - 将文档内容整理到标准子目录结构，根文件作为摘要索引
 ---
 
 # 文档结构统一
 
-将需求相关的5个独立文件（design.md、test-plan.md、plan.md、analysis-report.md、CHANGELOG.md）统一为2个精简文件（spec.md、test-cases.md），消除冗余，降低维护成本。
+将需求相关的5个独立文件（design.md、test-plan.md、plan.md、analysis-report.md、CHANGELOG.md）整理到 spec/、plan/、test-cases/ 子目录结构，根文件作为摘要索引，消除冗余。
 
 ## 问题分析
 
@@ -254,11 +254,11 @@ async function unifyDocuments(reqId) {
 
 | 维度           | 改进                    |
 | -------------- | ----------------------- |
-| **维护成本**   | 降低 70%（5文件→2文件） |
+| **维护成本**   | 结构化子目录拆分 |
 | **信息一致性** | 消除冗余，单一信息源    |
 | **查找效率**   | 集中式文档，减少跳转    |
 | **版本控制**   | 单文件变更历史更清晰    |
-| **新人上手**   | 只需阅读1-2个文件       |
+| **新人上手**   | 阅读摘要索引即可定位详细文档       |
 
 ## 配置选项
 
