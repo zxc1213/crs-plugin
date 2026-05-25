@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 import {
   init,
@@ -11,6 +12,8 @@ import {
   cleanup,
 } from '../../scripts/requirement-manager/utils/storage.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const TEST_BASE_DIR = path.join(__dirname, '../temp-test-storage');
 
 describe('Storage Utility', () => {

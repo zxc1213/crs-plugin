@@ -1,10 +1,13 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 import { expect } from 'chai';
 import { syncPlanStatus, syncAllPlans } from '../../scripts/requirement-manager/utils/plan-sync.js';
 import { writeMeta } from '../../scripts/requirement-manager/utils/storage.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const TEST_BASE_DIR = path.join(__dirname, '../temp-test-plan-sync');
 
 describe('plan-sync Utility', () => {
