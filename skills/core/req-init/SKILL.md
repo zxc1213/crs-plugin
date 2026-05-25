@@ -65,8 +65,8 @@ description: CRS 初始化配置 - 一次性设置，配置问题追踪系统、
 - 缺陷跟踪：`.requirements/bugs/`
 - 问题记录：`.requirements/questions/`
 - 需求变更：`.requirements/adjustments/`
-- 分析报告：`docs/analysis/`
-- 用户指南：`docs/guides/`
+- 分析报告：`.requirements/analysis/`
+- 用户指南：`.requirements/guides/`
 
 > 你可以接受默认配置，或指定自定义路径。
 
@@ -100,5 +100,5 @@ description: CRS 初始化配置 - 一次性设置，配置问题追踪系统、
 
 ## 需要帮助？
 
-- 用户指南：`docs/guides/user-guide.md`
-- 系统架构：`docs/analysis/optimization-report.md`
+- 用户指南：`.requirements/guides/user-guide.md`
+- 系统架构：`.requirements/analysis/optimization-report.md`

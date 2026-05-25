@@ -73,6 +73,18 @@ async function loadTemplate(templateName, vars) {
 }
 
 /**
+ * Copy sub-file templates into a sub-directory under reqPath
+ */
+async function copySubTemplates(reqPath, subdir, tplFiles, vars) {
+  const subDirPath = path.join(reqPath, subdir);
+  await fs.mkdir(subDirPath, { recursive: true });
+  for (const tplFile of tplFiles) {
+    const content = await loadTemplate(path.join(subdir, tplFile), vars);
+    await fs.writeFile(path.join(subDirPath, tplFile.replace('.tpl', '')), content, 'utf-8');
+  }
+}
+
+/**
  * 需求处理器类
  */
 export class Processor {
@@ -191,16 +203,34 @@ ${description}
 
 ## 文档保存指引
 
-**重要**: 当使用 superpowers 技能（如 brainstorming、systematic-debugging、writing-plans 等）分析此需求时，请将生成的文档保存到当前目录（\`${reqPath}\`）。
+**重要**: 所有文档保存在需求目录下。根文件（spec.md、plan.md、test-cases.md）是摘要索引，详细内容写入子目录。
 
-### 推荐的文档文件名：
+### 阶段 2（深度分析）→ 写入 spec/ 子目录
 
-- **设计文档**: \`design.md\` 或 \`spec.md\`
-- **分析报告**: \`analysis.md\` 或 \`report.md\`
-- **实施计划**: \`plan.md\` 或 \`implementation-plan.md\`
-- **测试计划**: \`test-plan.md\`
-- **会议记录**: \`meeting-YYYY-MM-DD.md\`
-- **决策记录**: \`decisions.md\`
+- \`spec/background.md\` — 背景与目标
+- \`spec/user-stories.md\` — 用户故事 + 验收标准
+- \`spec/design.md\` — 系统架构 + 核心组件 + 数据流
+- \`spec/api.md\` — 接口定义 + 技术选型 + 错误处理
+- \`spec/decisions.md\` — 开放问题 + 技术决策
+
+### 阶段 4（测试策略）→ 写入 test-cases/ 子目录
+
+- \`test-cases/positive.md\` — 正向用例
+- \`test-cases/negative.md\` — 异常用例
+- \`test-cases/boundary.md\` — 边界用例
+
+### 阶段 5（实施计划）→ 写入 plan/ 子目录
+
+- \`plan/tasks.md\` — 任务分解表
+- \`plan/milestones.md\` — 里程碑 + 风险清单
+- \`plan/step-N-xxx.md\` — 各步骤详细文档（按需拆分，N 从 1 开始）
+
+### 规则
+
+- 详细内容**始终写入子目录文件**，不写入根文件
+- 每次填充子文件后，更新根文件（spec.md/plan.md/test-cases.md）索引表的状态列
+- 子文件命名使用英文小写 + 短横线（kebab-case）
+- 额外文档（会议记录等）可追加到根目录
 
 ### 更新 meta.yaml
 
@@ -217,20 +247,35 @@ ${description}
     // 预生成骨架文件，避免后续步骤遗漏
     const title = meta.title;
     const date = now.slice(0, 10);
+    const tplVars = { ID: id, TYPE: type, TITLE: title, DATE: date };
     await fs.writeFile(
       path.join(reqPath, 'spec.md'),
-      await loadTemplate('spec.md.tpl', { ID: id, TYPE: type, TITLE: title, DATE: date }),
+      await loadTemplate('spec.md.tpl', tplVars),
       'utf-8'
     );
     await fs.writeFile(
       path.join(reqPath, 'plan.md'),
-      await loadTemplate('plan.md.tpl', { ID: id, TITLE: title, DATE: date }),
+      await loadTemplate('plan.md.tpl', tplVars),
       'utf-8'
     );
     await fs.writeFile(
       path.join(reqPath, 'test-cases.md'),
-      await loadTemplate('test-cases.md.tpl', { ID: id, TITLE: title, DATE: date }),
+      await loadTemplate('test-cases.md.tpl', tplVars),
       'utf-8'
+    );
+
+    // 创建子目录骨架
+    await copySubTemplates(reqPath, 'spec',
+      ['background.md.tpl', 'user-stories.md.tpl', 'design.md.tpl', 'api.md.tpl', 'decisions.md.tpl'],
+      tplVars
+    );
+    await copySubTemplates(reqPath, 'plan',
+      ['tasks.md.tpl', 'milestones.md.tpl'],
+      tplVars
+    );
+    await copySubTemplates(reqPath, 'test-cases',
+      ['positive.md.tpl', 'negative.md.tpl', 'boundary.md.tpl'],
+      tplVars
     );
 
     // 更新索引
