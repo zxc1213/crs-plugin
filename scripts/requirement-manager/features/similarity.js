@@ -220,8 +220,7 @@ class SimilarityDetector {
         totalRequirements: requirements.length,
         similarFound: result.count,
         highConfidence: result.similar.filter((r) => r.similarity >= 0.8).length,
-        mediumConfidence: result.similar.filter((r) => r.similarity >= 0.6 && r.similarity < 0.8)
-          .length,
+        mediumConfidence: result.similar.filter((r) => r.similarity >= 0.6 && r.similarity < 0.8).length,
         lowConfidence: result.similar.filter((r) => r.similarity < 0.6).length,
       },
       matches: result.similar.map((match) => ({

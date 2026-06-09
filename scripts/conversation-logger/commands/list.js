@@ -59,9 +59,7 @@ function formatAsTable(conversations) {
     const messageCount = conv.metadata.messageCount || 0;
     const status = conv.metadata.status || 'active';
 
-    lines.push(
-      `│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${String(messageCount).padStart(8)} │ ${status.padEnd(8)} │`
-    );
+    lines.push(`│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${String(messageCount).padStart(8)} │ ${status.padEnd(8)} │`);
   }
 
   lines.push('└─────────────────────────────────────┴──────────────────┴────────────┴──────────┘');

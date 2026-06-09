@@ -52,16 +52,7 @@ export class DebuggingAdapter extends BaseSkillAdapter {
 
   getTemplates() {
     return {
-      steps: [
-        '1. 清晰定义问题',
-        '2. 收集相关日志和数据',
-        '3. 列出可能的根本原因',
-        '4. 设计验证实验',
-        '5. 执行验证并分析结果',
-        '6. 确定根本原因',
-        '7. 制定解决方案',
-        '8. 实施并验证修复',
-      ],
+      steps: ['1. 清晰定义问题', '2. 收集相关日志和数据', '3. 列出可能的根本原因', '4. 设计验证实验', '5. 执行验证并分析结果', '6. 确定根本原因', '7. 制定解决方案', '8. 实施并验证修复'],
       output: {
         problemDefinition: '问题定义',
         gatheredInfo: '收集的信息',

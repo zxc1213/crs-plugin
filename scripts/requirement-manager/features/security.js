@@ -9,16 +9,14 @@ class SecurityFilter {
     this.patterns = {
       // 凭证类：password, token, key, secret, api_key
       credentials: {
-        regex:
-          /(?:password|passwd|pwd|token|key|secret|api[_-]?key|authorization|auth)[:\s]*[=:]?\s*[^\s'"{>]+/gi,
+        regex: /(?:password|passwd|pwd|token|key|secret|api[_-]?key|authorization|auth)[:\s]*[=:]?\s*[^\s'"{>]+/gi,
         label: 'credentials',
         replacement: '[REDACTED_CREDENTIAL]',
       },
 
       // 个人身份信息：SSN, 邮箱, 身份证
       pii: {
-        regex:
-          /\b\d{3}[-]?\d{2}[-]?\d{4}\b|[\w.%+-]+@[\w.-]+\.[a-z]{2,}\b|\b[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]\b|\b[1-9]\d{5}\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}\b/gi,
+        regex: /\b\d{3}[-]?\d{2}[-]?\d{4}\b|[\w.%+-]+@[\w.-]+\.[a-z]{2,}\b|\b[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]\b|\b[1-9]\d{5}\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}\b/gi,
         label: 'pii',
         replacement: '[REDACTED_PII]',
       },
@@ -39,8 +37,7 @@ class SecurityFilter {
 
       // IP地址
       ips: {
-        regex:
-          /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g,
+        regex: /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g,
         label: 'ips',
         replacement: '[REDACTED_IP]',
       },

@@ -61,9 +61,7 @@ export class FuseSearchEngine {
     }
 
     if (filters.tags && filters.tags.length > 0) {
-      filtered = filtered.filter(
-        (c) => c.metadata.tags && filters.tags.some((t) => c.metadata.tags.includes(t))
-      );
+      filtered = filtered.filter((c) => c.metadata.tags && filters.tags.some((t) => c.metadata.tags.includes(t)));
     }
 
     if (filters.status) {
@@ -90,15 +88,9 @@ export class FuseSearchEngine {
   formatAsTable(searchResult) {
     const lines = [];
     lines.push(`找到 ${searchResult.total} 条匹配 "${searchResult.query}" 的记录:\n`);
-    lines.push(
-      '┌─────────────────────────────────────┬──────────────────┬────────────┬──────────┐'
-    );
-    lines.push(
-      '│ ID                                  │ 开始时间         │ 相关性     │ 状态     │'
-    );
-    lines.push(
-      '├─────────────────────────────────────┼──────────────────┼────────────┼──────────┤'
-    );
+    lines.push('┌─────────────────────────────────────┬──────────────────┬────────────┬──────────┐');
+    lines.push('│ ID                                  │ 开始时间         │ 相关性     │ 状态     │');
+    lines.push('├─────────────────────────────────────┼──────────────────┼────────────┼──────────┤');
 
     for (const result of searchResult.results) {
       const conv = result.conversation;
@@ -107,14 +99,10 @@ export class FuseSearchEngine {
       const relevance = this.formatScore(result.score);
       const status = conv.metadata.status || 'active';
 
-      lines.push(
-        `│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${relevance.padStart(8)} │ ${status.padEnd(8)} │`
-      );
+      lines.push(`│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${relevance.padStart(8)} │ ${status.padEnd(8)} │`);
     }
 
-    lines.push(
-      '└─────────────────────────────────────┴──────────────────┴────────────┴──────────┘'
-    );
+    lines.push('└─────────────────────────────────────┴──────────────────┴────────────┴──────────┘');
     return lines.join('\n');
   }
 

@@ -151,44 +151,7 @@ export class KnowledgeGraph {
    */
   extractKeywords(content) {
     // 简化的关键词提取：移除停用词，统计词频
-    const stopWords = new Set([
-      '的',
-      '是',
-      '在',
-      '和',
-      '与',
-      '或',
-      '但',
-      '如果',
-      '然后',
-      '因为',
-      '所以',
-      'the',
-      'a',
-      'an',
-      'is',
-      'are',
-      'was',
-      'were',
-      'be',
-      'been',
-      'being',
-      'have',
-      'has',
-      'had',
-      'do',
-      'does',
-      'did',
-      'will',
-      'would',
-      'could',
-      'should',
-      'may',
-      'might',
-      'must',
-      'can',
-      'need',
-    ]);
+    const stopWords = new Set(['的', '是', '在', '和', '与', '或', '但', '如果', '然后', '因为', '所以', 'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'need']);
 
     const words = content
       .toLowerCase()

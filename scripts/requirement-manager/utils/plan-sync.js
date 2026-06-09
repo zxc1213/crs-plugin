@@ -86,19 +86,12 @@ export async function syncPlanStatus(baseDir, reqPath) {
     let updatedPlan;
 
     if (hasProgressBlock) {
-      updatedPlan = planContent.replace(
-        /## 实时进度[\s\S]*?(?=\n## |\n---|$)/,
-        progressBlock.trim() + '\n\n'
-      );
+      updatedPlan = planContent.replace(/## 实时进度[\s\S]*?(?=\n## |\n---|$)/, progressBlock.trim() + '\n\n');
     } else {
       const titleMatch = planContent.match(/^#.*$/m);
       if (titleMatch) {
         const insertPosition = titleMatch.index + titleMatch[0].length;
-        updatedPlan =
-          planContent.slice(0, insertPosition) +
-          '\n\n' +
-          progressBlock +
-          planContent.slice(insertPosition);
+        updatedPlan = planContent.slice(0, insertPosition) + '\n\n' + progressBlock + planContent.slice(insertPosition);
       } else {
         updatedPlan = progressBlock + planContent;
       }
@@ -142,18 +135,13 @@ export async function syncIndexTables(reqPath) {
 
     for (const row of config.rows) {
       const isFilled = fileStatuses[row.file] || false;
-      const rowPattern = new RegExp(
-        `\\|\\s*${escapeRegex(row.label)}\\s*\\|.*?${escapeRegex(row.file)}.*?\\|\\s*(待填充|已填充)\\s*\\|`
-      );
+      const rowPattern = new RegExp(`\\|\\s*${escapeRegex(row.label)}\\s*\\|.*?${escapeRegex(row.file)}.*?\\|\\s*(待填充|已填充)\\s*\\|`);
       const match = indexContent.match(rowPattern);
       if (match) {
         const currentStatus = match[1];
         const newStatus = isFilled ? '已填充' : '待填充';
         if (currentStatus !== newStatus) {
-          indexContent = indexContent.replace(
-            rowPattern,
-            match[0].replace(currentStatus, newStatus)
-          );
+          indexContent = indexContent.replace(rowPattern, match[0].replace(currentStatus, newStatus));
           modified = true;
         }
       }
@@ -169,10 +157,7 @@ export async function syncIndexTables(reqPath) {
         const currentStatus = stepMatch[1];
         const newStatus = anyStepFilled ? '已填充' : '待填充';
         if (currentStatus !== newStatus) {
-          indexContent = indexContent.replace(
-            stepRowPattern,
-            stepMatch[0].replace(currentStatus, newStatus)
-          );
+          indexContent = indexContent.replace(stepRowPattern, stepMatch[0].replace(currentStatus, newStatus));
           modified = true;
         }
       }
@@ -231,9 +216,7 @@ function generateProgressBlock(meta) {
   const completionPercent = calculateCompletion(meta);
   const updatedAt = meta.updatedAt || new Date().toISOString();
 
-  return PROGRESS_BLOCK_TEMPLATE.replace('{{STATUS}}', meta.status)
-    .replace('{{UPDATED_AT}}', formatDateTime(updatedAt))
-    .replace('{{COMPLETION_PERCENT}}', completionPercent);
+  return PROGRESS_BLOCK_TEMPLATE.replace('{{STATUS}}', meta.status).replace('{{UPDATED_AT}}', formatDateTime(updatedAt)).replace('{{COMPLETION_PERCENT}}', completionPercent);
 }
 
 /**

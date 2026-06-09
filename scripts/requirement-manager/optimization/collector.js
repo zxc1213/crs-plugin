@@ -21,16 +21,7 @@ const TYPE_DIRS = {
 /**
  * 常用 skills 列表（用于统计）
  */
-const COMMON_SKILLS = [
-  'brainstorming',
-  'test-driven-development',
-  'systematic-debugging',
-  'writing-plans',
-  'requesting-code-review',
-  'verification-before-completion',
-  'chinese-code-review',
-  'chinese-documentation',
-];
+const COMMON_SKILLS = ['brainstorming', 'test-driven-development', 'systematic-debugging', 'writing-plans', 'requesting-code-review', 'verification-before-completion', 'chinese-code-review', 'chinese-documentation'];
 
 /**
  * 指标收集器类
@@ -54,12 +45,7 @@ export class MetricsCollector {
   async collect() {
     const timestamp = new Date().toISOString();
 
-    const [systemMetrics, typeMetrics, skillMetrics, costMetrics] = await Promise.all([
-      this.collectSystemMetrics(),
-      this.collectTypeMetrics(),
-      this.collectSkillMetrics(),
-      this.collectCostMetrics(),
-    ]);
+    const [systemMetrics, typeMetrics, skillMetrics, costMetrics] = await Promise.all([this.collectSystemMetrics(), this.collectTypeMetrics(), this.collectSkillMetrics(), this.collectCostMetrics()]);
 
     const metrics = {
       timestamp,
@@ -186,10 +172,7 @@ export class MetricsCollector {
       const previous = previousSkills[skill] || { uses: 0, satisfaction: 0 };
       skillMetrics[skill] = {
         uses: previous.uses + Math.floor(Math.random() * 5), // 模拟新使用
-        satisfaction:
-          previous.satisfaction > 0
-            ? Math.round((previous.satisfaction * 0.9 + 4 + Math.random()) * 10) / 10
-            : Math.round((4 + Math.random()) * 10) / 10, // 初始满意度 4-5
+        satisfaction: previous.satisfaction > 0 ? Math.round((previous.satisfaction * 0.9 + 4 + Math.random()) * 10) / 10 : Math.round((4 + Math.random()) * 10) / 10, // 初始满意度 4-5
       };
     }
 
@@ -210,10 +193,7 @@ export class MetricsCollector {
     const totalTokens = previousCosts.daily_tokens + newTokens;
 
     // 模拟缓存命中率变化（0.5-0.8 之间）
-    const newCacheRate =
-      previousCosts.cache_hit_rate > 0
-        ? Math.min(0.8, Math.max(0.5, previousCosts.cache_hit_rate + (Math.random() - 0.5) * 0.1))
-        : 0.6;
+    const newCacheRate = previousCosts.cache_hit_rate > 0 ? Math.min(0.8, Math.max(0.5, previousCosts.cache_hit_rate + (Math.random() - 0.5) * 0.1)) : 0.6;
 
     return {
       daily_tokens: totalTokens,

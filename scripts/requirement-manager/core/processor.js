@@ -276,42 +276,14 @@ planning → analyzed → implementing → review → done
     const title = meta.title;
     const date = now.slice(0, 10);
     const tplVars = { ID: id, TYPE: type, TITLE: title, DATE: date };
-    await fs.writeFile(
-      path.join(reqPath, 'spec.md'),
-      await loadTemplate('spec.md.tpl', tplVars),
-      'utf-8'
-    );
-    await fs.writeFile(
-      path.join(reqPath, 'plan.md'),
-      await loadTemplate('plan.md.tpl', tplVars),
-      'utf-8'
-    );
-    await fs.writeFile(
-      path.join(reqPath, 'test-cases.md'),
-      await loadTemplate('test-cases.md.tpl', tplVars),
-      'utf-8'
-    );
+    await fs.writeFile(path.join(reqPath, 'spec.md'), await loadTemplate('spec.md.tpl', tplVars), 'utf-8');
+    await fs.writeFile(path.join(reqPath, 'plan.md'), await loadTemplate('plan.md.tpl', tplVars), 'utf-8');
+    await fs.writeFile(path.join(reqPath, 'test-cases.md'), await loadTemplate('test-cases.md.tpl', tplVars), 'utf-8');
 
     // 创建子目录骨架
-    await copySubTemplates(
-      reqPath,
-      'spec',
-      [
-        'background.md.tpl',
-        'user-stories.md.tpl',
-        'design.md.tpl',
-        'api.md.tpl',
-        'decisions.md.tpl',
-      ],
-      tplVars
-    );
+    await copySubTemplates(reqPath, 'spec', ['background.md.tpl', 'user-stories.md.tpl', 'design.md.tpl', 'api.md.tpl', 'decisions.md.tpl'], tplVars);
     await copySubTemplates(reqPath, 'plan', ['tasks.md.tpl', 'milestones.md.tpl'], tplVars);
-    await copySubTemplates(
-      reqPath,
-      'test-cases',
-      ['positive.md.tpl', 'negative.md.tpl', 'boundary.md.tpl'],
-      tplVars
-    );
+    await copySubTemplates(reqPath, 'test-cases', ['positive.md.tpl', 'negative.md.tpl', 'boundary.md.tpl'], tplVars);
 
     // 更新索引
     this.index.set(id, reqPath);

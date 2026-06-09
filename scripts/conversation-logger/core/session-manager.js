@@ -92,9 +92,7 @@ export class SessionManager {
       status: session.status,
       startTime: session.startTime,
       endTime: session.endTime,
-      messageCount: session.events.filter(
-        (e) => e.type === 'user_message' || e.type === 'ai_response'
-      ).length,
+      messageCount: session.events.filter((e) => e.type === 'user_message' || e.type === 'ai_response').length,
       toolCallCount: session.events.filter((e) => e.type === 'tool_use').length,
     };
   }
@@ -114,9 +112,7 @@ export class SessionManager {
    * @returns {Promise<void>}
    */
   async endSession() {
-    const activeSessions = Array.from(this.sessions.entries()).filter(
-      ([_, session]) => session.status === 'active'
-    );
+    const activeSessions = Array.from(this.sessions.entries()).filter(([_, session]) => session.status === 'active');
 
     for (const [id, session] of activeSessions) {
       session.status = 'ended';
@@ -137,9 +133,7 @@ export class SessionManager {
    * @returns {Promise<string|null>}
    */
   async getCurrentSessionId() {
-    const activeSession = Array.from(this.sessions.entries()).find(
-      ([_, session]) => session.status === 'active'
-    );
+    const activeSession = Array.from(this.sessions.entries()).find(([_, session]) => session.status === 'active');
 
     return activeSession ? activeSession[0] : null;
   }

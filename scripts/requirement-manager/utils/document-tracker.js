@@ -15,13 +15,7 @@ import yaml from 'js-yaml';
 export async function scanDocuments(reqPath) {
   try {
     const files = await fs.readdir(reqPath);
-    return files.filter(
-      (file) =>
-        file.endsWith('.md') &&
-        file !== 'raw.md' &&
-        file !== '.claude-context.md' &&
-        !file.startsWith('.')
-    );
+    return files.filter((file) => file.endsWith('.md') && file !== 'raw.md' && file !== '.claude-context.md' && !file.startsWith('.'));
   } catch (error) {
     return [];
   }
@@ -55,18 +49,7 @@ export async function isDocumentFilled(filePath) {
     const content = await fs.readFile(filePath, 'utf-8');
     if (/<!--\s*TODO:/.test(content)) return false;
 
-    const contentLines = content
-      .split('\n')
-      .filter(
-        (l) =>
-          l.trim() &&
-          !l.trim().startsWith('#') &&
-          !l.trim().startsWith('|') &&
-          !l.trim().startsWith('>') &&
-          !l.trim().startsWith('- [ ]') &&
-          !l.trim().startsWith('- [x]') &&
-          !l.trim().startsWith('---')
-      );
+    const contentLines = content.split('\n').filter((l) => l.trim() && !l.trim().startsWith('#') && !l.trim().startsWith('|') && !l.trim().startsWith('>') && !l.trim().startsWith('- [ ]') && !l.trim().startsWith('- [x]') && !l.trim().startsWith('---'));
     return contentLines.length >= 3;
   } catch {
     return false;

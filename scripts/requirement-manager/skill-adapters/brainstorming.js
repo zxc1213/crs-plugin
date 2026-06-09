@@ -51,13 +51,7 @@ export class BrainstormingAdapter extends BaseSkillAdapter {
 
   getTemplates() {
     return {
-      questions: [
-        '核心问题是什么？',
-        '有哪些可能的解决方案？',
-        '各方案的优缺点是什么？',
-        '有什么潜在风险？',
-        '推荐哪个方案？为什么？',
-      ],
+      questions: ['核心问题是什么？', '有哪些可能的解决方案？', '各方案的优缺点是什么？', '有什么潜在风险？', '推荐哪个方案？为什么？'],
       output: {
         problemStatement: '问题陈述',
         alternatives: '备选方案列表',

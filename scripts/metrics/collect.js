@@ -119,9 +119,7 @@ function collectEfficiencyMetrics(requirements) {
   const metrics = [];
 
   // 需求交付周期
-  const completedReqs = requirements.filter(
-    (r) => r.meta.status === 'completed' || r.meta.status === 'testing'
-  );
+  const completedReqs = requirements.filter((r) => r.meta.status === 'completed' || r.meta.status === 'testing');
 
   if (completedReqs.length > 0) {
     const cycleTimes = completedReqs
@@ -157,9 +155,7 @@ function collectQualityMetrics(requirements) {
   // 返工率
   const allReqs = requirements;
   if (allReqs.length > 0) {
-    const reworkedCount = allReqs.filter(
-      (r) => r.meta.rework_count && r.meta.rework_count > 0
-    ).length;
+    const reworkedCount = allReqs.filter((r) => r.meta.rework_count && r.meta.rework_count > 0).length;
 
     const reworkRate = reworkedCount / allReqs.length;
     metrics.push({
@@ -250,9 +246,7 @@ function collectValueMetrics(requirements) {
 
   // 需求完成率
   const allReqs = requirements;
-  const completedReqs = requirements.filter(
-    (r) => r.meta.status === 'completed' || r.meta.status === 'testing'
-  );
+  const completedReqs = requirements.filter((r) => r.meta.status === 'completed' || r.meta.status === 'testing');
 
   if (allReqs.length > 0) {
     const completionRate = completedReqs.length / allReqs.length;
@@ -382,12 +376,7 @@ function initMetricsSystem() {
   console.log('🚀 初始化度量系统...\n');
 
   // 创建目录
-  const dirs = [
-    METRICS_DIR,
-    path.join(METRICS_DIR, 'reports'),
-    path.join(METRICS_DIR, 'exports'),
-    path.join(METRICS_DIR, 'trends'),
-  ];
+  const dirs = [METRICS_DIR, path.join(METRICS_DIR, 'reports'), path.join(METRICS_DIR, 'exports'), path.join(METRICS_DIR, 'trends')];
 
   for (const dir of dirs) {
     if (!fs.existsSync(dir)) {
@@ -504,15 +493,7 @@ function convertToCSV(data) {
 
   for (const [metricType, records] of Object.entries(data.metrics)) {
     for (const record of records) {
-      lines.push(
-        [
-          record.date,
-          record.metric,
-          record.value,
-          record.sample_size || record.total || 'N/A',
-          record.details || '',
-        ].join(',')
-      );
+      lines.push([record.date, record.metric, record.value, record.sample_size || record.total || 'N/A', record.details || ''].join(','));
     }
   }
 

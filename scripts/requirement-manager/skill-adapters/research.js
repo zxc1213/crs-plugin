@@ -52,13 +52,7 @@ export class ResearchAdapter extends BaseSkillAdapter {
 
   getTemplates() {
     return {
-      questions: [
-        '需要研究什么主题？',
-        '已知信息有哪些？',
-        '需要查找哪些信息？',
-        '从哪些信息源查找？',
-        '如何整理和分析收集到的信息？',
-      ],
+      questions: ['需要研究什么主题？', '已知信息有哪些？', '需要查找哪些信息？', '从哪些信息源查找？', '如何整理和分析收集到的信息？'],
       output: {
         topic: '研究主题',
         knownInfo: '已知信息',

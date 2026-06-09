@@ -75,11 +75,7 @@ export class Dashboard {
   showHeader() {
     console.log('');
     console.log(chalk.cyan('╔══════════════════════════════════════════════════════════════╗'));
-    console.log(
-      chalk.cyan('║') +
-        chalk.white.bold('          需求管理系统仪表板                    ') +
-        chalk.cyan('║')
-    );
+    console.log(chalk.cyan('║') + chalk.white.bold('          需求管理系统仪表板                    ') + chalk.cyan('║'));
     console.log(chalk.cyan('╚══════════════════════════════════════════════════════════════╝'));
     console.log('');
   }
@@ -156,12 +152,7 @@ export class Dashboard {
       },
     });
 
-    table.push(
-      ['总需求数', stats.total.toString()],
-      ['待处理', stats.open.toString()],
-      ['进行中', stats.in_progress.toString()],
-      ['已完成', stats.completed.toString()]
-    );
+    table.push(['总需求数', stats.total.toString()], ['待处理', stats.open.toString()], ['进行中', stats.in_progress.toString()], ['已完成', stats.completed.toString()]);
 
     console.log(table.toString());
     console.log('');
@@ -210,11 +201,7 @@ export class Dashboard {
     if (!active) {
       console.log(chalk.gray('  暂无活跃需求'));
     } else {
-      console.log(
-        chalk.white(
-          `  ${active.id}: ${active.title || active.description?.substring(0, 50) || '无标题'}`
-        )
-      );
+      console.log(chalk.white(`  ${active.id}: ${active.title || active.description?.substring(0, 50) || '无标题'}`));
       const statusLabel = STATUS_LABELS[active.status] || active.status;
       const statusColor = STATUS_COLORS[active.status] || 'white';
       console.log(chalk[statusColor](`  状态: ${statusLabel}`));

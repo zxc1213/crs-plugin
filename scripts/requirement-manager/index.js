@@ -100,11 +100,7 @@ class RequirementManager {
       error: 'security_check_failed',
       message: `检测到敏感信息，无法继续：\n  ${warnings}`,
       severity: securityCheck.severity,
-      suggestions: [
-        '请移除敏感信息后重试',
-        '不要包含密码、密钥、个人身份信息等',
-        '使用占位符代替真实数据',
-      ],
+      suggestions: ['请移除敏感信息后重试', '不要包含密码、密钥、个人身份信息等', '使用占位符代替真实数据'],
     };
   }
 
@@ -254,18 +250,10 @@ class RequirementManager {
    * @param {object} executionPlan - 执行计划
    */
   async logCreation(requirement, executionPlan) {
-    await success(
-      requirement.id,
-      `需求已创建: ${requirement.type} - ${requirement.description.substring(0, 50)}`,
-      this.logPath
-    );
+    await success(requirement.id, `需求已创建: ${requirement.type} - ${requirement.description.substring(0, 50)}`, this.logPath);
 
     const totalSteps = executionPlan.metadata?.totalSteps || 0;
-    await info(
-      requirement.id,
-      `执行模式: ${executionPlan.modeDescription}, 步骤数: ${totalSteps}`,
-      this.logPath
-    );
+    await info(requirement.id, `执行模式: ${executionPlan.modeDescription}, 步骤数: ${totalSteps}`, this.logPath);
   }
 
   /**
@@ -276,8 +264,7 @@ class RequirementManager {
    */
   formatResult(requirement, executionPlan) {
     // 获取第一个步骤（通常是 brainstorming）
-    const firstStep =
-      executionPlan.steps && executionPlan.steps.length > 0 ? executionPlan.steps[0] : null;
+    const firstStep = executionPlan.steps && executionPlan.steps.length > 0 ? executionPlan.steps[0] : null;
 
     return {
       success: true,
@@ -382,12 +369,7 @@ class RequirementManager {
         options.mode = 'manual';
       } else if (arg.startsWith('--status=')) {
         input = `--status ${arg.replace('--status=', '')}`;
-      } else if (
-        arg === '--dashboard' ||
-        arg === '--list' ||
-        arg === '--active' ||
-        arg === '--status'
-      ) {
+      } else if (arg === '--dashboard' || arg === '--list' || arg === '--active' || arg === '--status') {
         // 查询命令，添加到输入前面
         input = input ? `${input} ${arg}` : arg;
       } else if (!arg.startsWith('--')) {
@@ -408,10 +390,7 @@ class RequirementManager {
     const result = await manager.handle(input, options);
 
     // 对于查询命令，不需要格式化输出（Dashboard 已经输出）
-    if (
-      result.action &&
-      ['show_dashboard', 'list_requirements', 'list_active'].includes(result.action)
-    ) {
+    if (result.action && ['show_dashboard', 'list_requirements', 'list_active'].includes(result.action)) {
       return;
     }
 
@@ -482,10 +461,7 @@ export default RequirementManager;
 export { formatOutput };
 
 // CLI 入口（如果直接运行此文件）
-if (
-  import.meta.url === `file://${process.argv[1]}` ||
-  import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`
-) {
+if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
   RequirementManager.cli(process.argv.slice(2)).catch((err) => {
     console.error('CLI 错误:', err);
     process.exit(1);

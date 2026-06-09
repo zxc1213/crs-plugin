@@ -132,11 +132,7 @@ export class SkillInterface {
       result: {
         message: `技能 '${skillName}' 不可用`,
         error: health?.error || 'Unknown error',
-        guidance: [
-          '1. 运行 claude-req-skill-health 检查技能状态',
-          '2. 安装缺失的 Superpowers 技能',
-          '3. 或使用 --fallback=template 启用降级模式',
-        ],
+        guidance: ['1. 运行 claude-req-skill-health 检查技能状态', '2. 安装缺失的 Superpowers 技能', '3. 或使用 --fallback=template 启用降级模式'],
       },
     };
   }

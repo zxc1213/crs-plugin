@@ -56,17 +56,7 @@ export class PlanningAdapter extends BaseSkillAdapter {
 
   getTemplates() {
     return {
-      sections: [
-        '目标和背景',
-        '任务列表',
-        '任务优先级',
-        '依赖关系',
-        '时间估算',
-        '里程碑',
-        '风险和应对',
-        '资源需求',
-        '验收标准',
-      ],
+      sections: ['目标和背景', '任务列表', '任务优先级', '依赖关系', '时间估算', '里程碑', '风险和应对', '资源需求', '验收标准'],
       output: {
         goal: '目标陈述',
         tasks: '任务列表',

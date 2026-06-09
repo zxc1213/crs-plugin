@@ -115,9 +115,7 @@ export class Optimizer {
           category: 'cost',
           priority: bottleneck.severity,
           title: '控制 Token 使用',
-          description: bottleneck.over_budget
-            ? `超出预算 ${bottleneck.over_budget} tokens`
-            : 'Token 使用接近预算上限',
+          description: bottleneck.over_budget ? `超出预算 ${bottleneck.over_budget} tokens` : 'Token 使用接近预算上限',
           changes: {
             enable_smart_skipping: true,
             increase_cache_ttl: 7200,
@@ -400,14 +398,10 @@ export class Optimizer {
     // 检查频率限制
     const history = await this.getHistory();
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
-    const recentApplies = history.filter(
-      (h) => h.type === 'apply' && new Date(h.timestamp).getTime() > oneHourAgo
-    );
+    const recentApplies = history.filter((h) => h.type === 'apply' && new Date(h.timestamp).getTime() > oneHourAgo);
 
     if (recentApplies.length >= this.maxActionsPerHour) {
-      errors.push(
-        `Decision frequency limit exceeded: ${recentApplies.length}/${this.maxActionsPerHour} per hour`
-      );
+      errors.push(`Decision frequency limit exceeded: ${recentApplies.length}/${this.maxActionsPerHour} per hour`);
     }
 
     return {
@@ -442,9 +436,7 @@ export class Optimizer {
     // 确保唯一性：查找当天已有的决策数量
     const history = await this.getHistory();
     const todayPrefix = `OPT-${dateStr}`;
-    const todayCount = history.filter(
-      (h) => h.decision_id && h.decision_id.startsWith(todayPrefix)
-    ).length;
+    const todayCount = history.filter((h) => h.decision_id && h.decision_id.startsWith(todayPrefix)).length;
     const counter = todayCount + 1;
 
     return `${todayPrefix}-${String(counter).padStart(3, '0')}`;
@@ -516,9 +508,7 @@ export class Optimizer {
         console.log(chalk.gray(`  ${action.description}`));
       }
       if (action.changes) {
-        console.log(
-          chalk.gray(`  变更: ${JSON.stringify(action.changes, null, 2).split('\n').join('\n  ')}`)
-        );
+        console.log(chalk.gray(`  变更: ${JSON.stringify(action.changes, null, 2).split('\n').join('\n  ')}`));
       }
       console.log();
     }

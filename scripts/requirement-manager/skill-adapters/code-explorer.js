@@ -52,13 +52,7 @@ export class CodeExplorerAdapter extends BaseSkillAdapter {
 
   getTemplates() {
     return {
-      questions: [
-        '需要探索哪个文件或模块？',
-        '想了解什么信息？',
-        '该文件/模块的主要功能是什么？',
-        '它与其他哪些模块有交互？',
-        '有哪些关键函数或类？',
-      ],
+      questions: ['需要探索哪个文件或模块？', '想了解什么信息？', '该文件/模块的主要功能是什么？', '它与其他哪些模块有交互？', '有哪些关键函数或类？'],
       output: {
         target: '探索目标',
         location: '代码位置',

@@ -71,9 +71,7 @@ export class Evaluator {
 
     // Skill 满意度 (0-20 分)
     if (metrics.skill_performance) {
-      const avgSatisfaction =
-        Object.values(metrics.skill_performance).reduce((sum, s) => sum + s.satisfaction, 0) /
-        Object.keys(metrics.skill_performance).length;
+      const avgSatisfaction = Object.values(metrics.skill_performance).reduce((sum, s) => sum + s.satisfaction, 0) / Object.keys(metrics.skill_performance).length;
       score += (avgSatisfaction / 5) * 20;
       // factors++; // unused
     }
@@ -237,8 +235,7 @@ export class Evaluator {
 
     const history = metrics.history;
     const recent = history.slice(-5);
-    const avgCompletion =
-      recent.reduce((sum, h) => sum + (h.completion_rate || 0), 0) / recent.length;
+    const avgCompletion = recent.reduce((sum, h) => sum + (h.completion_rate || 0), 0) / recent.length;
     const current = history[history.length - 1].completion_rate || 0;
     const previous = history[history.length - 2].completion_rate || 0;
     const change_rate = ((current - previous) / previous) * 100;
@@ -247,14 +244,7 @@ export class Evaluator {
     if (change_rate > 5) direction = 'up';
     else if (change_rate < -5) direction = 'down';
 
-    const completion_trend =
-      avgCompletion > 0.8
-        ? 'excellent'
-        : avgCompletion > 0.7
-          ? 'good'
-          : avgCompletion > 0.6
-            ? 'fair'
-            : 'poor';
+    const completion_trend = avgCompletion > 0.8 ? 'excellent' : avgCompletion > 0.7 ? 'good' : avgCompletion > 0.6 ? 'fair' : 'poor';
 
     return {
       completion_trend,
@@ -302,9 +292,7 @@ export class Evaluator {
             category: 'cost',
             priority: bottleneck.severity === 'critical' ? 'critical' : 'high',
             title: '控制 Token 使用',
-            description: bottleneck.over_budget
-              ? `超出预算 ${bottleneck.over_budget} tokens`
-              : 'Token 使用接近预算上限',
+            description: bottleneck.over_budget ? `超出预算 ${bottleneck.over_budget} tokens` : 'Token 使用接近预算上限',
             actions: ['增加缓存命中率', '优化提示词长度', '启用智能跳过机制'],
           });
           break;
@@ -364,9 +352,7 @@ export class Evaluator {
 
     // Skill 满意度 (0-20 分)
     if (metrics.skill_performance) {
-      const avgSatisfaction =
-        Object.values(metrics.skill_performance).reduce((sum, s) => sum + s.satisfaction, 0) /
-        Object.keys(metrics.skill_performance).length;
+      const avgSatisfaction = Object.values(metrics.skill_performance).reduce((sum, s) => sum + s.satisfaction, 0) / Object.keys(metrics.skill_performance).length;
       score += (avgSatisfaction / 5) * 20;
       // factors++; // unused
     }

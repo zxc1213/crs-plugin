@@ -90,14 +90,7 @@ export class AdapterFactory {
 }
 
 // 导出所有适配器
-export {
-  BaseSkillAdapter,
-  BrainstormingAdapter,
-  DebuggingAdapter,
-  ResearchAdapter,
-  CodeExplorerAdapter,
-  PlanningAdapter,
-};
+export { BaseSkillAdapter, BrainstormingAdapter, DebuggingAdapter, ResearchAdapter, CodeExplorerAdapter, PlanningAdapter };
 
 export default {
   BaseSkillAdapter,

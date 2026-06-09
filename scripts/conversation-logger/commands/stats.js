@@ -159,9 +159,7 @@ function formatAsTable(stats) {
     for (const activity of stats.recentActivity.slice(0, 5)) {
       const id = activity.id.substring(0, 35);
       const startTime = formatDate(activity.startTime);
-      lines.add(
-        `│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${String(activity.messageCount).padStart(8)} │`
-      );
+      lines.add(`│ ${id.padEnd(35)} │ ${startTime.padEnd(16)} │ ${String(activity.messageCount).padStart(8)} │`);
     }
 
     lines.add('└─────────────────────────────────────┴──────────────────┴────────────┘');

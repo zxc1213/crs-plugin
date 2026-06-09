@@ -317,20 +317,14 @@ export class Upgrader {
       console.log(chalk.green(`✓ 升级成功`));
       console.log(chalk.gray(`版本: ${result.version}`));
       console.log(chalk.gray(`备份: ${result.backup}`));
-      console.log(
-        chalk.gray(
-          `应用动作: ${result.applied_actions.filter((a) => a.status === 'success').length}/${result.applied_actions.length}\n`
-        )
-      );
+      console.log(chalk.gray(`应用动作: ${result.applied_actions.filter((a) => a.status === 'success').length}/${result.applied_actions.length}\n`));
     } else {
       console.log(chalk.red(`✗ 升级失败\n`));
     }
 
     if (result.applied_actions.some((a) => a.status === 'failed')) {
       console.log(chalk.yellow('失败的动作:'));
-      result.applied_actions
-        .filter((a) => a.status === 'failed')
-        .forEach((a) => console.log(chalk.red(`  - ${a.action_id}: ${a.error}`)));
+      result.applied_actions.filter((a) => a.status === 'failed').forEach((a) => console.log(chalk.red(`  - ${a.action_id}: ${a.error}`)));
     }
   }
 }
