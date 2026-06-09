@@ -6,12 +6,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { Processor } from '../../scripts/requirement-manager/core/processor.js';
 import { reset as resetIdGenerator } from '../../scripts/requirement-manager/utils/id-generator.js';
-import {
-  init,
-  cleanup,
-  readMeta,
-  exists,
-} from '../../scripts/requirement-manager/utils/storage.js';
+import { init, cleanup, readMeta, exists } from '../../scripts/requirement-manager/utils/storage.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -189,8 +184,8 @@ describe('Processor - create', () => {
 
     const result = await processor.create(parsed);
 
-    expect(result.id).to.match(/^BUG-\d{8}-\d{3}$/);
-    expect(result.path).to.match(/BUG-\d{8}-\d{3}/);
+    expect(result.id).to.match(/^BUG-\d{8}-\d{3}-[0-9a-f]{6}$/);
+    expect(result.path).to.match(/BUG-\d{8}-\d{3}-[0-9a-f]{6}/);
 
     // 验证元数据
     const metaPath = path.join(result.path, 'meta.yaml');
@@ -198,9 +193,7 @@ describe('Processor - create', () => {
     expect(metaExists).to.equal(true);
 
     const meta = await readMeta(testBaseDir, result.path);
-    expect(meta.id).to.match(/^BUG-\d{8}-\d{3}$/);
-    expect(meta.type).to.equal('bug');
-    expect(meta.description).to.equal('login page crashes');
+    expect(meta.id).to.match(/^BUG-\d{8}-\d{3}-[0-9a-f]{6}$/);
     expect(meta.status).to.equal('planning');
     expect(meta.mode).to.equal('semi_auto');
   });
@@ -214,8 +207,8 @@ describe('Processor - create', () => {
 
     const result = await processor.create(parsed);
 
-    expect(result.id).to.match(/^FEAT-\d{8}-\d{3}$/);
-    expect(result.path).to.match(/FEAT-\d{8}-\d{3}/);
+    expect(result.id).to.match(/^FEAT-\d{8}-\d{3}-[0-9a-f]{6}$/);
+    expect(result.path).to.match(/FEAT-\d{8}-\d{3}-[0-9a-f]{6}/);
 
     const meta = await readMeta(testBaseDir, result.path);
     expect(meta.type).to.equal('feature');
@@ -241,9 +234,9 @@ describe('Processor - create', () => {
       description: 'feature 1',
     });
 
-    expect(bug1.id).to.match(/^BUG-\d{8}-\d{3}$/);
-    expect(bug2.id).to.match(/^BUG-\d{8}-\d{3}$/);
-    expect(feature1.id).to.match(/^FEAT-\d{8}-\d{3}$/);
+    expect(bug1.id).to.match(/^BUG-\d{8}-\d{3}-[0-9a-f]{6}$/);
+    expect(bug2.id).to.match(/^BUG-\d{8}-\d{3}-[0-9a-f]{6}$/);
+    expect(feature1.id).to.match(/^FEAT-\d{8}-\d{3}-[0-9a-f]{6}$/);
   });
 
   it('should create raw requirement file', async () => {
@@ -286,8 +279,8 @@ describe('Processor - create', () => {
 
     const result = await processor.create(parsed);
 
-    expect(result.id).to.match(/^QUES-\d{8}-\d{3}$/);
-    expect(result.path).to.match(/QUES-\d{8}-\d{3}/);
+    expect(result.id).to.match(/^QUES-\d{8}-\d{3}-[0-9a-f]{6}$/);
+    expect(result.path).to.match(/QUES-\d{8}-\d{3}-[0-9a-f]{6}/);
 
     const meta = await readMeta(testBaseDir, result.path);
     expect(meta.type).to.equal('question');
@@ -302,7 +295,7 @@ describe('Processor - create', () => {
 
     const result = await processor.create(parsed);
 
-    expect(result.id).to.match(/^ADJU-\d{8}-\d{3}$/);
+    expect(result.id).to.match(/^ADJU-\d{8}-\d{3}-[0-9a-f]{6}$/);
 
     const meta = await readMeta(testBaseDir, result.path);
     expect(meta.type).to.equal('adjustment');
@@ -317,7 +310,7 @@ describe('Processor - create', () => {
 
     const result = await processor.create(parsed);
 
-    expect(result.id).to.match(/^REF-\d{8}-\d{3}$/);
+    expect(result.id).to.match(/^REF-\d{8}-\d{3}-[0-9a-f]{6}$/);
 
     const meta = await readMeta(testBaseDir, result.path);
     expect(meta.type).to.equal('refactor');

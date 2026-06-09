@@ -1,6 +1,6 @@
 /**
  * ID 生成器 - 为需求生成唯一ID
- * 格式: PREFIX-YYYYMMDD-XXX
+ * 格式: PREFIX-YYYYMMDD-XXX-HHHHHH (HHHHHH 为时间戳十六进制后 6 位)
  */
 
 import fs from 'fs/promises';
@@ -51,6 +51,14 @@ function getTodayString() {
 }
 
 /**
+ * 生成基于时间戳的 hash 后缀（十六进制后 6 位）
+ * @returns {string} 6 位十六进制字符串
+ */
+export function generateHash() {
+  return Date.now().toString(16).slice(-6).padStart(6, '0');
+}
+
+/**
  * 生成需求ID
  * @param {string} type - 需求类型 (feature/bug/tech-debt)
  * @returns {Promise<string>}
@@ -93,7 +101,10 @@ export async function generate(type) {
   // 格式化为 3 位数字
   const formattedNumber = String(number).padStart(3, '0');
 
-  return `${prefix}-${today}-${formattedNumber}`;
+  // 生成 hash 后缀保证并发唯一性
+  const hash = generateHash();
+
+  return `${prefix}-${today}-${formattedNumber}-${hash}`;
 }
 
 /**
@@ -102,47 +113,11 @@ export async function generate(type) {
  * @returns {object|null}
  */
 export function parse(id) {
-  // 支持新旧两种格式
-  // 新格式: PREFIX-YYYYMMDD-XXX
+  // 支持三种格式
+  // hash 格式: PREFIX-YYYYMMDD-XXX-HHHHHH
+  // 旧日期格式: PREFIX-YYYYMMDD-XXX
   // 旧格式: PREFIX-NNNN
-  let match = id.match(/^([A-Z]+)-(\d{8})-(\d{3})$/);
 
-  if (!match) {
-    // 尝试旧格式
-    match = id.match(/^([A-Z]+)-(\d{4})$/);
-    if (match) {
-      const [, prefix, numberStr] = match;
-      const number = parseInt(numberStr, 10);
-
-      const prefixToType = {
-        FEAT: 'feature',
-        BUG: 'bug',
-        QUES: 'question',
-        ADJU: 'adjustment',
-        REF: 'refactor',
-        DEBT: 'tech-debt',
-      };
-
-      const type = prefixToType[prefix];
-
-      if (!type) {
-        return null;
-      }
-
-      return {
-        type,
-        number,
-        prefix,
-        format: 'old',
-      };
-    }
-    return null;
-  }
-
-  const [, prefix, dateStr, numberStr] = match;
-  const number = parseInt(numberStr, 10);
-
-  // 映射前缀到类型
   const prefixToType = {
     FEAT: 'feature',
     BUG: 'bug',
@@ -152,19 +127,52 @@ export function parse(id) {
     DEBT: 'tech-debt',
   };
 
-  const type = prefixToType[prefix];
-
-  if (!type) {
-    return null;
+  // 优先匹配 hash 格式
+  let match = id.match(/^([A-Z]+)-(\d{8})-(\d{3})-([0-9a-f]{6})$/);
+  if (match) {
+    const [, prefix, dateStr, numberStr, hash] = match;
+    const type = prefixToType[prefix];
+    if (!type) return null;
+    return {
+      type,
+      number: parseInt(numberStr, 10),
+      prefix,
+      date: dateStr,
+      hash,
+      format: 'hash',
+    };
   }
 
-  return {
-    type,
-    number,
-    prefix,
-    date: dateStr,
-    format: 'new',
-  };
+  // 旧日期格式: PREFIX-YYYYMMDD-XXX
+  match = id.match(/^([A-Z]+)-(\d{8})-(\d{3})$/);
+  if (match) {
+    const [, prefix, dateStr, numberStr] = match;
+    const type = prefixToType[prefix];
+    if (!type) return null;
+    return {
+      type,
+      number: parseInt(numberStr, 10),
+      prefix,
+      date: dateStr,
+      format: 'new',
+    };
+  }
+
+  // 旧格式: PREFIX-NNNN
+  match = id.match(/^([A-Z]+)-(\d{4})$/);
+  if (match) {
+    const [, prefix, numberStr] = match;
+    const type = prefixToType[prefix];
+    if (!type) return null;
+    return {
+      type,
+      number: parseInt(numberStr, 10),
+      prefix,
+      format: 'old',
+    };
+  }
+
+  return null;
 }
 
 /**
@@ -200,6 +208,7 @@ export async function reset(type, date) {
 
 export default {
   generate,
+  generateHash,
   parse,
   reset,
 };

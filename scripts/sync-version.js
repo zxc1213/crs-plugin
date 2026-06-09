@@ -7,21 +7,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // 从package.json读取版本
-const packageJson = JSON.parse(
-  readFileSync(join(__dirname, '../package.json'), 'utf-8')
-);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
 const version = packageJson.version;
 
 // 定义需要同步的文件
 const manifests = [
   {
     path: '.claude-plugin/plugin.json',
-    key: 'version'
+    key: 'version',
   },
   {
     path: '.codex-plugin/plugin.json',
-    key: 'version'
-  }
+    key: 'version',
+  },
 ];
 
 // 同步版本号
