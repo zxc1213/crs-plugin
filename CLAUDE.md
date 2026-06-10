@@ -65,7 +65,7 @@ kg-rebuild                    # 重建索引
 
 **需求处理器** (`scripts/requirement-manager/core/processor.js`)
 
-- `Processor.create()` - 创建新需求，生成 ID（如 FEAT-20260514-001）
+- `Processor.create()` - 创建新需求，生成 ID（如 FEAT-20260514-001-a3b2c1）
 - `Processor.update()` - 更新需求状态
 - `Processor.parseType()` - 解析命令输入，自动推断类型和模式
 
@@ -187,13 +187,16 @@ Fuse.js 提供轻量级的模糊搜索能力，对于需求管理场景足够：
 
 ### 需求 ID 生成规则
 
-格式：`{前缀}-{日期}-{序号}`
+格式：`{前缀}-{日期}-{序号}-{hash}`
 
 - 前缀：FEAT（功能）、BUG（缺陷）、QUES（问题）、ADJU（调整）、REF（重构）
 - 日期：YYYYMMDD
 - 序号：三位数字，从 001 开始
+- hash：时间戳十六进制后 6 位，保证并发唯一性
 
-示例：`FEAT-20260514-001`
+示例：`FEAT-20260514-001-a3b2c1`
+
+> 旧格式 `PREFIX-YYYYMMDD-NNN` 和 `PREFIX-NNNN` 仍被 parse() 支持（向后兼容）
 
 ## 重要提示
 

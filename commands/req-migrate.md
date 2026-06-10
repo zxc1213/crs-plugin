@@ -26,7 +26,7 @@ description: 历史数据迁移工具（带备份）- 将 v0.6.0 之前的旧格
 v0.6.0 之前，每个需求使用 5 个独立文件：
 
 ```
-.requireations/FEAT-20260514-001/
+.requireations/FEAT-20260514-001-a3b2c1/
 ├── design.md           # 设计文档
 ├── test-plan.md        # 测试计划
 ├── plan.md             # 实施计划
@@ -41,7 +41,7 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 所有信息统一到 1 个文件：
 
 ```
-.requireations/FEAT-20260514-001/
+.requireations/FEAT-20260514-001-a3b2c1/
 └── spec.md             # 统一规格文档
 ```
 
@@ -49,16 +49,16 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 
 ```bash
 # 迁移单个需求（推荐）
-/req:migrate FEAT-20260514-001
+/req:migrate FEAT-20260514-001-a3b2c1
 
 # 批量迁移所有需求
 /req:migrate --all
 
 # 预览模式（不实际修改）
-/req:migrate FEAT-20260514-001 --dry-run
+/req:migrate FEAT-20260514-001-a3b2c1 --dry-run
 
 # 交互式迁移（逐步确认）
-/req:migrate FEAT-20260514-001 --interactive
+/req:migrate FEAT-20260514-001-a3b2c1 --interactive
 
 # 查看迁移状态
 /req:migrate --status
@@ -68,7 +68,7 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 
 | 选项            | 说明                                     |
 | --------------- | ---------------------------------------- |
-| `req-id`        | 需求 ID（如：FEAT-20260514-001）         |
+| `req-id`        | 需求 ID（如：FEAT-20260514-001-a3b2c1）         |
 | `--all`         | 批量迁移所有旧格式需求                   |
 | `--dry-run`     | 预览模式，显示将要执行的操作但不实际修改 |
 | `--interactive` | 交互式迁移，每个步骤都需确认             |
@@ -77,10 +77,10 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 ## 迁移过程
 
 ```bash
-🔄 安全迁移需求文档 - FEAT-20260514-001
+🔄 安全迁移需求文档 - FEAT-20260514-001-a3b2c1
 
 📦 备份中...
-✓ 创建 .backup/FEAT-20260514-001/ 目录
+✓ 创建 .backup/FEAT-20260514-001-a3b2c1/ 目录
 ✓ 备份 design.md
 ✓ 备份 test-plan.md
 ✓ 备份 plan.md
@@ -104,8 +104,8 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 
 ✅ 迁移完成！
 
-💾 备份位置: .requirements/.backup/FEAT-20260514-001/
-🔄 需要回滚? 运行: /req:migrate --rollback FEAT-20260514-001
+💾 备份位置: .requirements/.backup/FEAT-20260514-001-a3b2c1/
+🔄 需要回滚? 运行: /req:migrate --rollback FEAT-20260514-001-a3b2c1
 ```
 
 ## 安全特性
@@ -115,7 +115,7 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 迁移前自动创建 `.backup/` 目录，保存所有旧文件的完整副本：
 
 ```
-.requirements/.backup/FEAT-20260514-001/
+.requirements/.backup/FEAT-20260514-001-a3b2c1/
 ├── design.md
 ├── test-plan.md
 ├── plan.md
@@ -137,7 +137,7 @@ v0.6.0 之前，每个需求使用 5 个独立文件：
 
 ```bash
 # 回滚特定需求
-/req:migrate --rollback FEAT-20260514-001
+/req:migrate --rollback FEAT-20260514-001-a3b2c1
 
 # 回滚所有迁移
 /req:migrate --rollback --all

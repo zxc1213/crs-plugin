@@ -58,7 +58,7 @@ description: CRS 文档格式规范 - 所有需求文档的目录结构、命名
 
 | type | 前缀 | 示例 |
 |------|------|------|
-| feature | FEAT | FEAT-20260525-001 |
+| feature | FEAT | FEAT-20260525-001-a3b2c1 |
 | bug | BUG | BUG-20260525-001 |
 | question | QUES | QUES-20260525-001 |
 | adjustment | ADJ | ADJ-20260525-001 |
@@ -67,7 +67,7 @@ description: CRS 文档格式规范 - 所有需求文档的目录结构、命名
 ## 2. meta.yaml 格式
 
 ```yaml
-id: FEAT-20260525-001
+id: FEAT-20260525-001-a3b2c1
 type: feature
 title: 需求标题（首行描述，限100字符）
 description: 完整需求描述
