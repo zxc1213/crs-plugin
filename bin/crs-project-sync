@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const target = path.join(__dirname, 'crs-project-sync.js');
+process.argv[1] = target;
+await import(target);

@@ -1,5 +1,76 @@
 # Migration Guide
 
+## v0.10.x → v0.11.0
+
+v0.11.0 新增**项目级文档自动维护**功能（`.requirements/project/`），完全向后兼容，零破坏性变更。
+
+### 谁会受影响？
+
+| 用户类型 | 影响 | 行动 |
+|---|---|---|
+| 所有现有用户 | **正面** | 项目获得"活文档"视图，无需手动操作 |
+| 多人协作团队 | **正面** | project 文档纳入 VCS 后团队共享 |
+| 性能敏感项目 | 中性 | 单次同步 < 100ms，可关闭 |
+| 自定义工作流用户 | 中性 | 通过 `CRS_PROJECT_SYNC=off` 可禁用 |
+
+### 新增功能
+
+#### 1. 自动初始化 `.requirements/project/` 目录
+
+执行 `/req-init` 或首次创建需求时，自动生成：
+- `project-structure.md` — 项目结构（代码扫描）
+- `business-requirements.md` — 业务需求聚合
+- `functional-requirements.md` — 功能矩阵
+- `functional-design.md` — 设计要点汇总
+- `changelog.md` — 变更历史
+- `meta.yaml` — 项目元数据
+
+#### 2. 自动同步触发
+
+| 事件 | 动作 |
+|---|---|
+| 需求状态变为 `done` | 追加到 functional-requirements + functional-design |
+| Bug 修复 `design_change: true` | 更新 functional-design.md |
+| Bug 修复 `design_change: false` | 仅追加 changelog |
+
+#### 3. Bug 设计变更标记
+
+在 Bug 的 `spec/decisions.md` 顶部增加 frontmatter：
+
+```yaml
+---
+design_change: true
+impact_areas: [id-generator, processor]
+---
+```
+
+未标记时使用关键词兜底（"重构"、"架构变更"等），命中即视为设计变更。
+
+### 如何禁用？
+
+设置环境变量：
+```bash
+export CRS_PROJECT_SYNC=off
+```
+
+### 如何手动操作？
+
+```bash
+crs-project-init              # 初始化或修复
+crs-project-init --force      # 强制重建（保留 changelog）
+crs-project-sync --full       # 全量重生成
+crs-project-sync --req-id FEAT-20260613-001  # 同步指定需求
+```
+
+### 现有项目如何升级？
+
+1. 升级到 v0.11.0：`npm install -g github:zxc1213/crs`
+2. 在现有项目根目录执行：`crs-project-init`
+3. 系统自动扫描现有需求，生成 4 份核心文档
+4. 后续每次需求 done 时自动追加更新
+
+---
+
 ## v0.9.x → v0.10.0
 
 v0.10.0 引入新的 ID 生成模式（`CRS_ID_MODE` 环境变量），**默认行为变更**：不再写入 `.requirements/counters.json`，消除多人 Git 协作时的合并冲突。

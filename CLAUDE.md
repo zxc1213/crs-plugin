@@ -92,6 +92,11 @@ scripts/                       # 核心脚本工具
 ├── requirement-manager/       # 需求管理器核心
 │   ├── core/                  # processor.js, router.js, scheduler.js
 │   ├── optimization/          # optimizer.js, evaluator.js, upgrader.js
+│   ├── project-sync/          # 项目级文档自动维护（v0.11.0+）
+│   │   ├── index.js           # 编排器
+│   │   ├── structure-scanner.js
+│   │   ├── requirements-aggregator.js
+│   │   └── design-summarizer.js
 │   └── utils/                 # storage.js, logger.js, id-generator.js
 ├── knowledge-graph/           # 向量知识图谱
 ├── hooks/                     # 自动化钩子
@@ -214,6 +219,39 @@ Fuse.js 提供轻量级的模糊搜索能力，对于需求管理场景足够：
 - 全局唯一性始终由 hash 后缀保证（毫秒精度时间戳）
 
 ## 重要提示
+
+### 项目级文档自动维护（v0.11.0+）
+
+CRS 自动维护 `.requirements/project/` 目录，提供项目级"活文档"视图：
+
+| 文档 | 内容来源 | 更新触发 |
+|---|---|---|
+| `project-structure.md` | 实际代码扫描（package.json + 目录树） | 初始化 / `crs-project-init --force` |
+| `business-requirements.md` | 已完成 feature 需求聚合 | feature 状态变 done 时追加 |
+| `functional-requirements.md` | 已完成需求（features + bugs + refactors） | 需求 done 时追加（幂等去重） |
+| `functional-design.md` | 各需求 `spec/design.md` 聚合 + Bug 设计变更 | feature/refactor done 或 Bug design_change=true |
+| `changelog.md` | 全部同步事件 | 每次同步追加（永不删除） |
+
+**自动触发机制**：`processor.update()` 在状态变为 `done` 时调用 `project-sync`。
+
+**手动操作**：
+```bash
+crs-project-init                              # 初始化
+crs-project-init --force                      # 强制重建（保留 changelog）
+crs-project-sync --full                       # 全量重生成
+crs-project-sync --req-id FEAT-20260613-001   # 同步指定需求
+```
+
+**关闭同步**：`export CRS_PROJECT_SYNC=off`
+
+**Bug 设计变更标记**：在 Bug 的 `spec/decisions.md` 增加 frontmatter：
+```yaml
+---
+design_change: true
+impact_areas: [模块A, 模块B]
+---
+```
+未标记时使用关键词兜底检测（"重构"、"架构变更"等）。
 
 ### Hooks 配置
 

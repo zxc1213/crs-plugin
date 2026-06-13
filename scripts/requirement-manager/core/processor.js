@@ -360,6 +360,32 @@ planning → analyzed → implementing → review → done
     } catch (_error) {
       // 知识图谱同步失败不影响主流程
     }
+
+    // 新增：状态变为 done 时触发 project 文档同步
+    if (
+      updates.status === 'done' &&
+      meta.status !== 'done' &&
+      process.env.CRS_PROJECT_SYNC !== 'off'
+    ) {
+      try {
+        const { syncOnRequirementDone, syncOnBugFixed } = await import(
+          '../project-sync/index.js'
+        );
+        if (updatedMeta.type === 'bug') {
+          await syncOnBugFixed(this.baseDir, id);
+        } else {
+          await syncOnRequirementDone(this.baseDir, id);
+        }
+      } catch (_error) {
+        // 同步失败不影响主流程，仅记录日志
+        try {
+          const { logProjectSyncError } = await import('../project-sync/index.js');
+          await logProjectSyncError(this.baseDir, id, _error);
+        } catch (_logError) {
+          // 彻底静默
+        }
+      }
+    }
   }
 
   /**
