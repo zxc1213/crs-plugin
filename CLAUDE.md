@@ -97,6 +97,14 @@ scripts/                       # 核心脚本工具
 │   │   ├── structure-scanner.js
 │   │   ├── requirements-aggregator.js
 │   │   └── design-summarizer.js
+│   ├── export/                # HTML 报告导出（v0.12.0+）
+│   │   ├── index.js           # 编排入口
+│   │   ├── collector.js       # 数据聚合
+│   │   ├── renderer.js        # HTML 渲染
+│   │   ├── writer.js          # 文件输出
+│   │   ├── markdown.js        # 轻量 Markdown 渲染器
+│   │   ├── types.js           # 类型/常量定义
+│   │   └── utils.js           # XSS 转义等工具
 │   └── utils/                 # storage.js, logger.js, id-generator.js
 ├── knowledge-graph/           # 向量知识图谱
 ├── hooks/                     # 自动化钩子
@@ -131,6 +139,7 @@ commands/                      # Claude Code 命令定义
 bin/                           # CLI 工具
 ├── claude-req-init            # 初始化命令
 ├── claude-req-update          # 更新命令
+├── crs-export.js              # HTML 报告导出（v0.12.0+）
 └── kg-cli.js                  # 知识图谱 CLI
 
 hooks/                         # Hooks 配置
@@ -252,6 +261,23 @@ impact_areas: [模块A, 模块B]
 ---
 ```
 未标记时使用关键词兜底检测（"重构"、"架构变更"等）。
+
+### HTML 报告导出（v0.12.0+）
+
+`crs-export` CLI 将 `.requirements/` 聚合导出为单文件 HTML 报告，便于团队评审、项目归档、跨团队共享。
+
+```bash
+crs-export                                # 默认导出（含 Mermaid CDN）
+crs-export -o ./reports/v1.html           # 自定义输出路径
+crs-export -t "v0.11.0 发布快照"           # 自定义标题
+crs-export --offline                      # 离线模式（不加载 CDN）
+crs-export --no-mermaid                   # 禁用依赖图
+crs-export -q                             # 静默模式
+```
+
+报告内容：状态分布饼图（SVG 内联）、Mermaid 依赖关系图、需求列表（客户端过滤）、Changelog 时间线、需求详情（折叠）、项目级文档。
+
+实现模块：`scripts/export/`（`collector.js` / `renderer.js` / `writer.js` / `markdown.js` / `utils.js`）。
 
 ### Hooks 配置
 

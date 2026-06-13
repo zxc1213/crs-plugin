@@ -92,6 +92,17 @@ kg-recommend                 # 智能推荐相关需求
 kg-rebuild                   # 重建知识图谱索引
 ```
 
+**HTML 报告导出（v0.12.0+）**：
+
+```bash
+crs-export                    # 默认导出（含 Mermaid CDN）
+crs-export -o ./reports/v1.html -t "v1 发布快照"
+crs-export --offline          # 离线模式
+crs-export --no-mermaid       # 禁用依赖图
+```
+
+将 `.requirements/` 聚合为单文件 HTML 报告，含状态分布饼图、依赖关系图、需求列表（可过滤）、Changelog 时间线、详情面板。
+
 **优先级管理**：
 
 ```bash
@@ -219,7 +230,7 @@ your-project/
 - ✅ 向量知识图谱：基于 Fuse.js 实现语义搜索
 - ✅ 智能相似度检测：自动发现相似需求
 - ✅ 知识关联遍历：BFS 算法遍历需求关系网络
-- ✅ CLI 工具集：kg-search、kg-stats、kg-connections、kg-recommend、kg-rebuild
+- ✅ CLI 工具集：kg-search、kg-stats、kg-connections、kg-recommend、kg-rebuild、crs-export
 
 详细版本历史请查看 [CHANGELOG.md](CHANGELOG.md)。
 

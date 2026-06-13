@@ -1,6 +1,6 @@
 {
   "name": "claude-req-sys-plugin",
-  "version": "0.10.0",
+  "version": "0.12.0",
   "description": "智能需求管理系统",
   "skills": "./skills/",
   "commands": "./commands/",

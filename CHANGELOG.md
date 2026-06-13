@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-06-13
+
+### Added
+
+#### HTML 报告导出（crs-export）
+
+- **新增 `crs-export` CLI**：将 `.requirements/` 聚合为单文件静态 HTML 报告
+  - 状态分布饼图（SVG 内联，零依赖）
+  - Mermaid 依赖关系图（CDN / `--offline` 两种模式）
+  - 需求列表（客户端过滤：类型/状态/优先级/搜索）
+  - Changelog 时间线、需求详情折叠面板、项目级文档
+- **新模块** `scripts/export/`：7 个文件（collector/renderer/writer/markdown/utils/types/index）
+- **轻量 Markdown 渲染器**：手写实现，无新依赖，节省 ~30KB
+- **XSS 防护**：所有动态内容强制 `escapeHtml`，覆盖 OWASP payload
+- **测试**：~79 个用例（utils/markdown/collector/renderer/writer/integration），全部通过
+- **CLI 选项**：`--output` / `--title` / `--offline` / `--no-mermaid` / `--filter` / `--quiet`
+- **端到端验证**：在 CRS 自身导出 8 个需求 → 228 KB / 2ms
+
+### Changed
+
+- `package.json`：注册 `crs-export` bin
+- `README.md` / `CLAUDE.md`：新增 crs-export 使用文档
+
+## [0.11.0] - 2026-06-13
+
+### Added
+
+#### 项目级文档自动维护（project-sync）
+
+- **自动维护 `.requirements/project/`**：5 份文档自动同步
+  - `project-structure.md`（代码扫描）
+  - `business-requirements.md`（feature 需求聚合）
+  - `functional-requirements.md`（已完成需求聚合）
+  - `functional-design.md`（spec/design.md 聚合 + Bug 设计变更）
+  - `changelog.md`（全部同步事件，只追加）
+- **新增 CLI**：`crs-project-init` / `crs-project-sync`
+- **触发机制**：需求状态变 done / Bug 修复涉及设计变更时自动追加（幂等去重）
+- **Bug 设计变更检测**：frontmatter `design_change: true` + 关键词兜底
+
+### Changed
+
+- `processor.update()` 集成 project-sync 调用
+- 关闭同步：`export CRS_PROJECT_SYNC=off`
+
+## [0.10.0] - 2026-06-12
+
+### Added
+
+#### 多模式 ID 生成（CRS_ID_MODE）
+
+- 通过 `CRS_ID_MODE` 环境变量支持 4 种 NNN 计算方式
+  - `fixed`（默认）：进程内递增不持久化，多人 Git 零合并冲突
+  - `hash_seq`：hash 前 3 位（0-4095）
+  - `author_seq`：按作者隔离（`counters-{author}.json`）
+  - `hostname_seq`：按机器隔离（`counters-{hostname}.json`）
+
 ## [0.7.0] - 2026-05-23
 
 ### Added
