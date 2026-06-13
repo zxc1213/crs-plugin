@@ -191,12 +191,27 @@ Fuse.js 提供轻量级的模糊搜索能力，对于需求管理场景足够：
 
 - 前缀：FEAT（功能）、BUG（缺陷）、QUES（问题）、ADJU（调整）、REF（重构）
 - 日期：YYYYMMDD
-- 序号：三位数字，从 001 开始
-- hash：时间戳十六进制后 6 位，保证并发唯一性
+- 序号（NNN）：三位数字，**默认进程内递增**（不持久化），跨进程可能重复
+- hash：时间戳十六进制后 6 位，**保证全局唯一性**
 
 示例：`FEAT-20260514-001-a3b2c1`
 
 > 旧格式 `PREFIX-YYYYMMDD-NNN` 和 `PREFIX-NNNN` 仍被 parse() 支持（向后兼容）
+
+#### ID 模式（v0.10.0+）
+
+通过 `CRS_ID_MODE` 环境变量切换 NNN 部分的计算方式：
+
+| 模式 | 默认 | NNN 来源 | 是否写文件 | 适用场景 |
+|---|---|---|---|---|
+| `fixed` | ✅ | 进程内递增（不持久化） | ❌ | 多人协作零合并冲突 |
+| `hash_seq` | | hash 前 3 位（0-4095） | ❌ | 完全无状态 |
+| `author_seq` | | `counters-{author}.json` 递增 | ✅ | 按作者隔离连续 NNN |
+| `hostname_seq` | | `counters-{hostname}.json` 递增 | ✅ | 按机器隔离连续 NNN |
+
+- `author_seq` 模式需设置 `CRS_AUTHOR` 环境变量（未设置时 fallback 到 `git config user.name`，再失败则用 `'unknown'`）
+- 默认 `fixed` 模式不写 `counters.json`，多人 Git 合并不再冲突
+- 全局唯一性始终由 hash 后缀保证（毫秒精度时间戳）
 
 ## 重要提示
 

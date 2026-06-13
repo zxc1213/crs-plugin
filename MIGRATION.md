@@ -1,0 +1,95 @@
+# Migration Guide
+
+## v0.9.x → v0.10.0
+
+v0.10.0 引入新的 ID 生成模式（`CRS_ID_MODE` 环境变量），**默认行为变更**：不再写入 `.requirements/counters.json`，消除多人 Git 协作时的合并冲突。
+
+### 谁会受影响？
+
+| 用户类型 | 影响 | 行动 |
+|---|---|---|
+| 单人项目用户 | 中性 | 无需操作，新 ID 自动采用 fixed 模式 |
+| 多人协作团队 | **正面** | 不再有 counters.json 合并冲突 |
+| 依赖连续 NNN 的脚本 | **需调整** | NNN 在跨进程场景不再保证连续，请改用 `created` 时间排序 |
+| 需要作者/机器隔离 | 可选 | 显式启用 `author_seq` 或 `hostname_seq` 模式 |
+
+### 行为变更
+
+| 项 | v0.9.x | v0.10.0 |
+|---|---|---|
+| 默认 NNN 来源 | 共享 counters.json 递增 | 进程内递增（不持久化） |
+| `.requirements/counters.json` 写入 | 每次 generate 写入 | **不再写入** |
+| 多人 Git 合并冲突 | 经常发生 | **不再发生** |
+| 跨进程 NNN 唯一性 | 是（共享文件） | 否（由 hash 后缀保证全局唯一） |
+| parse() 兼容性 | 三种格式 | 三种格式（不变） |
+
+### 现有 ID 兼容性
+
+所有 v0.9.x 生成的 ID 仍能被 `parse()` 正确识别：
+
+- `FEAT-20260514-001-a3b2c1` (hash 格式) ✓
+- `FEAT-20260514-001` (旧日期格式) ✓
+- `FEAT-0001` (旧 4 位格式) ✓
+
+`.requirements/counters.json` 文件如果存在，**不会被主动删除**，但也不会被新版本写入。可以手动删除以减少仓库噪音。
+
+### 如何保留 v0.9.x 行为？
+
+如果你需要保留"全局连续递增 NNN + 共享 counters.json"的行为（例如有脚本依赖此特性），可以选择以下模式之一：
+
+#### 选项 A：按作者隔离（推荐）
+
+```bash
+# 在 shell 配置中（如 ~/.bashrc / ~/.zshrc / Windows 环境变量）
+export CRS_ID_MODE=author_seq
+export CRS_AUTHOR=你的名字
+```
+
+效果：每个作者维护独立的 `counters-{author}.json`，合并时不会冲突，且每人看到的 NNN 是连续的。
+
+#### 选项 B：按机器隔离
+
+```bash
+export CRS_ID_MODE=hostname_seq
+```
+
+效果：每台机器维护独立的 `counters-{hostname}.json`。
+
+#### 选项 C：完全无状态
+
+```bash
+export CRS_ID_MODE=hash_seq
+```
+
+效果：NNN 来自 hash 前 3 位（0-4095），完全无文件 IO，最简实现。
+
+### 升级步骤
+
+1. **升级包**：`npm install -g github:zxc1213/crs@latest`
+2. **可选：清理旧 counter 文件**：`rm .requirements/counters.json`（非必须，新版本不会写入）
+3. **可选：配置 ID 模式**：如需作者隔离，设置环境变量
+4. **验证**：执行 `/req -f 测试需求`，检查生成的 ID 仍为 `FEAT-YYYYMMDD-NNN-HHHHHH` 格式
+
+### 回滚
+
+如需回退到 v0.9.x：
+
+```bash
+npm install -g github:zxc1213/crs@v0.9.1
+```
+
+回退后已生成的 v0.10.0 ID 仍能被 v0.9.x 的 `parse()` 正确识别（hash 格式双向兼容）。
+
+### FAQ
+
+**Q: 升级后我的项目历史会受影响吗？**
+A: 不会。所有现有需求目录和 ID 都被保留，仅新创建的 ID 行为不同。
+
+**Q: counters.json 文件还有用吗？**
+A: v0.10.0 默认不再读写它。可以保留（无害）或删除（推荐）。
+
+**Q: 我看到 NNN 不再连续，是 bug 吗？**
+A: 这是设计变更。fixed 模式下 NNN 仅在单进程内递增，跨进程可能重复。全局唯一性由 hash 后缀保证。如需连续 NNN，请启用 `author_seq` 或 `hostname_seq` 模式。
+
+**Q: 升级后测试失败怎么办？**
+A: 如果你的测试断言"NNN 连续递增"或"counters.json 被写入"，请更新测试以适配 fixed 模式的新行为。参考 `tests/utils/id-generator.test.js` 的 4 种模式测试用例。
