@@ -5,13 +5,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
 
-import {
-  initializeProjectDocs,
-  syncOnRequirementDone,
-  syncOnBugFixed,
-  isProjectInitialized,
-  fullResync,
-} from '../../scripts/requirement-manager/project-sync/index.js';
+import { initializeProjectDocs, syncOnRequirementDone, syncOnBugFixed, isProjectInitialized, fullResync } from '../../scripts/requirement-manager/project-sync/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +22,7 @@ async function setupBase() {
       description: 'Test project for sync',
       main: 'index.js',
     }),
-    'utf-8',
+    'utf-8'
   );
 }
 
@@ -52,10 +46,7 @@ async function writeReq(type, id, metaOverride = {}, specFiles = {}) {
 
 async function readDoc(fileName) {
   try {
-    return await fs.readFile(
-      path.join(TEST_BASE, '.requirements', 'project', fileName),
-      'utf-8',
-    );
+    return await fs.readFile(path.join(TEST_BASE, '.requirements', 'project', fileName), 'utf-8');
   } catch (_e) {
     return null;
   }
@@ -168,7 +159,7 @@ describe('Project Sync Orchestrator', () => {
         { title: 'Big Refactor' },
         {
           'design.md': `# Design\n\n## 系统架构\n\nNew architecture details here.`,
-        },
+        }
       );
       const result = await syncOnRequirementDone(TEST_BASE, 'REF-001');
       expect(result.success).to.equal(true);
@@ -192,7 +183,7 @@ design_change: true
 # 决策
 Need to redesign X.`,
           'design.md': '# Design\n\n## 系统架构\n\nUpdated arch.',
-        },
+        }
       );
       const result = await syncOnBugFixed(TEST_BASE, 'BUG-DESIGN-001');
       expect(result.success).to.equal(true);
@@ -215,7 +206,7 @@ design_change: false
 
 # 决策
 Just a typo fix.`,
-        },
+        }
       );
       const result = await syncOnBugFixed(TEST_BASE, 'BUG-NODESIGN-001');
       expect(result.success).to.equal(true);

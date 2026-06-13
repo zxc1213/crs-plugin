@@ -362,15 +362,9 @@ planning → analyzed → implementing → review → done
     }
 
     // 新增：状态变为 done 时触发 project 文档同步
-    if (
-      updates.status === 'done' &&
-      meta.status !== 'done' &&
-      process.env.CRS_PROJECT_SYNC !== 'off'
-    ) {
+    if (updates.status === 'done' && meta.status !== 'done' && process.env.CRS_PROJECT_SYNC !== 'off') {
       try {
-        const { syncOnRequirementDone, syncOnBugFixed } = await import(
-          '../project-sync/index.js'
-        );
+        const { syncOnRequirementDone, syncOnBugFixed } = await import('../project-sync/index.js');
         if (updatedMeta.type === 'bug') {
           await syncOnBugFixed(this.baseDir, id);
         } else {

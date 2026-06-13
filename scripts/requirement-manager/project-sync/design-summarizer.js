@@ -15,20 +15,7 @@ import yaml from 'js-yaml';
 /**
  * design_change 关键词兜底匹配
  */
-const DESIGN_CHANGE_KEYWORDS = [
-  '重构',
-  '架构变更',
-  '架构调整',
-  '接口调整',
-  '接口变更',
-  '数据结构变更',
-  '数据结构迁移',
-  '协议变更',
-  'refactor',
-  'architecture change',
-  'breaking change',
-  'redesign',
-];
+const DESIGN_CHANGE_KEYWORDS = ['重构', '架构变更', '架构调整', '接口调整', '接口变更', '数据结构变更', '数据结构迁移', '协议变更', 'refactor', 'architecture change', 'breaking change', 'redesign'];
 
 /**
  * 安全读取文件
@@ -166,9 +153,7 @@ export async function summarizeSingleDesign(baseDir, reqId) {
   const { hasDesignChange, reason } = await detectDesignChange(reqDir);
 
   // 提取设计亮点：第一个 H2 章节的前 200 字符
-  const designHighlight = sections.length
-    ? sections[0].body.slice(0, 200) + (sections[0].body.length > 200 ? '...' : '')
-    : '';
+  const designHighlight = sections.length ? sections[0].body.slice(0, 200) + (sections[0].body.length > 200 ? '...' : '') : '';
 
   return {
     id: reqId,
@@ -236,12 +221,7 @@ export async function summarizeDesign(baseDir, requirements = []) {
  */
 function formatSectionSummary(entries) {
   if (!entries.length) return '_暂无相关内容_';
-  return entries
-    .map(
-      (e) =>
-        `### 来自 \`${e.from}\` — ${e.title}\n\n${e.body.slice(0, 500)}${e.body.length > 500 ? '...' : ''}\n`,
-    )
-    .join('\n---\n\n');
+  return entries.map((e) => `### 来自 \`${e.from}\` — ${e.title}\n\n${e.body.slice(0, 500)}${e.body.length > 500 ? '...' : ''}\n`).join('\n---\n\n');
 }
 
 export default {

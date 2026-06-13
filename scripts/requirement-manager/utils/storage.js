@@ -11,7 +11,20 @@ import yaml from 'js-yaml';
  * @param {string} baseDir - 基础目录路径
  */
 export async function init(baseDir) {
-  const dirs = [baseDir, path.join(baseDir, '.requirements'), path.join(baseDir, '.requirements', 'features'), path.join(baseDir, '.requirements', 'bugs'), path.join(baseDir, '.requirements', 'questions'), path.join(baseDir, '.requirements', 'adjustments'), path.join(baseDir, '.requirements', 'refactors'), path.join(baseDir, '.requirements', 'tech-debt'), path.join(baseDir, '.requirements', 'project'), path.join(baseDir, '.requirements', 'logs'), path.join(baseDir, 'templates'), path.join(baseDir, 'logs')];
+  const dirs = [
+    baseDir,
+    path.join(baseDir, '.requirements'),
+    path.join(baseDir, '.requirements', 'features'),
+    path.join(baseDir, '.requirements', 'bugs'),
+    path.join(baseDir, '.requirements', 'questions'),
+    path.join(baseDir, '.requirements', 'adjustments'),
+    path.join(baseDir, '.requirements', 'refactors'),
+    path.join(baseDir, '.requirements', 'tech-debt'),
+    path.join(baseDir, '.requirements', 'project'),
+    path.join(baseDir, '.requirements', 'logs'),
+    path.join(baseDir, 'templates'),
+    path.join(baseDir, 'logs'),
+  ];
 
   for (const dir of dirs) {
     try {

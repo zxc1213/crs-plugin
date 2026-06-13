@@ -57,9 +57,7 @@ crs-project-init - 初始化项目文档目录
   console.log('');
 
   try {
-    const { initializeProjectDocs } = await import(
-      '../scripts/requirement-manager/project-sync/index.js'
-    );
+    const { initializeProjectDocs } = await import('../scripts/requirement-manager/project-sync/index.js');
     const result = await initializeProjectDocs(baseDir, { force, actor: 'cli' });
 
     if (result.success) {

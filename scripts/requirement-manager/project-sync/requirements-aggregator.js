@@ -149,13 +149,7 @@ export async function aggregateRequirements(baseDir, options = {}) {
     grouped[`${typeName}s`] = onlyDone ? list.filter((r) => r.status === 'done') : list;
   }
 
-  const all = [
-    ...grouped.features,
-    ...grouped.bugs,
-    ...grouped.refactors,
-    ...grouped.adjustments,
-    ...grouped.questions,
-  ];
+  const all = [...grouped.features, ...grouped.bugs, ...grouped.refactors, ...grouped.adjustments, ...grouped.questions];
 
   return {
     ...grouped,

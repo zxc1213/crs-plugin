@@ -14,24 +14,7 @@ import path from 'path';
 /**
  * 默认忽略的目录/文件名
  */
-const DEFAULT_IGNORE = new Set([
-  'node_modules',
-  '.git',
-  '.requirements',
-  '.cache',
-  'dist',
-  'build',
-  'coverage',
-  '.next',
-  '.nuxt',
-  '.output',
-  '.nyc_output',
-  '.idea',
-  '.vscode',
-  '__pycache__',
-  '.DS_Store',
-  'vendor',
-]);
+const DEFAULT_IGNORE = new Set(['node_modules', '.git', '.requirements', '.cache', 'dist', 'build', 'coverage', '.next', '.nuxt', '.output', '.nyc_output', '.idea', '.vscode', '__pycache__', '.DS_Store', 'vendor']);
 
 /**
  * 默认扫描深度
@@ -170,9 +153,7 @@ function formatModulesTable(modules) {
   if (!modules.length) {
     return '_未识别到核心模块_';
   }
-  const rows = modules.map(
-    (m) => `| \`${m.path}\` | ${m.name} | ${m.entry || '-'} | - |`,
-  );
+  const rows = modules.map((m) => `| \`${m.path}\` | ${m.name} | ${m.entry || '-'} | - |`);
   return `| 路径 | 名称 | 入口 | 描述 |\n| ---- | ---- | ---- | ---- |\n${rows.join('\n')}`;
 }
 
@@ -198,7 +179,7 @@ function formatDependencies(pkgInfo) {
       devDeps
         .slice(0, 20)
         .map((d) => `- \`${d}\``)
-        .join('\n'),
+        .join('\n')
     );
     if (devDeps.length > 20) {
       lines.push(`- _... 及其余 ${devDeps.length - 20} 个_`);

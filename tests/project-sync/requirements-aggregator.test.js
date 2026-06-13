@@ -5,12 +5,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
 
-import {
-  aggregateRequirements,
-  aggregateSingleRequirement,
-  formatFeatureTableRows,
-  formatFeatureDetails,
-} from '../../scripts/requirement-manager/project-sync/requirements-aggregator.js';
+import { aggregateRequirements, aggregateSingleRequirement, formatFeatureTableRows, formatFeatureDetails } from '../../scripts/requirement-manager/project-sync/requirements-aggregator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,11 +15,7 @@ async function writeReq(type, id, meta, specBackground = '') {
   const dir = path.join(TEST_BASE, '.requirements', `${type}s`, id);
   await fs.mkdir(dir, { recursive: true });
   await fs.mkdir(path.join(dir, 'spec'), { recursive: true });
-  await fs.writeFile(
-    path.join(dir, 'meta.yaml'),
-    yaml.dump(meta),
-    'utf-8',
-  );
+  await fs.writeFile(path.join(dir, 'meta.yaml'), yaml.dump(meta), 'utf-8');
   if (specBackground) {
     await fs.writeFile(path.join(dir, 'spec', 'background.md'), specBackground, 'utf-8');
   }
@@ -100,16 +91,14 @@ describe('Requirements Aggregator', () => {
         title: 'With Background',
         status: 'done',
       },
-      '# 背景与目标\n\n这是摘要第一段。\n\n## 子标题\n\n第二段内容。',
+      '# 背景与目标\n\n这是摘要第一段。\n\n## 子标题\n\n第二段内容。'
     );
     const single = await aggregateSingleRequirement(TEST_BASE, 'FEAT-005');
     expect(single.summary).to.contain('这是摘要第一段');
   });
 
   it('should format feature table rows as markdown', async () => {
-    const features = [
-      { id: 'FEAT-A', title: 'A', type: 'feature', status: 'done', tags: ['auth'], completedAt: '2026-06-13T10:00:00.000Z' },
-    ];
+    const features = [{ id: 'FEAT-A', title: 'A', type: 'feature', status: 'done', tags: ['auth'], completedAt: '2026-06-13T10:00:00.000Z' }];
     const rows = formatFeatureTableRows(features);
     expect(rows).to.contain('| auth |');
     expect(rows).to.contain('FEAT-A');

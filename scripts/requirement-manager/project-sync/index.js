@@ -19,18 +19,8 @@ import yaml from 'js-yaml';
 import { fileURLToPath } from 'url';
 
 import { scanProjectStructure } from './structure-scanner.js';
-import {
-  aggregateRequirements,
-  aggregateSingleRequirement,
-  formatFeatureTableRows,
-  formatFeatureDetails,
-  formatBusinessTable,
-} from './requirements-aggregator.js';
-import {
-  summarizeDesign,
-  summarizeSingleDesign,
-  detectDesignChange,
-} from './design-summarizer.js';
+import { aggregateRequirements, aggregateSingleRequirement, formatFeatureTableRows, formatFeatureDetails, formatBusinessTable } from './requirements-aggregator.js';
+import { summarizeDesign, summarizeSingleDesign, detectDesignChange } from './design-summarizer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.resolve(__dirname, '../../../templates/project');
@@ -135,13 +125,7 @@ async function appendChangelog(baseDir, entry) {
   const header = headerEnd >= 0 ? existing.slice(0, headerEnd + 5) : existing;
   const body = headerEnd >= 0 ? existing.slice(headerEnd + 5) : '';
 
-  const lines = [
-    `\n## [${entry.timestamp}] ${entry.id || entry.action}`,
-    '',
-    `- **类型**: ${entry.type}`,
-    `- **标题**: ${entry.title}`,
-    `- **动作**: ${entry.action}`,
-  ];
+  const lines = [`\n## [${entry.timestamp}] ${entry.id || entry.action}`, '', `- **类型**: ${entry.type}`, `- **标题**: ${entry.title}`, `- **动作**: ${entry.action}`];
   if (entry.affectedDocs?.length) {
     lines.push(`- **影响文档**: ${entry.affectedDocs.join(', ')}`);
   }
@@ -256,7 +240,7 @@ export async function initializeProjectDocs(baseDir, options = {}) {
     // 3. 提炼设计
     const designSummary = await summarizeDesign(
       baseDir,
-      aggregated.all.map((r) => ({ id: r.id, type: r.type })),
+      aggregated.all.map((r) => ({ id: r.id, type: r.type }))
     );
 
     // 4. 渲染模板
@@ -387,22 +371,12 @@ export async function syncOnRequirementDone(baseDir, reqId) {
     // 根据类型路由
     if (single.type === 'feature' || single.type === 'adjustment') {
       // 更新 functional-requirements.md（追加模式）
-      await appendToSection(
-        baseDir,
-        'functional-requirements.md',
-        '## 功能详情',
-        formatFeatureDetails([single]),
-      );
+      await appendToSection(baseDir, 'functional-requirements.md', '## 功能详情', formatFeatureDetails([single]));
       affectedDocs.push('functional-requirements.md');
 
       // feature 类型也更新 business
       if (single.type === 'feature') {
-        await appendToSection(
-          baseDir,
-          'business-requirements.md',
-          '## 业务需求清单',
-          `\n### ${single.title}\n\n- **ID**: \`${single.id}\`\n- **摘要**: ${single.summary || '(无摘要)'}\n`,
-        );
+        await appendToSection(baseDir, 'business-requirements.md', '## 业务需求清单', `\n### ${single.title}\n\n- **ID**: \`${single.id}\`\n- **摘要**: ${single.summary || '(无摘要)'}\n`);
         affectedDocs.push('business-requirements.md');
       }
     }
@@ -411,18 +385,8 @@ export async function syncOnRequirementDone(baseDir, reqId) {
       // 提取设计要点
       const singleDesign = await summarizeSingleDesign(baseDir, reqId);
       if (singleDesign && singleDesign.sections.length) {
-        const designText = singleDesign.sections
-          .map(
-            (s) =>
-              `### 来自 \`${reqId}\` — ${s.title}\n\n${s.body.slice(0, 500)}${s.body.length > 500 ? '...' : ''}\n`,
-          )
-          .join('\n---\n\n');
-        await appendToSection(
-          baseDir,
-          'functional-design.md',
-          '## 关键设计决策',
-          designText,
-        );
+        const designText = singleDesign.sections.map((s) => `### 来自 \`${reqId}\` — ${s.title}\n\n${s.body.slice(0, 500)}${s.body.length > 500 ? '...' : ''}\n`).join('\n---\n\n');
+        await appendToSection(baseDir, 'functional-design.md', '## 关键设计决策', designText);
         affectedDocs.push('functional-design.md');
       }
     }
@@ -490,27 +454,12 @@ export async function syncOnBugFixed(baseDir, bugId) {
       // 同步到 functional-design.md
       const designSummary = await summarizeSingleDesign(baseDir, bugId);
       if (designSummary && designSummary.sections.length) {
-        const designText = designSummary.sections
-          .map(
-            (s) =>
-              `### 来自 \`${bugId}\` (Bug 设计变更) — ${s.title}\n\n${s.body.slice(0, 500)}${s.body.length > 500 ? '...' : ''}\n`,
-          )
-          .join('\n---\n\n');
-        await appendToSection(
-          baseDir,
-          'functional-design.md',
-          '## 关键设计决策',
-          designText,
-        );
+        const designText = designSummary.sections.map((s) => `### 来自 \`${bugId}\` (Bug 设计变更) — ${s.title}\n\n${s.body.slice(0, 500)}${s.body.length > 500 ? '...' : ''}\n`).join('\n---\n\n');
+        await appendToSection(baseDir, 'functional-design.md', '## 关键设计决策', designText);
         affectedDocs.push('functional-design.md');
       } else {
         // 即使没提取到 section，也追加一条占位
-        await appendToSection(
-          baseDir,
-          'functional-design.md',
-          '## 关键设计决策',
-          `### 来自 \`${bugId}\` (Bug 设计变更)\n\n_详见 [原始 Bug 文档](../bugs/${bugId}/spec/decisions.md)_\n`,
-        );
+        await appendToSection(baseDir, 'functional-design.md', '## 关键设计决策', `### 来自 \`${bugId}\` (Bug 设计变更)\n\n_详见 [原始 Bug 文档](../bugs/${bugId}/spec/decisions.md)_\n`);
         affectedDocs.push('functional-design.md');
       }
     } else {

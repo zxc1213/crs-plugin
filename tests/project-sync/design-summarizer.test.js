@@ -4,11 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 
-import {
-  detectDesignChange,
-  summarizeSingleDesign,
-  summarizeDesign,
-} from '../../scripts/requirement-manager/project-sync/design-summarizer.js';
+import { detectDesignChange, summarizeSingleDesign, summarizeDesign } from '../../scripts/requirement-manager/project-sync/design-summarizer.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,7 +46,7 @@ design_change: true
 ---
 
 # 决策
-some content`,
+some content`
       );
       const result = await detectDesignChange(path.join(TEST_BASE, '.requirements', 'bugs', 'BUG-001'));
       expect(result.hasDesignChange).to.equal(true);
@@ -65,7 +61,7 @@ design_change: false
 ---
 
 # 决策
-no design change`,
+no design change`
       );
       const result = await detectDesignChange(path.join(TEST_BASE, '.requirements', 'bugs', 'BUG-002'));
       expect(result.hasDesignChange).to.equal(false);
@@ -104,7 +100,7 @@ We use layered architecture.
 
 ## 核心组件
 
-Scanner + Aggregator.`,
+Scanner + Aggregator.`
       );
       const result = await summarizeSingleDesign(TEST_BASE, 'FEAT-001');
       expect(result).to.be.ok;
@@ -138,7 +134,7 @@ Layer A.
 
 ## 数据流
 
-Stream X.`,
+Stream X.`
       );
       await writeFeature(
         'FEAT-011',
@@ -150,7 +146,7 @@ Layer B.
 
 ## 组件清单
 
-C1, C2.`,
+C1, C2.`
       );
       const result = await summarizeDesign(TEST_BASE, [
         { id: 'FEAT-010', type: 'feature' },

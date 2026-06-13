@@ -12,23 +12,12 @@ import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from 'chai';
 import fs from 'fs/promises';
 import path from 'path';
-import {
-  generate,
-  generateHash,
-  parse,
-  reset,
-  getIdMode,
-  slugify,
-  resolveAuthor,
-  resolveHostname,
-} from '../../scripts/requirement-manager/utils/id-generator.js';
+import { generate, generateHash, parse, reset, getIdMode, slugify, resolveAuthor, resolveHostname } from '../../scripts/requirement-manager/utils/id-generator.js';
 
 const COUNTERS_DIR = '.requirements';
 
 async function cleanupScope(scope) {
-  const file = scope
-    ? path.join(COUNTERS_DIR, `counters-${scope}.json`)
-    : path.join(COUNTERS_DIR, 'counters.json');
+  const file = scope ? path.join(COUNTERS_DIR, `counters-${scope}.json`) : path.join(COUNTERS_DIR, 'counters.json');
   try {
     await fs.unlink(file);
   } catch (_e) {
@@ -341,13 +330,7 @@ describe('ID Generator Utility', () => {
     });
 
     it('should parse all 5 existing real-world IDs (regression)', () => {
-      const realIds = [
-        'BUG-20260526-001',
-        'FEAT-20260526-004',
-        'FEAT-20260526-005',
-        'REF-20260609-001',
-        'BUG-20260610-002-9e8e6f',
-      ];
+      const realIds = ['BUG-20260526-001', 'FEAT-20260526-004', 'FEAT-20260526-005', 'REF-20260609-001', 'BUG-20260610-002-9e8e6f'];
       for (const id of realIds) {
         const parsed = parse(id);
         expect(parsed, `should parse ${id}`).to.not.be.null;

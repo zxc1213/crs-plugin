@@ -66,9 +66,7 @@ async function main() {
   console.log('');
 
   try {
-    const projectSync = await import(
-      '../scripts/requirement-manager/project-sync/index.js'
-    );
+    const projectSync = await import('../scripts/requirement-manager/project-sync/index.js');
     let result;
 
     if (full) {
@@ -88,14 +86,20 @@ async function main() {
     }
 
     // 输出 JSON 统计
-    console.log(JSON.stringify({
-      success: result.success,
-      created: result.created,
-      updated: result.updated,
-      errors: result.errors,
-      skipped: result.skipped,
-      durationMs: result.stats.durationMs,
-    }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          success: result.success,
+          created: result.created,
+          updated: result.updated,
+          errors: result.errors,
+          skipped: result.skipped,
+          durationMs: result.stats.durationMs,
+        },
+        null,
+        2
+      )
+    );
 
     process.exit(result.success ? 0 : 1);
   } catch (error) {
