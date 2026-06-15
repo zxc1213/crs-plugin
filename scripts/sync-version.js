@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /**
- * 版本号同步脚本
+ * Version sync script.
  *
- * 从 package.json 读取 version 字段，同步到所有 manifest 文件。
- * 确保跨平台 manifest 版本一致，避免版本 drift 问题。
+ * Reads `version` from package.json and writes it to every manifest file
+ * so the version number stays consistent across platforms and avoids drift.
  *
- * 同步目标：
+ * Targets:
  *   - .claude-plugin/plugin.json  (Claude Code)
  *   - .cursor-plugin/plugin.json  (Cursor)
- *   - .codex-plugin/plugin.json   (Codex 旧路径，保留兼容)
+ *   - .codex-plugin/plugin.json   (Codex legacy path, kept for back-compat)
  *   - gemini-extension.json       (Gemini CLI)
  *
- * 注：.opencode/plugins/crs.js 动态读取 package.json，无需静态同步。
+ * Note: .opencode/plugins/crs.js reads package.json dynamically, no static sync needed.
  */
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -50,7 +50,7 @@ manifests.forEach(({ path, key }) => {
     const oldVersion = manifest[key];
     manifest[key] = version;
     writeFileSync(filePath, JSON.stringify(manifest, null, 2) + '\n');
-    console.log(`✓ Updated ${path}: ${oldVersion} → ${version}`);
+    console.log(`Updated ${path}: ${oldVersion} -> ${version}`);
     updated++;
   } else {
     console.log(`- ${path} already at ${version}`);
@@ -58,9 +58,7 @@ manifests.forEach(({ path, key }) => {
   }
 });
 
-console.log(
-  `\nVersion ${version} synced: ${updated} updated, ${skipped} skipped, ${missing} missing.`
-);
+console.log(`\nVersion ${version} synced: ${updated} updated, ${skipped} skipped, ${missing} missing.`);
 
 if (missing > 0) {
   console.warn('Warning: Some manifest files are missing.');
