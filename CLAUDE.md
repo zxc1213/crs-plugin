@@ -238,7 +238,15 @@ CRS 自动维护 `.requirements/project/` 目录，提供项目级"活文档"视
 | `functional-design.md` | 各需求 `spec/design.md` 聚合 + Bug 设计变更 | feature/refactor done 或 Bug design_change=true |
 | `changelog.md` | 全部同步事件 | 每次同步追加（永不删除） |
 
-**自动触发机制**：`processor.update()` 在状态变为 `done` 时调用 `project-sync`。
+**自动触发机制**（v0.13.1+ 三层兜底，修复 BUG-20260615-001）：
+
+| 触发点 | 行为 | 适用场景 |
+|---|---|---|
+| `Processor.create()` 创建需求 | 检测到 `project/meta.yaml` 缺失时自动 `initializeProjectDocs({actor:'auto-create'})` | 旧项目升级后第一次 `/req` |
+| `bin/crs-init` 升级路径 | 检测到 `.requirements/` 存在但 `project/meta.yaml` 缺失时自动迁移 | 用户主动运行 `crs-init` |
+| `Processor.update(status=done)` | 状态变 `done` 时调用 `syncOnRequirementDone` / `syncOnBugFixed` | 需求完成时增量追加 |
+
+任意一层失败均静默降级（写 `_system/logs/project-sync.log`），不影响主流程。
 
 **手动操作**：
 ```bash

@@ -197,6 +197,34 @@ if (!fs.existsSync(metricsDataPath)) {
   console.log('  ✓ metrics/data.json');
 }
 
+// Upgrade-path guardrail: if .requirements/ already exists but project/ is not
+// initialized, auto-migrate so that pre-v0.11.0 projects gain project docs on
+// their next crs-init run. Spec: BUG-20260615-001-e7e5ed AC-2 / NEG-5.
+const projectMetaPath = path.join(projectRoot, '.requirements', 'project', 'meta.yaml');
+const requirementsExists = fs.existsSync(path.join(projectRoot, '.requirements'));
+const projectMetaExists = fs.existsSync(projectMetaPath);
+if (requirementsExists && !projectMetaExists && process.env.CRS_PROJECT_SYNC !== 'off') {
+  console.log('\n📦 检测到旧版本项目痕迹，正在初始化 project 文档目录...');
+  try {
+    const { initializeProjectDocs } = await import('../scripts/requirement-manager/project-sync/index.js');
+    const initResult = await initializeProjectDocs(projectRoot, { actor: 'crs-init' });
+    // initializeProjectDocs swallows internal errors via try/catch and surfaces
+    // them through result.success=false. Treat both throw and success=false as
+    // "init failed but did not crash crs-init" (NEG-5).
+    if (initResult && initResult.success === false) {
+      const errMsg = (initResult.errors && initResult.errors[0]) || 'unknown error';
+      console.warn(`  ⚠ project 目录初始化失败：${errMsg}`);
+      console.warn('    可稍后运行 crs-project-init 手动初始化');
+    } else {
+      const createdCount = (initResult?.created || []).length;
+      console.log(`  ✓ 已创建 ${createdCount} 个文档 (耗时 ${initResult?.stats?.durationMs ?? 0}ms)`);
+    }
+  } catch (error) {
+    console.warn(`  ⚠ project 目录初始化失败：${error.message}`);
+    console.warn('    可稍后运行 crs-project-init 手动初始化');
+  }
+}
+
 console.log('\n✅ 项目初始化完成!\n');
 console.log('📊 CRS 已就绪\n');
 console.log('开始使用:');

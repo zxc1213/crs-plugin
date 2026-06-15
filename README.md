@@ -68,6 +68,8 @@ CRS 已支持 5 个主流 AI 编程工具，一次安装多平台可用：
 /plugin update crs@crs
 ```
 
+> **升级到 v0.11.0+ 后**：旧项目下一次运行 `/req` 创建需求或 `crs-init` 时，`.requirements/project/` 目录会被自动初始化（无需手动跑 `crs-project-init`）。详见 [BUG-20260615-001](.requirements/bugs/BUG-20260615-001-e7e5ed/spec.md)。
+
 ## 📝 卸载插件
 
 ```bash

@@ -307,6 +307,27 @@ planning → analyzed → implementing → review → done
       // 知识图谱同步失败不影响主流程
     }
 
+    // Upgrade-path guardrail: ensure .requirements/project/ is initialized so that
+    // projects created on CRS < v0.11.0 gain project docs on their next /req run
+    // instead of having to wait for the first requirement to reach status=done.
+    // Spec: BUG-20260615-001-e7e5ed AC-1 / AC-3 / AC-4 / AC-6.
+    if (process.env.CRS_PROJECT_SYNC !== 'off') {
+      try {
+        const { isProjectInitialized, initializeProjectDocs } = await import('../project-sync/index.js');
+        if (!(await isProjectInitialized(this.baseDir))) {
+          await initializeProjectDocs(this.baseDir, { actor: 'auto-create' });
+        }
+      } catch (_projectSyncError) {
+        // Auto-init failure must never break requirement creation.
+        try {
+          const { logProjectSyncError } = await import('../project-sync/index.js');
+          await logProjectSyncError(this.baseDir, id, _projectSyncError);
+        } catch (_logError) {
+          // Silently swallow log failures to keep create() resilient.
+        }
+      }
+    }
+
     return {
       id,
       path: reqPath,
