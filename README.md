@@ -33,6 +33,18 @@
 /plugin install https://github.com/zxc1213/crs-plugin
 ```
 
+### 🌐 跨平台支持（v0.13.0+）
+
+CRS 已支持 5 个主流 AI 编程工具，一次安装多平台可用：
+
+| 平台 | 安装命令 | 详细文档 |
+|---|---|---|
+| **Claude Code** | `/plugin install crs-marketplace/crs` | 默认平台 |
+| **Cursor** | `/add-plugin crs` | [docs/README.cursor.md](docs/README.cursor.md) |
+| **Gemini CLI** | `gemini extensions install https://github.com/zxc1213/crs-plugin` | [docs/README.gemini.md](docs/README.gemini.md) |
+| **OpenCode** | 按 [.opencode/INSTALL.md](.opencode/INSTALL.md) 步骤 | [docs/README.opencode.md](docs/README.opencode.md) |
+| **Codex** | 按 [.codex/INSTALL.md](.codex/INSTALL.md) 步骤 | [docs/README.codex.md](docs/README.codex.md) |
+
 - 📋 **多类型支持**：新功能、Bug 修复、技术问题、需求调整、重构
 - 🤖 **智能自动化**：集成 brainstorming、systematic-debugging 等 skills
 - 🧭 **统一入口**⭐：智能路由到最优流程，无需手动选择
@@ -158,12 +170,20 @@ crs-export --no-mermaid       # 禁用依赖图
 crs/
 ├── .claude-plugin/             # 插件清单
 │   └── plugin.json             # 插件配置文件
-├── skills/                     # Skills（12个）
-│   ├── core/                   # 核心需求管理
-│   ├── quality/                # 质量保证
-│   ├── analysis/               # 分析评估
-│   ├── change/                 # 变更处理
-│   └── utils/                  # 辅助工具
+├── skills/                     # Skills（13个，平铺结构 v0.13.0+）
+│   ├── req/                    # 主入口
+│   ├── req-manager/            # 智能需求管理
+│   ├── req-brainstorm/         # 深度分析
+│   ├── req-init/               # 初始化
+│   ├── req-doc-format/         # 文档格式
+│   ├── req-quality/            # 质量门禁
+│   ├── req-test-plan/          # 测试策略
+│   ├── req-verify/             # 需求验证
+│   ├── req-priority/           # 优先级评估
+│   ├── req-metrics/            # 度量分析
+│   ├── req-change/             # 变更管理
+│   ├── req-migrate/            # 需求迁移
+│   └── req-unify/              # 文档统一
 ├── commands/                   # Commands（13个）
 ├── hooks/                      # Hooks 配置
 │   └── hooks.json

@@ -110,23 +110,20 @@ scripts/                       # 核心脚本工具
 ├── hooks/                     # 自动化钩子
 └── metrics/                   # 度量收集
 
-skills/                        # Claude Code 技能定义
-├── core/                      # 核心需求管理
-│   ├── req-manager/           # 智能需求管理
-│   ├── req-brainstorm/        # 深度需求分析
-│   └── req-init/              # 需求系统初始化
-├── quality/                   # 质量保证
-│   ├── req-quality/           # 质量门禁
-│   ├── req-test-plan/         # 测试策略
-│   └── req-verify/            # 需求验证
-├── analysis/                  # 分析评估
-│   ├── req-priority/          # 优先级评估
-│   └── req-metrics/           # 度量分析
-├── change/                    # 变更处理
-│   ├── req-change/            # 变更管理
-│   └── req-migrate/           # 需求迁移
-└── utils/                     # 辅助工具
-    └── req-unify/             # 文档统一
+skills/                        # Claude Code 技能定义（平铺，跨平台兼容 v0.13.0+）
+├── req/                       # 需求管理主入口
+├── req-manager/               # 智能需求管理
+├── req-brainstorm/            # 深度需求分析
+├── req-init/                  # 需求系统初始化
+├── req-doc-format/            # 文档格式规范
+├── req-quality/               # 质量门禁
+├── req-test-plan/             # 测试策略
+├── req-verify/                # 需求验证
+├── req-priority/              # 优先级评估
+├── req-metrics/               # 度量分析
+├── req-change/                # 变更管理
+├── req-migrate/               # 需求迁移
+└── req-unify/                 # 文档统一
 
 commands/                      # Claude Code 命令定义
 ├── req.md                     # 主命令

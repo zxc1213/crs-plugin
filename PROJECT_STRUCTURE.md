@@ -77,40 +77,26 @@ crs/
 
 ### `skills/` - Skills 定义
 
-Claude Code 技能定义，按功能分类组织。
+Claude Code 技能定义，平铺组织（v0.13.0+，跨平台兼容）。
 
 ```
 skills/
-├── core/                     # 核心需求管理
-│   ├── req-manager/
-│   │   └── SKILL.md         # 智能需求管理统一入口
-│   ├── req-brainstorm/
-│   │   └── SKILL.md         # 深度需求分析（四阶段）
-│   └── req-init/
-│       └── SKILL.md         # 需求系统初始化
-├── quality/                  # 质量保证
-│   ├── req-quality/
-│   │   └── SKILL.md         # 质量门禁检查
-│   ├── req-test-plan/
-│   │   └── SKILL.md         # 测试策略生成
-│   └── req-verify/
-│       └── SKILL.md         # 需求验证
-├── analysis/                 # 分析评估
-│   ├── req-priority/
-│   │   └── SKILL.md         # 优先级科学评估
-│   └── req-metrics/
-│       └── SKILL.md         # 需求度量分析
-├── change/                   # 变更处理
-│   ├── req-change/
-│   │   └── SKILL.md         # 需求变更管理
-│   └── req-migrate/
-│       └── SKILL.md         # 需求迁移
-└── utils/                    # 辅助工具
-    └── req-unify/
-        └── SKILL.md         # 文档结构统一
+├── req/                      # 需求管理主入口
+├── req-manager/              # 智能需求管理统一入口
+├── req-brainstorm/           # 深度需求分析（四阶段）
+├── req-init/                 # 需求系统初始化
+├── req-doc-format/           # 文档格式规范
+├── req-quality/              # 质量门禁检查
+├── req-test-plan/            # 测试策略生成
+├── req-verify/               # 需求验证
+├── req-priority/             # 优先级科学评估
+├── req-metrics/              # 需求度量分析
+├── req-change/               # 需求变更管理
+├── req-migrate/              # 需求迁移
+└── req-unify/                # 文档结构统一
 ```
 
-**Skills 数量**: 12 个
+**Skills 数量**: 13 个（v0.13.0 起改为平铺结构，符合 Claude Code/Cursor/Gemini CLI/OpenCode 标准）
 
 ---
 

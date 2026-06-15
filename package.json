@@ -1,16 +1,25 @@
 {
   "name": "crs-plugin",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "CRS Plugin - 智能需求管理系统，从需求到测试的全流程自动化",
   "type": "module",
   "files": [
     ".claude-plugin/",
+    ".cursor-plugin/",
+    ".codex/",
+    ".codex-plugin/",
+    ".opencode/",
     "skills/",
     "commands/",
     "hooks/",
     "scripts/",
     "bin/",
-    "README.md"
+    "gemini-extension.json",
+    "GEMINI.md",
+    "CLAUDE.md",
+    "README.md",
+    "MIGRATION.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "claude-code",

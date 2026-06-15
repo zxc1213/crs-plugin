@@ -1,5 +1,130 @@
 # Migration Guide
 
+## v0.12.x → v0.13.0
+
+v0.13.0 实现**跨平台兼容性改造**：补齐 Cursor、Gemini CLI、OpenCode、Codex 的 manifest 文件，标准化 skills 目录结构（嵌套 → 平铺），建立版本同步机制。
+
+### 谁会受影响？
+
+| 用户类型 | 影响 | 行动 |
+|---|---|---|
+| Claude Code 用户 | **中性**（零回归） | 直接升级，无需操作 |
+| 自定义 skill 引用 | ⚠️ **可能破坏** | 检查硬编码的 skills 路径，改为平铺 |
+| Cursor/Gemini/OpenCode/Codex 用户 | **正面** | 可首次安装使用 CRS |
+| 自定义 plugin 加载器 | ⚠️ **可能破坏** | 检查 plugin.json 字段格式 |
+
+### 主要变更
+
+#### 1. Skills 目录结构平铺
+
+**v0.12.0（嵌套）**：
+
+```
+skills/
+├── core/req-manager/
+├── quality/req-quality/
+├── analysis/req-priority/
+└── ...
+```
+
+**v0.13.0（平铺）**：
+
+```
+skills/
+├── req-manager/
+├── req-quality/
+├── req-priority/
+└── ...
+```
+
+**迁移映射**：
+
+| 旧路径 | 新路径 |
+|---|---|
+| `skills/core/req-manager/` | `skills/req-manager/` |
+| `skills/core/req-brainstorm/` | `skills/req-brainstorm/` |
+| `skills/core/req-init/` | `skills/req-init/` |
+| `skills/core/req-doc-format/` | `skills/req-doc-format/` |
+| `skills/quality/req-quality/` | `skills/req-quality/` |
+| `skills/quality/req-test-plan/` | `skills/req-test-plan/` |
+| `skills/quality/req-verify/` | `skills/req-verify/` |
+| `skills/analysis/req-metrics/` | `skills/req-metrics/` |
+| `skills/analysis/req-priority/` | `skills/req-priority/` |
+| `skills/change/req-change/` | `skills/req-change/` |
+| `skills/change/req-migrate/` | `skills/req-migrate/` |
+| `skills/utils/req-unify/` | `skills/req-unify/` |
+
+#### 2. plugin.json 字段格式标准化
+
+**v0.12.0**（`.claude-plugin/plugin.json`）：
+
+```json
+{
+  "skills": ["./skills/"],
+  "commands": ["./commands/"]
+}
+```
+
+**v0.13.0**（移除 skills/commands 字段，依赖约定发现）：
+
+```json
+{
+  "name": "crs",
+  "version": "0.13.0",
+  "keywords": [...]
+}
+```
+
+#### 3. 新增多平台 manifest 文件
+
+| 文件 | 用途 |
+|---|---|
+| `.cursor-plugin/plugin.json` | Cursor 入口 |
+| `gemini-extension.json` + `GEMINI.md` | Gemini CLI 入口 |
+| `.codex/INSTALL.md` + `.codex/context.md` | Codex 入口（新路径） |
+| `.opencode/INSTALL.md` + `.opencode/plugins/crs.js` | OpenCode 入口 |
+| `hooks/hooks-cursor.json` | Cursor 简化版 hooks |
+
+#### 4. 版本同步机制
+
+新增 `npm run sync-version` 自动同步版本号到所有 manifest 文件，避免版本 drift。
+
+### 升级步骤
+
+```bash
+# 1. 升级到 v0.13.0
+npm install -g github:zxc1213/crs-plugin@latest
+
+# 2. 验证安装
+claude
+# 在 Claude Code 中执行：
+/req --active
+
+# 3. （可选）验证其他平台
+# 参见 docs/README.{cursor,gemini,opencode,codex}.md
+```
+
+### 回滚
+
+如需回滚到 v0.12.0：
+
+```bash
+npm install -g github:zxc1213/crs-plugin@v0.12.0
+```
+
+`.requirements/` 数据完全兼容，无需迁移。
+
+### 自定义代码检查清单
+
+如果你有以下场景，需要手动调整：
+
+- [ ] 自定义 skill 中硬编码引用了 `skills/core/*` 等旧路径
+- [ ] 自定义 plugin 加载器解析 `.claude-plugin/plugin.json` 的 `skills` 字段
+- [ ] CI 脚本中扫描特定 skills 子目录
+- [ ] 文档中引用了 skills 嵌套路径
+
+---
+
 ## v0.10.x → v0.11.0
 
 v0.11.0 新增**项目级文档自动维护**功能（`.requirements/project/`），完全向后兼容，零破坏性变更。

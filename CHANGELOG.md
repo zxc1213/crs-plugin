@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-06-15
+
+### Added
+
+#### 跨平台 Plugin 兼容性
+
+- **5 平台 manifest 支持**：CRS Plugin 现可被以下 AI 编程工具识别和加载：
+  - **Claude Code** — 默认平台（`.claude-plugin/plugin.json`）
+  - **Cursor** — 新增 `.cursor-plugin/plugin.json`
+  - **Gemini CLI** — 新增 `gemini-extension.json` + `GEMINI.md`
+  - **OpenCode** — 新增 `.opencode/plugins/crs.js`（ESM 入口）
+  - **Codex** — 新增 `.codex/INSTALL.md` + `.codex/context.md`
+- **多平台文档**：`docs/README.{cursor,gemini,opencode,codex}.md` 完整安装指南
+- **Cursor 简化 hooks**：`hooks/hooks-cursor.json` + `hooks/run-hook.cjs`
+- **OpenCode 动态入口**：`.opencode/plugins/crs.js` 自动扫描 skills/commands
+- **版本同步脚本**：扩展 `scripts/sync-version.js` 同步 4 个 manifest 版本号
+- **需求文档**：FEAT-20260615-001-3b7e2a 完整 5 阶段文档（spec/plan/test-cases）
+
+### Changed
+
+#### Skills 目录结构标准化
+
+- **嵌套 → 平铺**：`skills/<category>/<skill>/SKILL.md` → `skills/<skill>/SKILL.md`
+- **13 个 skills 全部平铺**：符合 Claude Code/Cursor/Gemini CLI/OpenCode 标准
+- **`.claude-plugin/plugin.json` 格式修正**：移除 `skills`/`commands` 字段（依赖约定发现），新增 `keywords` 字段
+- **`package.json` files 字段**：新增 5 个 manifest 目录/文件，确保 npm publish 包含
+- **`README.md`**：新增"跨平台支持"章节，5 平台安装矩阵
+- **`CLAUDE.md` / `PROJECT_STRUCTURE.md`**：更新 skills 目录结构说明
+- **`MIGRATION.md`**：新增 v0.12.x → v0.13.0 详细迁移指南
+
+### Compatibility
+
+- ✅ **零回归**：320 个测试用例全部通过（v0.12.0 基线）
+- ✅ **数据兼容**：`.requirements/` 数据无需迁移
+- ⚠️ **路径变更**：自定义代码引用旧 skills 路径需更新（详见 MIGRATION.md）
+
+### Docs
+
+- `docs/README.cursor.md` — Cursor 安装与使用
+- `docs/README.gemini.md` — Gemini CLI 安装与使用
+- `docs/README.opencode.md` — OpenCode 安装与使用
+- `docs/README.codex.md` — Codex 安装与使用
+
+---
+
 ## [0.12.0] - 2026-06-13
 
 ### Added
