@@ -78,6 +78,28 @@ CRS 已支持 5 个主流 AI 编程工具，一次安装多平台可用：
 
 ## 使用
 
+### v1.5.0 新能力（同步自 crs-zcode）⭐
+
+**项目历史与文档纳管**：
+
+```bash
+node scripts/requirement-manager/index.js --history 20   # 历史时间线（事件账本）
+node scripts/requirement-manager/index.js --status FEAT-xxx  # 单需求状态
+node bin/crs-project-sync.js --scan-docs    # 扫描登记宿主文档 + 漂移检测
+node bin/crs-project-sync.js --req-id FEAT-xxx --change medium --reason "..."  # 需求变更（区块替换）
+```
+
+**项目级规则自定义**（`.requirements/_system/rules.yaml`，指南 `docs/rules.md`）：
+
+```bash
+node scripts/requirement-manager/index.js rules            # 查看合并后规则（标注来源）
+node scripts/requirement-manager/index.js rules --validate # 校验项目规则文件
+```
+
+guard（阶段守卫 / Bash 命令拦截）与 inject（会话注入提醒）两类规则，同 id 覆盖内置、注入预算默认 600 字符。**阶段守卫已改为扫描 meta.yaml（不再依赖符号链接），Windows 原生可用。**
+
+**注入面度量**：`node bin/crs-context-stats.js`（commands/skills 体积与 hook 注入文案统计）。
+
 ### 主命令（简短形式）⭐
 
 ```bash

@@ -120,7 +120,8 @@ describe('Export Collector', () => {
 
     const result = await collect(path.join(TEST_BASE, '.requirements'));
     expect(result.stats.byStatus.done).to.equal(2);
-    expect(result.stats.byStatus.open).to.equal(1);
+    // 旧词表 open 归一为 planning（metaStatus，schema 唯一口径）
+    expect(result.stats.byStatus.planning).to.equal(1);
     // req.type 来自 meta.yaml（单数）
     expect(result.stats.byType.feature).to.equal(2);
     expect(result.stats.byType.bug).to.equal(1);

@@ -1,6 +1,6 @@
 {
   "name": "crs-plugin",
-  "version": "0.13.0",
+  "version": "1.5.0",
   "description": "CRS Plugin - 智能需求管理系统，从需求到测试的全流程自动化",
   "type": "module",
   "files": [
@@ -43,10 +43,10 @@
     "crs-update": "bin/crs-update.js",
     "crs-track": "bin/crs-track.js",
     "crs-sync-plans": "bin/crs-sync-plans.js",
-    "crs-skill-health": "bin/crs-skill-health.js",
     "crs-project-init": "bin/crs-project-init.js",
     "crs-project-sync": "bin/crs-project-sync.js",
     "crs-export": "bin/crs-export.js",
+    "crs-context-stats": "bin/crs-context-stats.js",
     "kg-search": "bin/kg-cli.js",
     "kg-stats": "bin/kg-cli.js",
     "kg-connections": "bin/kg-cli.js",
@@ -54,9 +54,11 @@
     "kg-rebuild": "bin/kg-cli.js"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
     "cli-table3": "^0.6.5",
     "fs-extra": "^11.2.0",
-    "fuse.js": "^7.0.0"
+    "fuse.js": "^7.0.0",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",

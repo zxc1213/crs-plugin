@@ -225,26 +225,50 @@ describe('Export Renderer - 项目级文档', () => {
 });
 
 describe('Export Renderer - 时间线', () => {
-  it('空 changelog 显示提示', () => {
+  it('空时间线显示提示', () => {
     const html = render(makeData());
-    expect(html).to.include('暂无变更记录');
+    expect(html).to.include('暂无历史记录');
   });
 
-  it('渲染 changelog 条目', () => {
+  it('渲染时间线事件（timeline 账本源）', () => {
     const data = makeData({
-      changelog: [
-        {
-          timestamp: '2026-06-13T10:00:00Z',
-          title: 'requirement-done',
-          reqId: 'FEAT-001',
-          action: 'requirement-done',
-          actor: 'system',
-        },
-      ],
+      timeline: {
+        source: 'timeline',
+        events: [
+          {
+            timestamp: '2026-06-13T10:00:00Z',
+            type: 'project_synced',
+            reqId: 'FEAT-001',
+            title: '需求完成同步',
+            summary: '更新 2 份项目文档',
+          },
+        ],
+      },
     });
     const html = render(data);
     expect(html).to.include('timeline-item');
     expect(html).to.include('FEAT-001');
+    expect(html).to.include('需求完成同步');
+  });
+
+  it('旧项目 changelog 回退渲染提示', () => {
+    const data = makeData({
+      timeline: {
+        source: 'changelog',
+        events: [
+          {
+            timestamp: '2026-06-13T10:00:00Z',
+            type: 'project_synced',
+            reqId: null,
+            title: 'requirement-done',
+            summary: '',
+          },
+        ],
+      },
+    });
+    const html = render(data);
+    expect(html).to.include('来自 changelog 解析');
+    expect(html).to.include('timeline-item');
   });
 });
 

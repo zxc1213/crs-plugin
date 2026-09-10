@@ -29,7 +29,11 @@ export default [
       },
     },
     rules: {
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      // 与 crs-zcode 同口径：_ 前缀占位（catch 参数/未用形参）不告警
+      'no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
       'no-console': 'off',
       'prefer-const': 'warn',
       'no-undef': 'off',

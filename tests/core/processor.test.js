@@ -353,7 +353,8 @@ describe('Processor - update', () => {
     await processor.update(created.id, { status: 'in_progress' });
 
     const meta = await readMeta(testBaseDir, created.path);
-    expect(meta.status).to.equal('in_progress');
+    // 旧词表 in_progress 由状态机归一为规范词 implementing（schema 唯一口径）
+    expect(meta.status).to.equal('implementing');
   });
 
   it('should update multiple fields', async () => {
@@ -370,7 +371,9 @@ describe('Processor - update', () => {
     });
 
     const meta = await readMeta(testBaseDir, created.path);
-    expect(meta.status).to.equal('completed');
+    // completed 归一为 done，且引擎自动补写 completed 完成时间
+    expect(meta.status).to.equal('done');
+    expect(meta.completed).to.be.ok;
     expect(meta.priority).to.equal('high');
     expect(meta.title).to.equal('Updated Title');
   });

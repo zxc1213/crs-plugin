@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-10
+
+**主题：同步自 crs-zcode v1.2→v1.5——文档体系 / 引擎重构 / 正确性加固 / 规则体系与注入面收敛一次性对齐**（需求 FEAT-20260910-001-fe7306）
+
+> 本次为跨仓同步版本：将 crs-zcode（ZCode 移植线）四代演进的引擎能力移植回本仓，并与平台层（ClaudeCode hooks / 多平台清单）适配共存。版本号跳变 0.13.0 → 1.5.0 与 zcode 线对齐。
+
+### 引擎层（同步自 zcode v1.2~v1.5）
+
+- **文档体系**：`project/timeline.yaml` 统一事件账本（append-only + 原子写）；`crs:block` 区块替换（需求变更后已聚合文档原位更新，旧格式自动迁移）；`docs-map.yaml` 宿主文档纳管（`--scan-docs` 扫描登记 + 漂移检测 + `--doc-reviewed`）；`--history [N]` / `--status <ID>` 查询；HTML 报告新增历史时间线（彩色事件徽章）/ 成长档案（经验库 + 踩坑沉淀）/ 文档地图三板块
+- **引擎重构**：processor 拆分 template-renderer / requirement-creator / status-machine 三模块；scheduler 瘦身（只管执行模式与阶段顺序）；`core/schema.js` 唯一口径源（状态词表 / 日期字段 / 类型目录 / 事件类型，读取侧兼容旧口径）；项目级 `config.yaml`（权重 / 门禁 / 骨架 / docs-map 深度可覆盖，损坏回退默认）
+- **正确性修复**（同步过程中本仓当场复现过前两项）：`--help`/未知查询旗标不再被当作需求描述误建垃圾需求；凭证正则收紧（「关键词 + 显式 =/: 分隔 + ≥6 位密钥样值」，"token 消耗" 类自然叙述不再误报）；知识图谱路径语义修复（收项目根）；`--force` 全量重建保留 changelog/timeline/docs-map；交付日期按 completed 取值；DEBT 类型聚合修复；CSV 导出 RFC 4180 转义
+- **规则体系**：`core/rules.js` + `.requirements/_system/rules.yaml`——guard（PostToolUse 守卫，含 Bash `command_contains`）与 inject（SessionStart 提醒）两类规则；同 id 字段级覆盖内置、新 id 追加、单条非法剔除、YAML 损坏降级默认；`inject_budget_chars` 注入预算（默认 600 字符，按 priority 整条丢弃）；`rules` / `rules --validate` CLI 子命令；自定义指南 `docs/rules.md`
+
+### 平台层（ClaudeCode 适配）
+
+- **hooks 重写为规则驱动**：`scripts/hooks/crs-session-start.js` / `crs-post-tool-use.js` / `crs-stop.js` 三个脚本消费规则数据，源码零内嵌文案；与 conversation-logger 的 hook 条目在 hooks.json 中共存
+- **阶段守卫复活**：原 `post-req-update.js` 依赖从未创建的 `.requirements/ACTIVE` 符号链接（死功能），且 Windows 无符号链接权限导致 6 个测试 EPERM 失败；现改为扫描 meta.yaml（`crs-lib.js`），Windows 原生可用，EPERM 失败清零
+- **多平台清单不回归**：hooks-cursor.json / gemini-extension.json / codex 清单维持不动
+
+### 注入面收敛
+
+- commands + skills 总量 **182.1KB → 117.9KB（-35.3%）**：req/req-change/req-priority/req-quality/metrics 五命令与八个 req-* 技能改用 zcode 收敛版内容（命令=路由+硬性约束，示例输出外移 `docs/examples/`，格式定义移交骨架模板）；保留全部用户入口（13 命令 + 13 技能，多平台兼容优先，见需求决策 Q2）；claude 独有入口中 req-migrate/req-verify/req-manager 仍超 5KB，留待后续按需收敛
+- 新增 `bin/crs-context-stats.js` 注入面度量（commands/skills 逐文件字节、hook 注入文案字符数与预算占用，`--json` / `--compare-json`）
+
+### 移除（死代码，同步 zcode 判定 + 本仓零引用复验）
+
+- `skill-adapters/`（6 文件）与 `core/skill-interface.js`（约 1100 行）
+- `optimization/`（4 文件）与 `features/similarity.js`（查重职责已由知识图谱承担）
+- `utils/skills-health.js` + `bin/crs-skill-health.js`（旧生态技能清单）
+- `demo.js`、`integrations/`（零引用）
+
+### 变更
+
+- 依赖：+`js-yaml`（YAML 解析）+`chalk`（CLI 着色）；package.json 移除 crs-skill-health bin 入口、新增 crs-context-stats
+- 测试：366 通过/6 失败 → **381 全绿**（+规则引擎 16 / 配置 8 / schema 18 / 安全回归 11 / hook 端到端 12；symlink 守卫用例按新机制重写）
+- ESLint 对齐 zcode 口径（`_` 前缀 catch 参数豁免），引擎代码 lint 告警归零（conversation-logger 历史告警保留）
+
 ## [0.13.0] - 2026-06-15
 
 ### Added

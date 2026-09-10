@@ -12,6 +12,18 @@
         ],
         "description": "初始化对话记录器",
         "id": "conv:session:start"
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"var p=require('path'),f=require('fs'),b='scripts/hooks/plugin-hook-bootstrap.cjs',d=p.join(require('os').homedir(),'.claude'),r='',t=[p.join(d,'plugins/marketplaces/crs/plugins/crs')];try{var c=p.join(d,'plugins/cache/crs/crs');if(f.existsSync(c))f.readdirSync(c).forEach(function(v){var vp=p.join(c,v);if(!r&&f.statSync(vp).isDirectory()&&f.existsSync(p.join(vp,b)))r=vp})}catch(e){}if(!r)for(var i=0;i<t.length;i++){if(f.existsSync(p.join(t[i],b))){r=t[i];break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,b))\" scripts/hooks/crs-session-start.js",
+            "timeout": 5
+          }
+        ],
+        "description": "CRS 规则引擎注入（活跃需求提示 + docs-map 漂移）",
+        "id": "crs:session:start"
       }
     ],
     "PostToolUse": [
@@ -20,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),b='scripts/hooks/plugin-hook-bootstrap.cjs',d=p.join(require('os').homedir(),'.claude'),r='',t=[p.join(d,'plugins/marketplaces/crs/plugins/crs')];try{var c=p.join(d,'plugins/cache/crs/crs');if(f.existsSync(c))f.readdirSync(c).forEach(function(v){var vp=p.join(c,v);if(!r&&f.statSync(vp).isDirectory()&&f.existsSync(p.join(vp,b)))r=vp})}catch(e){}if(!r)for(var i=0;i<t.length;i++){if(f.existsSync(p.join(t[i],b))){r=t[i];break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,b))\" scripts/hooks/post-req-update.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),b='scripts/hooks/plugin-hook-bootstrap.cjs',d=p.join(require('os').homedir(),'.claude'),r='',t=[p.join(d,'plugins/marketplaces/crs/plugins/crs')];try{var c=p.join(d,'plugins/cache/crs/crs');if(f.existsSync(c))f.readdirSync(c).forEach(function(v){var vp=p.join(c,v);if(!r&&f.statSync(vp).isDirectory()&&f.existsSync(p.join(vp,b)))r=vp})}catch(e){}if(!r)for(var i=0;i<t.length;i++){if(f.existsSync(p.join(t[i],b))){r=t[i];break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,b))\" scripts/hooks/crs-post-tool-use.js",
             "timeout": 10
           }
         ],
@@ -46,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"var p=require('path'),f=require('fs'),b='scripts/hooks/plugin-hook-bootstrap.cjs',d=p.join(require('os').homedir(),'.claude'),r='',t=[p.join(d,'plugins/marketplaces/crs/plugins/crs')];try{var c=p.join(d,'plugins/cache/crs/crs');if(f.existsSync(c))f.readdirSync(c).forEach(function(v){var vp=p.join(c,v);if(!r&&f.statSync(vp).isDirectory()&&f.existsSync(p.join(vp,b)))r=vp})}catch(e){}if(!r)for(var i=0;i<t.length;i++){if(f.existsSync(p.join(t[i],b))){r=t[i];break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,b))\" scripts/hooks/stop-req-summary.js",
+            "command": "node -e \"var p=require('path'),f=require('fs'),b='scripts/hooks/plugin-hook-bootstrap.cjs',d=p.join(require('os').homedir(),'.claude'),r='',t=[p.join(d,'plugins/marketplaces/crs/plugins/crs')];try{var c=p.join(d,'plugins/cache/crs/crs');if(f.existsSync(c))f.readdirSync(c).forEach(function(v){var vp=p.join(c,v);if(!r&&f.statSync(vp).isDirectory()&&f.existsSync(p.join(vp,b)))r=vp})}catch(e){}if(!r)for(var i=0;i<t.length;i++){if(f.existsSync(p.join(t[i],b))){r=t[i];break}}if(!r)r=p.resolve('.');process.env.CLAUDE_PLUGIN_ROOT=r;require(p.join(r,b))\" scripts/hooks/crs-stop.js",
             "timeout": 10
           }
         ],

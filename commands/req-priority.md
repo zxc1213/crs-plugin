@@ -9,7 +9,7 @@ description: 优先级评估 - 多维度科学评估需求优先级，优化资�
 ## 用法
 
 \`\`\`bash
-/req:priority <req-id>
+/req-priority <req-id>
 \`\`\`
 
 ## 选项

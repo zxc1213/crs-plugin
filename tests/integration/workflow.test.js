@@ -112,10 +112,25 @@ describe('需求管理系统集成测试', () => {
 
     it('应该处理 status 命令', async () => {
       const manager = new RequirementManager(testDir);
-      const result = await manager.handle('/req --status REQ-001');
+      // 先创建一个需求，再查询其状态（新引擎对不存在 ID 返回 not-found 错误）
+      const created = await manager.handle('/req --feature 状态查询目标需求');
+      expect(created.success).to.be.ok;
+
+      const result = await manager.handle(`/req --status ${created.requirement.id}`);
 
       expect(result.success).to.be.ok;
       expect(result.action).to.equal('show_status');
+      expect(result.requirementId).to.equal(created.requirement.id);
+      expect(result.status).to.equal('planning');
+    });
+
+    it('status 命令对不存在 ID 返回结构化错误与建议', async () => {
+      const manager = new RequirementManager(testDir);
+      const result = await manager.handle('/req --status FEAT-19990101-999-zzzzzz');
+
+      expect(result.success).to.be.false;
+      expect(result.error).to.equal('requirement_not_found');
+      expect(result.suggestions).to.be.ok;
     });
   });
 

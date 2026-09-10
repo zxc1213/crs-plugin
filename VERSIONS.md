@@ -4,6 +4,8 @@
 
 CRS 现在提供 **Claude Code 插件**作为主要安装方式。
 
+> **v1.5.0（2026-09-10）**：同步自 crs-zcode v1.2→v1.5——时间线事件账本 / docs-map 文档纳管 / `crs:block` 区块替换 / 项目级 config.yaml 与 rules.yaml 规则引擎 / 阶段守卫 Windows 修复 / 凭证正则与旗标误建修复 / 注入面 -35%。版本号与 zcode 线对齐（0.13.0 → 1.5.0）。详见 [CHANGELOG.md](CHANGELOG.md)。
+
 ---
 
 ## 🚀 插件版本（推荐）⭐

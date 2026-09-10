@@ -1,21 +1,22 @@
 /**
- * RequirementManager - 智能需求管理系统主入口
+ * RequirementManager - 智能需求管理系统门面
  *
- * 功能：
- * - 接收用户输入
- * - 安全检查
- * - 解析需求
- * - 创建需求
- * - 生成执行计划
- * - 返回下一步操作
+ * 只保留：handle() 入口（安全检查 → 解析 → 查询路由/创建委托）与 CLI。
+ * 创建流 → core/creation-flow.js；变更/事件 → core/change-events.js；
+ * 引擎动作 → core/processor.js（门面）及其下游模块。
  */
 
 import { Processor } from './core/processor.js';
-import { schedule, generateSkillPrompt } from './core/scheduler.js';
+import { runCreationFlow } from './core/creation-flow.js';
+import { handleChange, handleEvent } from './core/change-events.js';
+import { STATUS_LABELS, STATUS_COLORS } from './core/schema.js';
+import { loadRules, validateRules, DEFAULT_RULES, RULES_REL_PATH } from './core/rules.js';
 import securityFilter from './features/security.js';
-import { info, success, warn, error } from './utils/logger.js';
+import { error } from './utils/logger.js';
 import Dashboard from './ui/dashboard.js';
 import path from 'path';
+import fs from 'fs';
+import yaml from 'js-yaml';
 import chalk from 'chalk';
 
 /**
@@ -29,7 +30,7 @@ class RequirementManager {
   constructor(baseDir) {
     this.baseDir = baseDir;
     this.processor = new Processor(baseDir);
-    this.logPath = path.join(baseDir, '.claude', 'logs', 'requirement.log');
+    this.logPath = path.join(baseDir, '.crs', 'logs', 'requirement.log');
   }
 
   /**
@@ -54,17 +55,8 @@ class RequirementManager {
         return await this.handleQueryCommand(parsed);
       }
 
-      // 4. 创建需求
-      const requirement = await this.createRequirement(parsed);
-
-      // 5. 生成执行计划
-      const executionPlan = this.generateExecutionPlan(requirement);
-
-      // 6. 记录日志
-      await this.logCreation(requirement, executionPlan);
-
-      // 7. 返回结果
-      return this.formatResult(requirement, executionPlan);
+      // 4. 创建流（创建 + 执行计划 + 日志 + 格式化）
+      return await runCreationFlow(this.processor, parsed, this.logPath);
     } catch (err) {
       await error('SYSTEM', `处理失败: ${err.message}`, this.logPath);
       return this.formatError(err);
@@ -100,7 +92,7 @@ class RequirementManager {
       error: 'security_check_failed',
       message: `检测到敏感信息，无法继续：\n  ${warnings}`,
       severity: securityCheck.severity,
-      suggestions: ['请移除敏感信息后重试', '不要包含密码、密钥、个人身份信息等', '使用占位符代替真实数据'],
+      suggestions: ['请移除敏感信息后重试', '不要包含密码、密钥、个人身份信息等', '使用占位符代替真实信息'],
     };
   }
 
@@ -119,6 +111,7 @@ class RequirementManager {
       full_auto: 'fully',
       semi_auto: 'semi',
       manual: 'manual',
+      quick: 'quick',
     };
 
     // 合并选项
@@ -135,7 +128,7 @@ class RequirementManager {
    * @returns {boolean}
    */
   isQueryCommand(parsed) {
-    const queryCommands = ['--list', '--active', '--status', '--dashboard'];
+    const queryCommands = ['--list', '--active', '--status', '--dashboard', '--history'];
     return queryCommands.some((cmd) => parsed.description.includes(cmd));
   }
 
@@ -178,13 +171,16 @@ class RequirementManager {
 
     if (description.includes('--status')) {
       const id = description.replace('--status', '').trim();
-      // TODO: 实现单个需求状态查询
+      return await this.handleStatusQuery(id);
+    }
+
+    if (description.includes('--history')) {
+      const limit = parseInt(description.replace('--history', '').trim(), 10);
+      await dashboard.showHistory(Number.isInteger(limit) && limit > 0 ? limit : 20);
       return {
         success: true,
-        action: 'show_status',
-        requirementId: id,
-        message: `显示需求 ${id} 的状态`,
-        implementation: 'TODO: 实现状态查询',
+        action: 'show_history',
+        message: '已显示历史时间线',
       };
     }
 
@@ -196,127 +192,81 @@ class RequirementManager {
   }
 
   /**
-   * 创建需求
-   * @param {object} parsed - 解析后的需求对象
-   * @returns {Promise<object>} 创建的需求对象
+   * 处理单个需求状态查询
+   * @param {string} id - 需求 ID
+   * @returns {Promise<object>} 查询结果
    */
-  async createRequirement(parsed) {
-    const { type, mode, description } = parsed;
-
-    // 创建需求
-    const result = await this.processor.create(parsed);
-
-    // 返回完整的需求对象
-    return {
-      id: result.id,
-      path: result.path,
-      type,
-      mode,
-      description,
-    };
-  }
-
-  /**
-   * 生成执行计划
-   * @param {object} requirement - 需求对象
-   * @returns {object} 执行计划
-   */
-  generateExecutionPlan(requirement) {
-    try {
-      return schedule(requirement);
-    } catch (err) {
-      // 如果生成计划失败，返回基础计划
+  async handleStatusQuery(id) {
+    if (!id) {
       return {
-        requirementId: requirement.id,
-        type: requirement.type,
-        mode: requirement.mode,
-        modeDescription: '半自动执行',
-        steps: [],
-        checkpoints: [],
-        metadata: {
-          primarySkill: 'brainstorming',
-          optionalSkills: [],
-          totalSteps: 0,
-          totalCheckpoints: 0,
-        },
-        error: err.message,
+        success: false,
+        error: 'missing_requirement_id',
+        message: '用法: --status <需求ID>，例如 --status FEAT-20260908-001',
       };
     }
-  }
 
-  /**
-   * 记录创建日志
-   * @param {object} requirement - 需求对象
-   * @param {object} executionPlan - 执行计划
-   */
-  async logCreation(requirement, executionPlan) {
-    await success(requirement.id, `需求已创建: ${requirement.type} - ${requirement.description.substring(0, 50)}`, this.logPath);
+    let meta;
+    try {
+      meta = await this.processor.get(id);
+    } catch (err) {
+      return {
+        success: false,
+        error: 'requirement_not_found',
+        message: `未找到需求 ${id}：${err.message}`,
+        suggestions: ['用 --list 查看所有需求 ID', '检查 ID 前缀（FEAT/BUG/QUES/ADJU/REF）'],
+      };
+    }
 
-    const totalSteps = executionPlan.metadata?.totalSteps || 0;
-    await info(requirement.id, `执行模式: ${executionPlan.modeDescription}, 步骤数: ${totalSteps}`, this.logPath);
-  }
+    const labels = STATUS_LABELS;
+    const colors = STATUS_COLORS;
+    const status = labels[meta.status] ? meta.status : 'planning';
+    const reqPath = this.processor.getRequirementPath(id);
 
-  /**
-   * 格式化结果
-   * @param {object} requirement - 需求对象
-   * @param {object} executionPlan - 执行计划
-   * @returns {object} 格式化的结果
-   */
-  formatResult(requirement, executionPlan) {
-    // 获取第一个步骤（通常是 brainstorming）
-    const firstStep = executionPlan.steps && executionPlan.steps.length > 0 ? executionPlan.steps[0] : null;
+    console.log(chalk.cyan(`📌 需求 ${meta.id}`));
+    console.log(`${chalk.gray('  标题:')} ${meta.title || meta.description?.substring(0, 60) || '无标题'}`);
+    console.log(`${chalk.gray('  类型:')} ${meta.type}`);
+    console.log(`${chalk.gray('  状态:')} ${chalk[colors[status]](labels[status] || meta.status)}`);
+    console.log(`${chalk.gray('  优先级:')} ${meta.priority_detail?.level || meta.priority || '未评估'}`);
+    console.log(`${chalk.gray('  创建:')} ${meta.created || '未知'}`);
+    if (meta.updatedAt) {
+      console.log(`${chalk.gray('  更新:')} ${meta.updatedAt}`);
+    }
+    if (meta.completed) {
+      console.log(`${chalk.gray('  完成:')} ${meta.completed}`);
+    }
+    if (meta.tags && meta.tags.length > 0) {
+      console.log(`${chalk.gray('  标签:')} ${meta.tags.join(', ')}`);
+    }
+    if (reqPath) {
+      console.log(`${chalk.gray('  路径:')} ${reqPath}`);
+    }
+    console.log('');
 
     return {
       success: true,
-      requirement: {
-        id: requirement.id,
-        type: requirement.type,
-        mode: requirement.mode,
-        description: requirement.description,
-      },
-      executionPlan: {
-        mode: executionPlan.mode,
-        modeDescription: executionPlan.modeDescription,
-        totalSteps: executionPlan.metadata?.totalSteps || 0,
-        checkpoints: executionPlan.checkpoints?.length || 0,
-      },
-      nextSteps: this.generateNextSteps(requirement, executionPlan, firstStep),
+      action: 'show_status',
+      requirementId: meta.id,
+      status: meta.status,
+      message: `已显示需求 ${meta.id} 的状态`,
     };
   }
 
   /**
-   * 生成下一步操作
-   * @param {object} requirement - 需求对象
-   * @param {object} executionPlan - 执行计划
-   * @param {object} firstStep - 第一步
-   * @returns {object} 下一步操作
+   * 需求变更（req-change 流程的引擎落点，逻辑在 core/change-events.js）
+   * @param {object} params - { id, level, reason }
+   * @returns {Promise<object>} 处理结果
    */
-  generateNextSteps(requirement, executionPlan, firstStep) {
-    const steps = [];
+  async handleChange(params = {}) {
+    return handleChange(this.processor, params);
+  }
 
-    // 第一步：调用 skill
-    if (firstStep) {
-      steps.push({
-        action: 'call_skill',
-        skill: firstStep.skill,
-        description: `使用 ${firstStep.skill} skill 分析需求`,
-        prompt: generateSkillPrompt(firstStep.skill, {
-          id: requirement.id,
-          type: requirement.type,
-          description: requirement.description,
-        }),
-      });
-    }
-
-    // 后续步骤提示
-    if (executionPlan.steps.length > 1) {
-      steps.push({
-        action: 'continue_workflow',
-        description: `完成后继续执行剩余 ${executionPlan.steps.length - 1} 个步骤`,
-      });
-    }
-
-    return steps;
+  /**
+   * 记录时间线事件（逻辑在 core/change-events.js）
+   * @param {object} params - { type, id, title, summary }
+   * @returns {Promise<object>} 处理结果
+   */
+  async handleEvent(params = {}) {
+    return handleEvent(this.baseDir, params);
   }
 
   /**
@@ -338,11 +288,42 @@ class RequirementManager {
    * @param {string[]} args - 命令行参数
    */
   static async cli(args) {
+    // 帮助旗标短路：打印用法即返回，零副作用（防止被当作需求描述误建需求，BUG-20260909-001-69b294）
+    if (args.includes('-h') || args.includes('--help')) {
+      printUsage();
+      return;
+    }
+
     // 获取基础目录
     const baseDir = process.cwd();
 
     // 创建管理器实例
     const manager = new RequirementManager(baseDir);
+
+    // 子命令：rules（规则清单 / 校验，FEAT-20260909-001-4ae874）
+    if (args[0] === 'rules') {
+      await printRules(baseDir, args[1]);
+      return;
+    }
+
+    // 子命令：change / event（req-change 流程与时间线事件的引擎入口）
+    if (args[0] === 'change' || args[0] === 'event') {
+      const params = {};
+      for (let i = 1; i < args.length; i++) {
+        const flag = args[i];
+        const next = args[i + 1];
+        if (flag.startsWith('--') && next !== undefined && !next.startsWith('--')) {
+          const key = flag.replace(/^--/, '');
+          if (['id', 'level', 'reason', 'type', 'title', 'summary'].includes(key)) {
+            params[key] = next;
+            i++;
+          }
+        }
+      }
+      const result = args[0] === 'change' ? await manager.handleChange(params) : await manager.handleEvent(params);
+      formatOutput(result);
+      return;
+    }
 
     // 处理命令行选项
     const options = {};
@@ -369,7 +350,9 @@ class RequirementManager {
         options.mode = 'manual';
       } else if (arg.startsWith('--status=')) {
         input = `--status ${arg.replace('--status=', '')}`;
-      } else if (arg === '--dashboard' || arg === '--list' || arg === '--active' || arg === '--status') {
+      } else if (arg.startsWith('--history=')) {
+        input = `--history ${arg.replace('--history=', '')}`;
+      } else if (arg === '--dashboard' || arg === '--list' || arg === '--active' || arg === '--status' || arg === '--history') {
         // 查询命令，添加到输入前面
         input = input ? `${input} ${arg}` : arg;
       } else if (!arg.startsWith('--')) {
@@ -390,13 +373,86 @@ class RequirementManager {
     const result = await manager.handle(input, options);
 
     // 对于查询命令，不需要格式化输出（Dashboard 已经输出）
-    if (result.action && ['show_dashboard', 'list_requirements', 'list_active'].includes(result.action)) {
+    if (result.action && ['show_dashboard', 'list_requirements', 'list_active', 'show_history'].includes(result.action)) {
       return;
     }
 
     // 输出结果
     formatOutput(result);
   }
+}
+
+/**
+ * 打印合并后的规则清单（含来源标注）或校验 rules.yaml（rules 子命令）
+ */
+async function printRules(baseDir, flag) {
+  console.log(chalk.cyan('📋 CRS 规则清单\n'));
+
+  const rulesPath = path.join(baseDir, '.requirements', '_system', 'rules.yaml');
+  let project = null;
+  let parseError = null;
+  if (fs.existsSync(rulesPath)) {
+    try {
+      project = yaml.load(fs.readFileSync(rulesPath, 'utf-8'));
+    } catch (err) {
+      parseError = err.message;
+    }
+  }
+
+  if (flag === '--validate') {
+    const result = validateRules(parseError ? null : project);
+    if (parseError) {
+      console.log(chalk.red(`✗ ${RULES_REL_PATH} YAML 语法错误: ${parseError}`));
+      process.exitCode = 1;
+      return;
+    }
+    if (result.errors.length === 0 && result.warnings.length === 0) {
+      console.log(chalk.green(`✓ ${RULES_REL_PATH} 校验通过`));
+      return;
+    }
+    for (const message of result.errors) console.log(chalk.red(`  ✗ ${message}`));
+    for (const message of result.warnings) console.log(chalk.yellow(`  ⚠ ${message}`));
+    if (result.errors.length > 0) process.exitCode = 1;
+    return;
+  }
+
+  const merged = await loadRules(baseDir);
+  const defaultIds = new Set(DEFAULT_RULES.rules.map((r) => r.id));
+  const projectIds = new Set(parseError ? [] : validateRules(project).cleaned.rules.map((r) => r.id));
+
+  if (parseError) {
+    console.log(chalk.yellow(`⚠ ${RULES_REL_PATH} 语法错误，以下为内置默认（${parseError}）\n`));
+  }
+
+  console.log(`inject 预算: ${merged.inject_budget_chars} chars ｜ 规则数: ${merged.rules.length}\n`);
+  for (const rule of merged.rules) {
+    const source = defaultIds.has(rule.id) ? (projectIds.has(rule.id) ? '项目覆盖' : '内置') : '项目新增';
+    const status = rule.enabled === false ? chalk.gray('disabled') : chalk.green('enabled');
+    console.log(`  ${chalk.bold(rule.id)}  [${rule.type}] ${status} priority=${rule.priority ?? 0}  ${chalk.gray(source)}`);
+    console.log(`    ${(rule.message || '').slice(0, 60)}${(rule.message || '').length > 60 ? '…' : ''}`);
+  }
+  console.log(`\n校验: node scripts/requirement-manager/index.js rules --validate ｜ 自定义指南: docs/rules.md`);
+}
+
+/**
+ * 打印 CLI 用法（--help / -h 时输出，零副作用）
+ */
+function printUsage() {
+  console.log(chalk.cyan('📋 CRS 需求管理系统\n'));
+  console.log('用法: node scripts/requirement-manager/index.js [选项] <需求描述>');
+  console.log('      node scripts/requirement-manager/index.js <子命令> [参数]\n');
+  console.log('子命令:');
+  console.log('  change    需求变更入账（--id <ID> --level <small|medium|large> --reason <原因>）');
+  console.log('  event     时间线事件（--id <ID> --type <类型> --title <标题> --summary <摘要>）\n');
+  console.log('常用选项:');
+  console.log('  -f, --feature   功能类（默认）      -b, --bug        缺陷类');
+  console.log('  -q, --question  问题类              -a, --adjust     调整类');
+  console.log('  -r, --refactor  重构类');
+  console.log('  --quick / --deep / --auto / --conservative   执行模式');
+  console.log('  rules [--validate]                规则清单 / rules.yaml 校验');
+  console.log('  --list / --active / --dashboard   查询需求清单 / 活跃需求 / 看板');
+  console.log('  --status <ID> / --history <ID>    查询单个需求状态 / 历史\n');
+  console.log('  -h, --help     打印本说明');
 }
 
 /**
@@ -411,6 +467,15 @@ function formatOutput(result) {
     if (result.suggestions) {
       console.log(chalk.yellow('\n建议:'));
       result.suggestions.forEach((s) => console.log(`  • ${s}`));
+    }
+    return;
+  }
+
+  // 变更/事件子命令结果
+  if (result.action === 'requirement_changed' || result.action === 'timeline_event') {
+    console.log(chalk.green(`✓ ${result.message}`));
+    if (result.updatedDocs?.length) {
+      console.log(chalk.gray(`  已更新文档: ${result.updatedDocs.join(', ')}`));
     }
     return;
   }

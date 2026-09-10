@@ -6,7 +6,6 @@ import fs from 'fs/promises';
 import {
   init,
   exists,
-  createRequirementDir,
   readMeta,
   writeMeta,
   cleanup,
@@ -31,27 +30,35 @@ describe('Storage Utility', () => {
       const dirExists = await exists(TEST_BASE_DIR);
       expect(dirExists).to.equal(true);
     });
-  });
 
-  describe('createRequirementDir(baseDir, type, id)', () => {
-    it('should create feature requirement directory', async () => {
+    it('should create all schema type directories', async () => {
       await init(TEST_BASE_DIR);
-      const reqPath = await createRequirementDir(TEST_BASE_DIR, 'feature', 'FEAT-001');
-      expect(reqPath).to.include('FEAT-001');
-      const metaFile = path.join(reqPath, 'meta.yaml');
-      const metaExists = await exists(metaFile);
-      expect(metaExists).to.equal(true);
+      for (const dir of ['features', 'bugs', 'questions', 'adjustments', 'refactors', 'tech-debt']) {
+        const existsAfter = await exists(path.join(TEST_BASE_DIR, '.requirements', dir));
+        expect(existsAfter, `.${path.sep}.requirements/${dir}`).to.equal(true);
+      }
     });
   });
 
-  describe('readMeta(baseDir, reqPath)', () => {
-    it('should read existing metadata', async () => {
+  describe('writeMeta(baseDir, reqPath, meta) / readMeta(baseDir, reqPath)', () => {
+    it('should round-trip metadata', async () => {
       await init(TEST_BASE_DIR);
-      const reqPath = await createRequirementDir(TEST_BASE_DIR, 'feature', 'FEAT-002');
+      const reqPath = path.join(TEST_BASE_DIR, '.requirements', 'features', 'FEA-001');
+      await fs.mkdir(reqPath, { recursive: true });
+      await writeMeta(TEST_BASE_DIR, reqPath, { id: 'FEA-001', type: 'feature', status: 'planning' });
       const meta = await readMeta(TEST_BASE_DIR, reqPath);
       expect(meta).to.be.ok;
-      expect(meta.id).to.equal('FEAT-002');
+      expect(meta.id).to.equal('FEA-001');
       expect(meta.type).to.equal('feature');
+      expect(meta.status).to.equal('planning');
+    });
+
+    it('readMeta returns null for missing meta.yaml', async () => {
+      await init(TEST_BASE_DIR);
+      const reqPath = path.join(TEST_BASE_DIR, '.requirements', 'features', 'FEA-404');
+      await fs.mkdir(reqPath, { recursive: true });
+      const meta = await readMeta(TEST_BASE_DIR, reqPath);
+      expect(meta).to.equal(null);
     });
   });
 

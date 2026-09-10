@@ -132,11 +132,12 @@ describe('plan-sync Utility', () => {
     });
 
     it('should handle all status values correctly', async () => {
+      // 旧词表经 normalizeStatus 归一后计算完成度（schema 唯一口径）
       const statusTests = [
-        { status: 'open', expectedPercent: '0%' },
-        { status: 'in_progress', expectedPercent: '60%' },
-        { status: 'completed', expectedPercent: '100%' },
-        { status: 'blocked', expectedPercent: '25%' },
+        { status: 'open', expectedPercent: '10%' }, // → planning
+        { status: 'in_progress', expectedPercent: '60%' }, // → implementing
+        { status: 'completed', expectedPercent: '100%' }, // → done
+        { status: 'blocked', expectedPercent: '60%' }, // → implementing
       ];
 
       for (const { status, expectedPercent } of statusTests) {
@@ -290,8 +291,9 @@ describe('plan-sync Utility', () => {
       const checkedCount = (updated.match(/- \[x\]/g) || []).length;
       const uncheckedCount = (updated.match(/- \[ \]/g) || []).length;
 
-      expect(checkedCount).to.equal(0); // 全部不勾选
-      expect(uncheckedCount).to.equal(2);
+      // v1.4 语义：非终态不回退手工勾选（引擎只代写 done 完成态，不抹除人工编辑）
+      expect(checkedCount).to.equal(2); // 手工勾选保留
+      expect(uncheckedCount).to.equal(0);
     });
 
     it('should preserve criteria when status is in_progress', async () => {
