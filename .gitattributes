@@ -1,0 +1,145 @@
+###############################################################################
+# 1) 核心：换行符统一（强制仓库内 LF，工作区按系统或指定转换）
+###############################################################################
+# 所有文本自动检测，仓库统一 LF
+*               text=auto eol=lf
+
+# Windows 脚本必须 CRLF
+*.cmd           text eol=crlf
+*.bat           text eol=crlf
+*.ps1           text eol=crlf
+*.reg           text eol=crlf
+
+# Linux/macOS 脚本必须 LF
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.zsh           text eol=lf
+*.py            text eol=lf
+*.go            text eol=lf
+*.java          text eol=lf
+*.c             text eol=lf
+*.cpp           text eol=lf
+*.h             text eol=lf
+*.rs            text eol=lf
+*.js            text eol=lf
+*.ts            text eol=lf
+*.vue           text eol=lf
+*.css           text eol=lf
+*.scss          text eol=lf
+*.html          text eol=lf
+*.md            text diff=markdown
+*.txt           text
+*.json          text
+*.yml           text
+*.yaml          text
+*.xml           text
+*.svg           text
+*.ini           text
+*.conf          text
+*.properties    text
+*.gradle        text
+*.mk            text
+*.cmake         text
+
+###############################################################################
+# 2) 二进制文件（不转换、不diff、不自动合并）
+###############################################################################
+# 图片
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.bmp           binary
+*.ico           binary
+*.tiff          binary
+*.webp          binary
+
+# 音视频
+*.mp3           binary
+*.wav           binary
+*.ogg           binary
+*.mp4           binary
+*.mov           binary
+*.avi           binary
+*.flv           binary
+*.webm          binary
+
+# 压缩包
+*.zip           binary
+*.rar           binary
+*.7z            binary
+*.tar           binary
+*.gz            binary
+*.bz2           binary
+*.xz            binary
+*.tgz           binary
+
+# 文档/二进制格式
+*.pdf           binary
+*.doc           binary
+*.docx          binary
+*.xls           binary
+*.xlsx          binary
+*.ppt           binary
+*.pptx          binary
+*.vsdx          binary
+*.odt           binary
+*.ods           binary
+*.odp           binary
+
+# 可执行与库
+*.exe           binary
+*.dll           binary
+*.so            binary
+*.dylib         binary
+*.a             binary
+*.lib           binary
+*.obj           binary
+*.class         binary
+
+# 字体
+*.ttf           binary
+*.otf           binary
+*.woff          binary
+*.woff2         binary
+
+# 其他二进制
+*.pem           binary
+*.key           binary
+*.crt           binary
+*.der           binary
+*.pfx           binary
+
+###############################################################################
+# 3) 合并与diff策略
+###############################################################################
+# 锁文件：优先用当前分支（ours）
+package-lock.json merge=ours
+yarn.lock         merge=ours
+Gemfile.lock      merge=ours
+Cargo.lock        merge=ours
+go.sum            merge=ours
+poetry.lock       merge=ours
+Pipfile.lock      merge=ours
+
+# 变更日志：简单 union 合并
+CHANGELOG.md      merge=union
+
+# 禁用diff（纯二进制）
+*.bin             -diff
+*.dat             -diff
+
+###############################################################################
+# 4) 导出忽略（git archive 不打包）
+###############################################################################
+.gitattributes    export-ignore
+.gitignore        export-ignore
+.gitmodules       export-ignore
+.github/          export-ignore
+tests/            export-ignore
+docs/             export-ignore
+*.log             export-ignore
+*.tmp             export-ignore
+*.swp             export-ignore
+.DS_Store         export-ignore
+Thumbs.db         export-ignore

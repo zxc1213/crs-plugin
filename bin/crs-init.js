@@ -70,10 +70,7 @@ if (needsGlobalSetup) {
       const files = fs.readdirSync(hooksDir);
       files.forEach((file) => {
         if (file.endsWith('.js')) {
-          fs.copyFileSync(
-            path.join(hooksDir, file),
-            path.join(GLOBAL_CLAUDE, 'scripts', 'hooks', file)
-          );
+          fs.copyFileSync(path.join(hooksDir, file), path.join(GLOBAL_CLAUDE, 'scripts', 'hooks', file));
         }
       });
       console.log('  ✓ hooks 脚本');
@@ -122,21 +119,7 @@ console.log('🎯 CRS 项目初始化\n');
 const projectRoot = process.cwd();
 
 // 创建目录结构
-const dirs = [
-  '.requirements/features',
-  '.requirements/bugs',
-  '.requirements/questions',
-  '.requirements/adjustments',
-  '.requirements/refactorings',
-  '.requirements/metrics',
-  '.requirements/metrics/reports',
-  '.requirements/metrics/exports',
-  '.requirements/metrics/trends',
-  '.requirements/_system/versions',
-  'docs/specs',
-  'docs/guides',
-  'docs/analysis',
-];
+const dirs = ['.requirements/features', '.requirements/bugs', '.requirements/questions', '.requirements/adjustments', '.requirements/refactorings', '.requirements/metrics', '.requirements/metrics/reports', '.requirements/metrics/exports', '.requirements/metrics/trends', '.requirements/_system/versions', 'docs/specs', 'docs/guides', 'docs/analysis'];
 
 console.log('📁 创建项目目录...');
 dirs.forEach((dir) => {

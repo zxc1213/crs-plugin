@@ -14,21 +14,7 @@ const skillsDir = join(rootDir, 'skills');
  * skills/<skill-name>/SKILL.md（13 个 skills 全部平铺）
  */
 describe('Skills Structure (技能目录结构 v0.13.0+)', () => {
-  const expectedSkills = [
-    'req',
-    'req-manager',
-    'req-brainstorm',
-    'req-init',
-    'req-doc-format',
-    'req-quality',
-    'req-test-plan',
-    'req-verify',
-    'req-priority',
-    'req-metrics',
-    'req-change',
-    'req-migrate',
-    'req-unify',
-  ];
+  const expectedSkills = ['req', 'req-manager', 'req-brainstorm', 'req-init', 'req-doc-format', 'req-quality', 'req-test-plan', 'req-verify', 'req-priority', 'req-metrics', 'req-change', 'req-migrate', 'req-unify'];
 
   it('skills/ 目录存在', () => {
     expect(existsSync(skillsDir), 'skills/ directory must exist').to.equal(true);
@@ -38,16 +24,11 @@ describe('Skills Structure (技能目录结构 v0.13.0+)', () => {
     const legacyCategories = ['core', 'quality', 'analysis', 'change', 'utils'];
     const entries = readdirSync(skillsDir);
     const found = entries.filter((e) => legacyCategories.includes(e));
-    expect(
-      found,
-      `Found legacy category directories: ${found.join(', ')}`
-    ).to.have.lengthOf(0);
+    expect(found, `Found legacy category directories: ${found.join(', ')}`).to.have.lengthOf(0);
   });
 
   it('包含全部 13 个 skill 子目录', () => {
-    const entries = readdirSync(skillsDir).filter((e) =>
-      statSync(join(skillsDir, e)).isDirectory()
-    );
+    const entries = readdirSync(skillsDir).filter((e) => statSync(join(skillsDir, e)).isDirectory());
     expectedSkills.forEach((skill) => {
       expect(entries, `Missing skill directory: ${skill}`).to.include(skill);
     });
@@ -64,9 +45,7 @@ describe('Skills Structure (技能目录结构 v0.13.0+)', () => {
     expectedSkills.forEach((skill) => {
       const skillMd = join(skillsDir, skill, 'SKILL.md');
       const content = readFileSync(skillMd, 'utf-8');
-      expect(content.startsWith('---'), `${skill}/SKILL.md must start with frontmatter`).to.equal(
-        true
-      );
+      expect(content.startsWith('---'), `${skill}/SKILL.md must start with frontmatter`).to.equal(true);
     });
   });
 
@@ -114,10 +93,7 @@ describe('Legacy Path Cleanup', () => {
     const content = readFileSync(claudeMd, 'utf-8');
     const legacyPatterns = ['skills/core/', 'skills/quality/', 'skills/analysis/', 'skills/change/', 'skills/utils/'];
     const found = legacyPatterns.filter((p) => content.includes(p));
-    expect(
-      found,
-      `CLAUDE.md still references legacy paths: ${found.join(', ')}`
-    ).to.have.lengthOf(0);
+    expect(found, `CLAUDE.md still references legacy paths: ${found.join(', ')}`).to.have.lengthOf(0);
   });
 
   it('README.md 不再引用嵌套 skills 路径', () => {
@@ -125,8 +101,6 @@ describe('Legacy Path Cleanup', () => {
     const content = readFileSync(readmeMd, 'utf-8');
     const legacyPatterns = ['skills/core/', 'skills/quality/', 'skills/analysis/', 'skills/change/', 'skills/utils/'];
     const found = legacyPatterns.filter((p) => content.includes(p));
-    expect(found, `README.md still references legacy paths: ${found.join(', ')}`).to.have.lengthOf(
-      0
-    );
+    expect(found, `README.md still references legacy paths: ${found.join(', ')}`).to.have.lengthOf(0);
   });
 });

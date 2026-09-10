@@ -67,12 +67,7 @@ describe('sync-version.js 脚本完整性', () => {
     const scriptPath = join(rootDir, 'scripts', 'sync-version.js');
     const content = readFileSync(scriptPath, 'utf-8');
 
-    const expectedPaths = [
-      '.claude-plugin/plugin.json',
-      '.cursor-plugin/plugin.json',
-      '.codex-plugin/plugin.json',
-      'gemini-extension.json',
-    ];
+    const expectedPaths = ['.claude-plugin/plugin.json', '.cursor-plugin/plugin.json', '.codex-plugin/plugin.json', 'gemini-extension.json'];
 
     expectedPaths.forEach((p) => {
       expect(content, `sync-version.js must reference ${p}`).to.include(p);
